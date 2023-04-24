@@ -1,6 +1,6 @@
-usr/local/bin/dogecoin-qt usr/bin
-share/pixmaps/dogecoin32.xpm usr/share/pixmaps
-share/pixmaps/dogecoin16.xpm usr/share/pixmaps
-share/pixmaps/dogecoin128.png usr/share/pixmaps
-debian/dogecoin-qt.desktop usr/share/applications
-debian/dogecoin-qt.protocol usr/share/kde4/services/
+usr/local/bin/cyberdollar-qt usr/bin
+share/pixmaps/cyberdollar32.xpm usr/share/pixmaps
+share/pixmaps/cyberdollar16.xpm usr/share/pixmaps
+share/pixmaps/cyberdollar128.png usr/share/pixmaps
+debian/cyberdollar-qt.desktop usr/share/applications
+debian/cyberdollar-qt.protocol usr/share/kde4/services/

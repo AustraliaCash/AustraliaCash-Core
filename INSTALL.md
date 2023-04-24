@@ -1,10 +1,10 @@
-# Installing Dogecoin Core
+# Installing CyberDollar Core
 
 ### Pre-compiled binaries
 
-The easiest way to install the latest version of the Dogecoin Core software is
+The easiest way to install the latest version of the CyberDollar Core software is
 by to download the latest precompiled binaries for your platform from the
-[release page](https://github.com/dogecoin/dogecoin/releases). Currently,
+[release page](https://github.com/cyberdollar/cyberdollar/releases). Currently,
 binaries are released for the following platforms:
 
 - Windows, 64-bit and 32-bit
@@ -19,22 +19,22 @@ regarding that process.
 
 ### Compiling using packaged dependencies
 
-It is possible to build your own copy of Dogecoin Core with the exact, tested,
+It is possible to build your own copy of CyberDollar Core with the exact, tested,
 dependencies, as used for the binary releases, by using the
 [depends system](depends/description.md). Please refer to the
-[depends README](depends/README.md) for instructions to build Dogecoin using
+[depends README](depends/README.md) for instructions to build CyberDollar using
 these dependencies.
 
 ### Compiling using system-provided libraries
 
-  The following are developer notes on how to build Dogecoin on your native
+  The following are developer notes on how to build CyberDollar on your native
   platform, using the dependencies as provided by your system's package manager.
   They are not complete guides, but include notes on the necessary libraries,
   compile flags, etc.
 
   - [Unix Build Notes](doc/build-unix.md)
   - [Windows Build Notes](doc/build-windows.md)
-  - [macOS Build Notes](doc/Building-Dogecoin-1.14-for-Mac.md)
+  - [macOS Build Notes](doc/Building-CyberDollar-1.14-for-Mac.md)
 
 ### Testing
 
@@ -65,7 +65,7 @@ to see it.
 
 **testnet and regtest modes**
 
-Run with the `-testnet` option to run with "play dogecoins" on the test network, if you
+Run with the `-testnet` option to run with "play cyberdollars" on the test network, if you
 are testing multi-machine code that needs to operate across the internet.
 
 If you are testing something that can run on one machine, run with the `-regtest` option.
@@ -74,7 +74,7 @@ that run in `-regtest` mode.
 
 **DEBUG_LOCKORDER**
 
-Dogecoin Core is a multithreaded application, and deadlocks or other multithreading bugs
+CyberDollar Core is a multithreaded application, and deadlocks or other multithreading bugs
 can be very difficult to track down. Compiling with `-DDEBUG_LOCKORDER` (`configure
 CXXFLAGS="-DDEBUG_LOCKORDER -g"`) inserts run-time checks to keep track of which locks
 are held, and adds warnings to the debug.log file if inconsistencies are detected.

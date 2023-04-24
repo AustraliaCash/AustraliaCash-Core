@@ -214,8 +214,8 @@
         <translation>&amp;Opsies</translation>
     </message>
     <message>
-        <source>Dogecoin</source>
-        <translation>Dogecoin</translation>
+        <source>CyberDollar</source>
+        <translation>CyberDollar</translation>
     </message>
     <message>
         <source>Wallet</source>

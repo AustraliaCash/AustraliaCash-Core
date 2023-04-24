@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2014-2016 The Bitcoin Core developers
-# Copyright (c) 2022 The Dogecoin Core developers
+# Copyright (c) 2022 The CyberDollar Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -164,7 +164,7 @@ testScripts = [
     'paytxfee.py',
     'feelimit.py',
     'setmaxconnections.py',
-    # While fee bumping should work in Doge, these tests depend on free transactions, which we don't support.
+    # While fee bumping should work in Cyber, these tests depend on free transactions, which we don't support.
     # Disable until we can do a full rewrite of the tests (possibly upstream), or revise fee schedule, or something
     'bumpfee.py',
     'rpcnamedargs.py',
