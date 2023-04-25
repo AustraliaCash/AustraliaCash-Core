@@ -1,0 +1,33 @@
+# /etc/conf.d/cyberdollard: config file for /etc/init.d/cyberdollard
+
+# Config file location
+#CYBERDOLLARD_CONFIGFILE="/etc/cyberdollar/cyberdollar.conf"
+
+# What directory to write pidfile to?  (created and owned by $CYBERDOLLARD_USER)
+#CYBERDOLLARD_PIDDIR="/var/run/cyberdollard"
+
+# What filename to give the pidfile
+#CYBERDOLLARD_PIDFILE="${CYBERDOLLARD_PIDDIR}/cyberdollard.pid"
+
+# Where to write cyberdollard data (be mindful that the blockchain is large)
+#CYBERDOLLARD_DATADIR="/var/lib/cyberdollard"
+
+# User and group to own cyberdollard process
+#CYBERDOLLARD_USER="cyberdollar"
+#CYBERDOLLARD_GROUP="cyberdollar"
+
+# Path to cyberdollard executable
+#CYBERDOLLARD_BIN="/usr/bin/cyberdollard"
+
+# Nice value to run cyberdollard under
+#CYBERDOLLARD_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+CYBERDOLLARD_OPTS="-disablewallet"
+
+# The timeout in seconds OpenRC will wait for cyberdollard to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+CYBERDOLLARD_SIGTERM_TIMEOUT=60
