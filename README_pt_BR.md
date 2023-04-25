@@ -28,11 +28,11 @@ A API JSON-RPC fornecida pelo CyberDollar Core é auto documentada e pode ser bu
 
 ### Quais as portas
 
-A CyberDollar Core utiliza por padrão a porta `22556` para comunicação par-a-par, que é necessária para sincronizar a blockchain da "rede principal" e se manter informada de novas transações e blocos. Outrosim, uma porta JSONRPC pode ser aberta, que por padrão é a porta `22555` para nós da rede principal. Recomendamos fortemente não expor portas RPC para a internet pública. 
+A CyberDollar Core utiliza por padrão a porta `22333` para comunicação par-a-par, que é necessária para sincronizar a blockchain da "rede principal" e se manter informada de novas transações e blocos. Outrosim, uma porta JSONRPC pode ser aberta, que por padrão é a porta `22555` para nós da rede principal. Recomendamos fortemente não expor portas RPC para a internet pública. 
 
 |  Função  | mainnet | testnet | regtest |
 | :------- | ------: | ------: | ------: |
-| P2P      |   22556 |   44556 |   18444 |
+| P2P      |   22333 |   44888 |   18444 |
 | RPC      |   22555 |   44555 |   18332 |
 
 ## Desenvolvimento continuo - Plano Lua 🌒
