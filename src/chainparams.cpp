@@ -129,7 +129,7 @@ public:
         digishieldConsensus.fDigishieldDifficultyCalculation = true;
         digishieldConsensus.fPowAllowDigishieldMinDifficultyBlocks = false;
         digishieldConsensus.nPowTargetTimespan = 60; // post-digishield: 1 minute
-        digishieldConsensus.nCoinbaseMaturity = 240;
+        digishieldConsensus.nCoinbaseMaturity = 500000;
 
         // Blocks 371337+ are AuxPoW
         auxpowConsensus = digishieldConsensus;
