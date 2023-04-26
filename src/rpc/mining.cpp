@@ -1001,11 +1001,11 @@ void AuxMiningCheck()
 
     /* This should never fail, since the chain is already
        past the point of merge-mining start.  Check nevertheless.  */
-    {
+    /*{
         LOCK(cs_main);
         if (Params().GetConsensus(chainActive.Height() + 1).fAllowLegacyBlocks)
             throw std::runtime_error("getauxblock method is not yet available");
-    }
+    }*/
 }
 
 static UniValue AuxMiningCreateBlock(const CScript& scriptPubKey)
