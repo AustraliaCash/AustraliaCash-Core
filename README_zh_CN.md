@@ -6,8 +6,8 @@
 
 <div align="center">
 
-[![CyberDollarBadge](https://img.shields.io/badge/Cyber-Coin-yellow.svg)](https://cyberdollar.com)
-[![MuchWow](https://img.shields.io/badge/Much-Wow-yellow.svg)](https://cyberdollar.com)
+[![CyberDollarBadge](https://img.shields.io/badge/Cyber-Coin-yellow.svg)](https://cyberchain.info)
+[![MuchWow](https://img.shields.io/badge/Much-Wow-yellow.svg)](https://cyberchain.info)
 
 </div>
 
@@ -17,7 +17,7 @@
 
 狗狗币网络默认交易费的相关信息请查看[收费建议](doc/fee-recommendation.md)
 
-**网址:** [cyberdollar.com](https://cyberdollar.com)
+**网址:** [cyberchain.info](https://cyberchain.info)
 
 ## 使用指南 💻
 

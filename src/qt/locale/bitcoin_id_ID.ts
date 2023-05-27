@@ -91,7 +91,7 @@
         <translation>&amp;Pilih</translation>
     </message>
     <message>
-        <source>Such sending addresses</source>
+        <source>Sending addresses</source>
         <translation>Alamat-alamat pengirim</translation>
     </message>
     <message>
@@ -131,7 +131,7 @@
         <translation>Terjadi kesalahan saat berusaha untuk menyimpan alamat ke dalam daftar %1. Mohon ulangi kembali.</translation>
     </message>
     <message>
-        <source>Much receiving addresses</source>
+        <source>Receiving addresses</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -287,7 +287,7 @@
         <translation>Tampilkan gambaran umum dompet Anda</translation>
     </message>
     <message>
-        <source>&amp;Such Send</source>
+        <source>&amp;Skypay</source>
         <translation>&amp;Kirim Aja</translation>
     </message>
     <message>
@@ -295,7 +295,7 @@
         <translation>Kirim koin ke alamat CyberDollar</translation>
     </message>
     <message>
-        <source>&amp;Much Receive</source>
+        <source>&amp;Income</source>
         <translation>&amp;Terima Banget</translation>
     </message>
     <message>
@@ -403,7 +403,7 @@
         <translation>CyberDollar</translation>
     </message>
     <message>
-        <source>&amp;Much receiving addresses...</source>
+        <source>&amp;Receiving addresses...</source>
         <translation>&amp;Alamat-alamat untuk menerima...</translation>
     </message>
     <message>
@@ -593,7 +593,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Such sending addresses...</source>
+        <source>&amp;Sending addresses...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

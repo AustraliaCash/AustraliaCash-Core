@@ -91,12 +91,12 @@
         <translation>C&amp;hoose</translation>
     </message>
     <message>
-        <source>Such sending addresses</source>
-        <translation>Such sending addresses</translation>
+        <source>Sending addresses</source>
+        <translation>Sending addresses</translation>
     </message>
     <message>
-        <source>Much receiving addresses</source>
-        <translation>Much receiving addresses</translation>
+        <source>Receiving addresses</source>
+        <translation>Receiving addresses</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -343,12 +343,12 @@
         <translation>&amp;Change Passphrase...</translation>
     </message>
     <message>
-        <source>&amp;Such sending addresses...</source>
-        <translation>&amp;Such sending addresses...</translation>
+        <source>&amp;Sending addresses...</source>
+        <translation>&amp;Sending addresses...</translation>
     </message>
     <message>
-        <source>&amp;Much receiving addresses...</source>
-        <translation>&amp;Much receiving addresses...</translation>
+        <source>&amp;Receiving addresses...</source>
+        <translation>&amp;Receiving addresses...</translation>
     </message>
     <message>
         <source>Open &amp;URI...</source>
@@ -391,12 +391,12 @@
         <translation>Wallet</translation>
     </message>
     <message>
-        <source>&amp;Such Send</source>
-        <translation>&amp;Such Send</translation>
+        <source>&amp;Skypay</source>
+        <translation>&amp;Skypay</translation>
     </message>
     <message>
-        <source>&amp;Much Receive</source>
-        <translation>&amp;Much Receive</translation>
+        <source>&amp;Income</source>
+        <translation>&amp;Income</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>

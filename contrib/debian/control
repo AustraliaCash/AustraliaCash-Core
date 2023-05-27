@@ -26,7 +26,7 @@ Build-Depends: debhelper,
  python,
  libzmq3-dev
 Standards-Version: 3.9.2
-Homepage: http://www.cyberdollar.com/
+Homepage: http://www.cyberchain.info/
 Vcs-Git: git://github.com/cyberdollar/cyberdollar.git
 Vcs-Browser: http://github.com/cyberdollar/cyberdollar
 

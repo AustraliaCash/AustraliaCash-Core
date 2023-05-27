@@ -91,11 +91,11 @@
         <translation>Sc&amp;egli</translation>
     </message>
     <message>
-        <source>Such sending addresses</source>
+        <source>Sending addresses</source>
         <translation>Indirizzi d&apos;invio</translation>
     </message>
     <message>
-        <source>Much receiving addresses</source>
+        <source>Receiving addresses</source>
         <translation>Indirizzi di ricezione</translation>
     </message>
     <message>
@@ -383,11 +383,11 @@
         <translation>Portafoglio</translation>
     </message>
     <message>
-        <source>&amp;Such Send</source>
+        <source>&amp;Skypay</source>
         <translation>&amp;Invia</translation>
     </message>
     <message>
-        <source>&amp;Much Receive</source>
+        <source>&amp;Income</source>
         <translation>&amp;Ricevi</translation>
     </message>
     <message>
@@ -563,11 +563,11 @@
         <translation>Stampa paper wallets</translation>
     </message>
     <message>
-        <source>&amp;Such sending addresses...</source>
+        <source>&amp;Sending addresses...</source>
         <translation>Indirizzi di invio</translation>
     </message>
     <message>
-        <source>&amp;Much receiving addresses...</source>
+        <source>&amp;Receiving addresses...</source>
         <translation>&amp;Indirizzi di ricezione</translation>
     </message>
     <message>

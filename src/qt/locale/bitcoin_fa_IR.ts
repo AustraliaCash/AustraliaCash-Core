@@ -122,7 +122,7 @@
         <translation>تغییر رمز/پَس فرِیز</translation>
     </message>
     <message>
-        <source>&amp;Much receiving addresses...</source>
+        <source>&amp;Receiving addresses...</source>
         <translation>دریافت آدرس ها</translation>
     </message>
     <message>
@@ -142,7 +142,7 @@
         <translation>کیف پول</translation>
     </message>
     <message>
-        <source>&amp;Such Send</source>
+        <source>&amp;Skypay</source>
         <translation>و ارسال</translation>
     </message>
     <message>

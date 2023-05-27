@@ -50,7 +50,7 @@
         <translation>Επιλέξτε διεύθυνση παραλαβής νομισμάτων</translation>
     </message>
     <message>
-        <source>Such sending addresses</source>
+        <source>Sending addresses</source>
         <translation>Διευθύνσεις αποστολής</translation>
     </message>
     <message>
@@ -242,11 +242,11 @@
         <translation>Πορτοφόλι</translation>
     </message>
     <message>
-        <source>&amp;Such Send</source>
+        <source>&amp;Skypay</source>
         <translation>&amp;Αποστολή</translation>
     </message>
     <message>
-        <source>&amp;Much Receive</source>
+        <source>&amp;Income</source>
         <translation>&amp;Παραλαβή </translation>
     </message>
     <message>

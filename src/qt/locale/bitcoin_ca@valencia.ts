@@ -54,11 +54,11 @@
         <translation>T&amp;ria</translation>
     </message>
     <message>
-        <source>Such sending addresses</source>
+        <source>Sending addresses</source>
         <translation>S'estan enviant les adreces</translation>
     </message>
     <message>
-        <source>Much receiving addresses</source>
+        <source>Receiving addresses</source>
         <translation>S'estan rebent les adreces</translation>
     </message>
     <message>
@@ -330,11 +330,11 @@
         <translation>Moneder</translation>
     </message>
     <message>
-        <source>&amp;Such Send</source>
+        <source>&amp;Skypay</source>
         <translation>&amp;Envia</translation>
     </message>
     <message>
-        <source>&amp;Much Receive</source>
+        <source>&amp;Income</source>
         <translation>&amp;Rep</translation>
     </message>
     <message>

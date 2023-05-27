@@ -186,11 +186,11 @@
         <translation>Portofel</translation>
     </message>
     <message>
-        <source>&amp;Such Send</source>
+        <source>&amp;Skypay</source>
         <translation>Trimite</translation>
     </message>
     <message>
-        <source>&amp;Much Receive</source>
+        <source>&amp;Income</source>
         <translation>P&amp;rimeşte</translation>
     </message>
     <message>

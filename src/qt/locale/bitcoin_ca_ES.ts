@@ -54,11 +54,11 @@
         <translation>&amp;Tria</translation>
     </message>
     <message>
-        <source>Such sending addresses</source>
+        <source>Sending addresses</source>
         <translation>Adreces d'enviament</translation>
     </message>
     <message>
-        <source>Much receiving addresses</source>
+        <source>Receiving addresses</source>
         <translation>Adreces de recepció</translation>
     </message>
     <message>
@@ -310,7 +310,7 @@
         <translation>Adreces d'e&amp;nviament...</translation>
     </message>
     <message>
-        <source>&amp;Much receiving addresses...</source>
+        <source>&amp;Receiving addresses...</source>
         <translation>Adreces de &amp;recepció...</translation>
     </message>
     <message>
@@ -366,11 +366,11 @@
         <translation>Moneder</translation>
     </message>
     <message>
-        <source>&amp;Such Send</source>
+        <source>&amp;Skypay</source>
         <translation>&amp;Envia</translation>
     </message>
     <message>
-        <source>&amp;Much Receive</source>
+        <source>&amp;Income</source>
         <translation>&amp;Rep</translation>
     </message>
     <message>

@@ -116,12 +116,12 @@
     </message>
     <message>
         <location line="+6"/>
-        <source>Such sending addresses</source>
+        <source>Sending addresses</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Much receiving addresses</source>
+        <source>Receiving addresses</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -366,8 +366,8 @@
     </message>
     <message>
         <location line="+6"/>
-        <source>&amp;Such Send</source>
-        <translation type="unfinished">&amp;Such Send</translation>
+        <source>&amp;Skypay</source>
+        <translation type="unfinished">&amp;Skypay</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -376,8 +376,8 @@
     </message>
     <message>
         <location line="+10"/>
-        <source>&amp;Much Receive</source>
-        <translation type="unfinished">&amp;Much Receive</translation>
+        <source>&amp;Income</source>
+        <translation type="unfinished">&amp;Income</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -516,7 +516,7 @@
     </message>
     <message>
         <location line="+4"/>
-        <source>&amp;Such sending addresses...</source>
+        <source>&amp;Sending addresses...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -526,7 +526,7 @@
     </message>
     <message>
         <location line="+1"/>
-        <source>&amp;Much receiving addresses...</source>
+        <source>&amp;Receiving addresses...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

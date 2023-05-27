@@ -60,8 +60,8 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, Mode _mode,
     case ForEditing:
         switch(tab)
         {
-        case SendingTab: setWindowTitle(tr("Such sending addresses")); break;
-        case ReceivingTab: setWindowTitle(tr("Much receiving addresses")); break;
+        case SendingTab: setWindowTitle(tr("Sending addresses")); break;
+        case ReceivingTab: setWindowTitle(tr("Receiving addresses")); break;
         }
         break;
     }

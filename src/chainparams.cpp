@@ -81,8 +81,8 @@ public:
         consensus.nMajorityRejectBlockOutdated = 1900;
         consensus.nMajorityWindow = 2000;
         // BIP34 is never enforced in CyberDollar v2 blocks, so we enforce from v3
-        consensus.BIP34Height = 0;
-        consensus.BIP34Hash = uint256S("0x00");
+        consensus.BIP34Height = 1;
+        consensus.BIP34Hash = uint256S("0xb37bc8ff4f2ed04e392552a60276cecc66c96a2ec77247278b7d8ac22691c57f");
         consensus.BIP65Height = 0;
         consensus.BIP66Height = 0;
         consensus.powLimit = uint256S("0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20;
@@ -114,7 +114,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x00");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00");
+        consensus.defaultAssumeValid = uint256S("0x1307f452ada4a24600d445813800b0619e30fbcc1ab410a08fc39075164e9d40");
 
         // AuxPoW parameters
         consensus.nAuxpowChainId = 0x0016;
@@ -179,14 +179,15 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            (      0, uint256S("0x9c9a636ea98266d22caad13f08959ebb7bb2919f5426ba59d16c54dc7eab6779"))
+            (      0, uint256S("0x9c9a636ea98266d22caad13f08959ebb7bb2919f5426ba59d16c54dc7eab6779")),
+            (   7333, uint256S("0x1307f452ada4a24600d445813800b0619e30fbcc1ab410a08fc39075164e9d40"))
         };
 
         chainTxData = ChainTxData{
             // Data as of block ed7d266dcbd8bb8af80f9ccb8deb3e18f9cc3f6972912680feeb37b090f8cee0 (height 4303965).
             // Tx estimate based on average between 2021-07-01 (3793538) and 2022-07-01 (4288126)
-            1657646310, // * UNIX timestamp of last checkpoint block
-            45,   // * total number of transactions between genesis and last checkpoint
+            1684929016, // * UNIX timestamp of last checkpoint block
+            8111,   // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.29        // * estimated number of transactions per second after checkpoint
         };

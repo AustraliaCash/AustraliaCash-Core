@@ -6,8 +6,8 @@ CyberDollar Core [CYBER, Ð]
 
 <div align="center">
 
-[![CyberDollarBadge](https://img.shields.io/badge/Cyber-Coin-yellow.svg)](https://cyberdollar.com)
-[![MuchWow](https://img.shields.io/badge/Much-Wow-yellow.svg)](https://cyberdollar.com)
+[![CyberDollarBadge](https://img.shields.io/badge/Cyber-Coin-yellow.svg)](https://cyberchain.info)
+[![MuchWow](https://img.shields.io/badge/Much-Wow-yellow.svg)](https://cyberchain.info)
 
 </div>
 
@@ -21,7 +21,7 @@ Select language: [EN](./README.md) | [CN](./README_zh_CN.md) | [PT](./README_pt_
 [پیشنهادهای هزینه‌ای](doc/fee-recommendation.md)
 مراجعه نمایید.
 
-**سایت اینترنتی:** [cyberdollar.com](https://cyberdollar.com)
+**سایت اینترنتی:** [cyberchain.info](https://cyberchain.info)
 
 ## استفاده 💻
 

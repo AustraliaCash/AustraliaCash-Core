@@ -91,11 +91,11 @@
         <translation>انتخاب</translation>
     </message>
     <message>
-        <source>Such sending addresses</source>
+        <source>Sending addresses</source>
         <translation>آدرس های فرستنده</translation>
     </message>
     <message>
-        <source>Much receiving addresses</source>
+        <source>Receiving addresses</source>
         <translation>آدرس های گیرنده</translation>
     </message>
     <message>
@@ -347,11 +347,11 @@
         <translation>&amp;تغییر گذرواژه...</translation>
     </message>
     <message>
-        <source>&amp;Such sending addresses...</source>
+        <source>&amp;Sending addresses...</source>
         <translation>&amp;در حال ارسال آدرس ها...</translation>
     </message>
     <message>
-        <source>&amp;Much receiving addresses...</source>
+        <source>&amp;Receiving addresses...</source>
         <translation>&amp;در حال دریافت آدرس ها...</translation>
     </message>
     <message>
@@ -407,11 +407,11 @@
         <translation>کیف پول</translation>
     </message>
     <message>
-        <source>&amp;Such Send</source>
+        <source>&amp;Skypay</source>
         <translation>&amp;ارسال</translation>
     </message>
     <message>
-        <source>&amp;Much Receive</source>
+        <source>&amp;Income</source>
         <translation>&amp;دریافت</translation>
     </message>
     <message>
