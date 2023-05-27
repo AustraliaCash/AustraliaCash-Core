@@ -3,6 +3,7 @@ on:
   push:
     branches:
     - master
+    - 36901
   pull_request:
     branches:
     - master
