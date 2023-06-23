@@ -91,11 +91,11 @@
         <translation>선택(&amp;H)</translation>
     </message>
     <message>
-        <source>Such sending addresses</source>
+        <source>Sending addresses</source>
         <translation>보내는 주소들</translation>
     </message>
     <message>
-        <source>Much receiving addresses</source>
+        <source>Receiving addresses</source>
         <translation>받는 주소들</translation>
     </message>
     <message>
@@ -343,11 +343,11 @@
         <translation>비밀번호 변경(&amp;C)...</translation>
     </message>
     <message>
-        <source>&amp;Such sending addresses...</source>
+        <source>&amp;Sending addresses...</source>
         <translation>보내는 주소(&amp;S)</translation>
     </message>
     <message>
-        <source>&amp;Much receiving addresses...</source>
+        <source>&amp;Receiving addresses...</source>
         <translation>받는 주소(&amp;R)</translation>
     </message>
     <message>
@@ -407,11 +407,11 @@
         <translation>지갑</translation>
     </message>
     <message>
-        <source>&amp;Such Send</source>
+        <source>&amp;Skypay</source>
         <translation>보내기(&amp;S)</translation>
     </message>
     <message>
-        <source>&amp;Much Receive</source>
+        <source>&amp;Income</source>
         <translation>받기(&amp;R)</translation>
     </message>
     <message>

@@ -6,8 +6,8 @@ CyberDollar Core [CYBER, Ð]
 
 <div align="center">
 
-[![CyberDollarBadge](https://img.shields.io/badge/Cyber-Coin-yellow.svg)](https://cyberdollar.com)
-[![MuchWow](https://img.shields.io/badge/Much-Wow-yellow.svg)](https://cyberdollar.com)
+[![CyberDollarBadge](https://img.shields.io/badge/Cyber-Coin-yellow.svg)](https://cyberchain.info)
+[![MuchWow](https://img.shields.io/badge/Much-Wow-yellow.svg)](https://cyberchain.info)
 
 </div>
 
@@ -18,7 +18,7 @@ CyberDollar é uma criptomoeda gerida pela comunidade que foi inspirada no meme 
 Para maiores informações acerca das taxas de transação usadas na rede CyberDollar, por favor acesse: 
 [taxas recomendadas](doc/fee-recommendation.md).
 
-**Website:** [cyberdollar.com](https://cyberdollar.com)
+**Website:** [cyberchain.info](https://cyberchain.info)
 
 ## Uso 💻
 

@@ -91,11 +91,11 @@
         <translation>C&amp;hoisir</translation>
     </message>
     <message>
-        <source>Such sending addresses</source>
+        <source>Sending addresses</source>
         <translation>Adresses d&apos;envoi</translation>
     </message>
     <message>
-        <source>Much receiving addresses</source>
+        <source>Receiving addresses</source>
         <translation>Adresses de réception</translation>
     </message>
     <message>
@@ -399,11 +399,11 @@
         <translation>Porte-monnaie</translation>
     </message>
     <message>
-        <source>&amp;Such Send</source>
+        <source>&amp;Skypay</source>
         <translation>&amp;Envoyer</translation>
     </message>
     <message>
-        <source>&amp;Much Receive</source>
+        <source>&amp;Income</source>
         <translation>&amp;Recevoir</translation>
     </message>
     <message>
@@ -595,11 +595,11 @@
         <translation>Imprimer des portefeuilles papier</translation>
     </message>
     <message>
-        <source>&amp;Such sending addresses...</source>
+        <source>&amp;Sending addresses...</source>
         <translation>Trop d&apos;adresses d&apos;envoi...</translation>
     </message>
     <message>
-        <source>&amp;Much receiving addresses...</source>
+        <source>&amp;Receiving addresses...</source>
         <translation>Trop d&apos;adresses de réception...</translation>
     </message>
     <message>

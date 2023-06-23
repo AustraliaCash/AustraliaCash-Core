@@ -54,7 +54,7 @@
         <translation>Chọn</translation>
     </message>
     <message>
-        <source>Such sending addresses</source>
+        <source>Sending addresses</source>
         <translation>Địa chỉ gửi đến</translation>
     </message>
     <message>
@@ -170,11 +170,11 @@
         <translation>&amp;Thay đổi mật khẩu...</translation>
     </message>
     <message>
-        <source>&amp;Such sending addresses...</source>
+        <source>&amp;Sending addresses...</source>
         <translation>&amp;Địa chỉ gửi</translation>
     </message>
     <message>
-        <source>&amp;Much receiving addresses...</source>
+        <source>&amp;Receiving addresses...</source>
         <translation>Địa chỉ nhận</translation>
     </message>
     <message>
@@ -214,11 +214,11 @@
         <translation>Ví</translation>
     </message>
     <message>
-        <source>&amp;Such Send</source>
+        <source>&amp;Skypay</source>
         <translation>&amp;Gửi</translation>
     </message>
     <message>
-        <source>&amp;Much Receive</source>
+        <source>&amp;Income</source>
         <translation>&amp;Nhận</translation>
     </message>
     <message>

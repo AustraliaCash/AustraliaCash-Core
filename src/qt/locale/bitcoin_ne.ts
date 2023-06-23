@@ -83,7 +83,7 @@
         <translation>छनौट गर्नुहोस्...</translation>
     </message>
     <message>
-        <source>Such sending addresses</source>
+        <source>Sending addresses</source>
         <translation>पठाउने ठेगानाहरू...</translation>
     </message>
     <message>
@@ -104,7 +104,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Much receiving addresses</source>
+        <source>Receiving addresses</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -348,11 +348,11 @@
         <translation>&amp;amp;पासफ्रेज परिवर्तन गर्नुहोस्...</translation>
     </message>
     <message>
-        <source>&amp;Such sending addresses...</source>
+        <source>&amp;Sending addresses...</source>
         <translation>&amp;amp;पठाउने ठेगानाहरू...</translation>
     </message>
     <message>
-        <source>&amp;Much receiving addresses...</source>
+        <source>&amp;Receiving addresses...</source>
         <translation>&amp;amp;प्राप्त गर्ने ठेगानाहरू...</translation>
     </message>
     <message>
@@ -388,11 +388,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Such Send</source>
+        <source>&amp;Skypay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Much Receive</source>
+        <source>&amp;Income</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
