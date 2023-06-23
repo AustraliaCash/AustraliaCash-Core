@@ -164,7 +164,7 @@ public:
         vSeeds.push_back(CDNSSeedData("67.219.100.165", "67.219.100.165", true));
         vSeeds.push_back(CDNSSeedData("multicyber.org", "seed2.multicyber.org"));
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,30);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,34);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,22);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,158);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x02)(0xfa)(0xca)(0xfd).convert_to_container<std::vector<unsigned char> >();
@@ -181,13 +181,14 @@ public:
             boost::assign::map_list_of
             (      0, uint256S("0x9c9a636ea98266d22caad13f08959ebb7bb2919f5426ba59d16c54dc7eab6779"))
             (   7333, uint256S("0x1307f452ada4a24600d445813800b0619e30fbcc1ab410a08fc39075164e9d40"))
+            (  12757, uint256S("0x2c0092c1772767364d092db509a219452d9f0111070a6a984b84d1670fbbaef5"))
         };
 
         chainTxData = ChainTxData{
             // Data as of block ed7d266dcbd8bb8af80f9ccb8deb3e18f9cc3f6972912680feeb37b090f8cee0 (height 4303965).
             // Tx estimate based on average between 2021-07-01 (3793538) and 2022-07-01 (4288126)
             1684929016, // * UNIX timestamp of last checkpoint block
-            8111,   // * total number of transactions between genesis and last checkpoint
+            13369,   // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.29        // * estimated number of transactions per second after checkpoint
         };
