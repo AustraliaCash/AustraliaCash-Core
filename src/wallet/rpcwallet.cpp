@@ -3093,7 +3093,7 @@ UniValue bumpfee(const JSONRPCRequest& request)
         if (specifiedConfirmTarget) {
             nNewFee = CWallet::GetMinimumFee(*wtx.tx, maxNewTxSize, newConfirmTarget, mempool, CAmount(0));
         }
-        // otherwise bump the fee by 1 CYBER.
+        // otherwise bump the fee by 1 CASH.
         else {
             nNewFee = nOldFee + walletIncrementalRelayFee.GetFeePerK();
         }

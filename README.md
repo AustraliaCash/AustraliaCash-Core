@@ -1,7 +1,7 @@
 <h1 align="center">
 <img src="https://static.tumblr.com/ppdj5y9/Ae9mxmxtp/300coin.png" alt="CyberDollar" width="300"/>
 <br/><br/>
-CyberDollar Core [CYBER, Ð]  
+CyberDollar Core [CASH, ₡]  
 </h1>
 
 <div align="center">
@@ -51,7 +51,7 @@ Main development resources:
   follow planned and in-progress work for upcoming releases.
 * [GitHub Discussion](https://github.com/cyberdollar/cyberdollar/discussions) is used
   to discuss features, planned and unplanned, related to both the development of
-  the CyberDollar Core software, the underlying protocols and the CYBER asset.  
+  the CyberDollar Core software, the underlying protocols and the CASH asset.  
 * [CyberDollardev subreddit](https://www.reddit.com/r/cyberdollardev/)
 
 ### Version strategy
