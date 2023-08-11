@@ -290,22 +290,22 @@ Set key pool size to <n> (default: 100)
 .HP
 \fB\-discardthreshold=\fR<amt>
 .IP
-The minimum transaction output size (in CYBER) used to validate wallet
+The minimum transaction output size (in CASH) used to validate wallet
 transactions and discard change (to fee) (default: 0.01)
 .HP
 \fB\-fallbackfee=\fR<amt>
 .IP
-A fee rate (in CYBER/kB) that will be used when fee estimation has
+A fee rate (in CASH/kB) that will be used when fee estimation has
 insufficient data (default: 0.01)
 .HP
 \fB\-mintxfee=\fR<amt>
 .IP
-Fees (in CYBER/kB) smaller than this are considered zero fee for
+Fees (in CASH/kB) smaller than this are considered zero fee for
 transaction creation (default: 0.01)
 .HP
 \fB\-paytxfee=\fR<amt>
 .IP
-Fee (in CYBER/kB) to add to transactions you send (default: 0.01)
+Fee (in CASH/kB) to add to transactions you send (default: 0.01)
 .HP
 \fB\-rescan\fR
 .IP
@@ -404,12 +404,12 @@ Prepend debug output with timestamp (default: 1)
 .HP
 \fB\-minrelaytxfee=\fR<amt>
 .IP
-Fees (in CYBER/kB) smaller than this are considered zero fee for
+Fees (in CASH/kB) smaller than this are considered zero fee for
 relaying, mining and transaction creation (default: 0.001)
 .HP
 \fB\-maxtxfee=\fR<amt>
 .IP
-Maximum total fees (in CYBER) to use in a single wallet transaction or
+Maximum total fees (in CASH) to use in a single wallet transaction or
 raw transaction; setting this too low may abort large
 transactions (default: 100.00)
 .HP
@@ -431,13 +431,13 @@ Node relay options:
 .HP
 \fB\-dustlimit=\fR<amt>
 .IP
-Amount under which a transaction output is considered dust, in CYBER
+Amount under which a transaction output is considered dust, in CASH
 (default: 0.01)
 .HP
 \fB\-harddustlimit=\fR<amt>
 .IP
 Amount under which a transaction output is considered non\-standard and
-will not be accepted or relayed, in CYBER (default: 0.001)
+will not be accepted or relayed, in CASH (default: 0.001)
 .HP
 \fB\-bytespersigop\fR
 .IP
@@ -474,7 +474,7 @@ Set maximum size of high\-priority/low\-fee transactions in bytes
 .HP
 \fB\-blockmintxfee=\fR<amt>
 .IP
-Set lowest fee rate (in CYBER/kB) for transactions to be included in
+Set lowest fee rate (in CASH/kB) for transactions to be included in
 block creation. (default: 0.01)
 .PP
 RPC server options:

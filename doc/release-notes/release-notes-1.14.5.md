@@ -63,20 +63,20 @@ the CyberDollar network, following the reduction of relay and mining defaults in
 [here](../fee-recommendation.md). With this release, the minimum fees when
 creating transactions are recommended to be as follows:
 
-* the recommended minimum transaction fee is 0.01 CYBER/kb, and
-* the recommended dust limit is 1 CYBER, and
-* the recommended RBF increment is 0.001 CYBER.
+* the recommended minimum transaction fee is 0.01 CASH/kb, and
+* the recommended dust limit is 1 CASH, and
+* the recommended RBF increment is 0.001 CASH.
 
 ### Wallet/UI Changes
 
-* The user interface for selecting fees when transacting CYBER has been updated
+* The user interface for selecting fees when transacting CASH has been updated
   to give an idea of how much is being spent, rather than a block target. As
   CyberDollar blocks are not full, typically all transactions are mined in the next
   block, and therefore the target estimation does not makes sense for CyberDollar.
 * Transaction sizes are no longer rounded up to the nearest kilobyte before
   calculating fees, which significantly simplifies fee calculation logic and
   makes it more similar to Bitcoin and Litecoin.
-* The default minimum transaction fee is now 0.01 CYBER per kilobyte. Note that
+* The default minimum transaction fee is now 0.01 CASH per kilobyte. Note that
   you may see transactions take longer to be confirmed while using these lower
   fees, until all miners have updated. The new fee slider can help with getting
   fast-confirming transactions by sliding it all the way to the maximum, or for
@@ -88,8 +88,8 @@ creating transactions are recommended to be as follows:
   rather than the dust limits used for relay, preventing stuck transactions. The
   wallet will discard any change to fee and reject output amounts that are lower
   than this limit. Until this release sees significant network adoption, the
-  default dust limit is recommended to stay at 1 CYBER, as versions 1.14.2 until
-  1.14.4 have a bug that rejects any transaction with an output under 1 CYBER.
+  default dust limit is recommended to stay at 1 CASH, as versions 1.14.2 until
+  1.14.4 have a bug that rejects any transaction with an output under 1 CASH.
 * Derive minimum change from configurable wallet parameters `-discardthreshold`
   and `-mintxfee`: `minimum change = discard threshold + 2 * minimum fee`.
 
@@ -97,13 +97,13 @@ creating transactions are recommended to be as follows:
 
 * Split the dust limit into a hard and soft threshold, to reintroduce the
   economic disincentive for dust, rather than rejection introduced since 1.14.2
-  * `-harddustlimit` is by default set at 0.001 CYBER and sets the value under
+  * `-harddustlimit` is by default set at 0.001 CASH and sets the value under
     which transactions will be rejected by nodes.
   * The dust limit parameter introduced with 1.14.4 (`-dustlimit`) is now the
     soft dust limit, enforcing the economic disincentive. Each output under this
     threshold will be accepted as long as the entire limit is added to fee.
 * Change the default incremental fee used for RBF and mempool limiting to
-  0.0001 CYBER.
+  0.0001 CASH.
 
 BDB Updated to 5.3
 ------------------

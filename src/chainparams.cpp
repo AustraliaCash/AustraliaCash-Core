@@ -111,10 +111,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 0; // Disabled
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00");
+        consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000000000f6575a1bd6f51a");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x1307f452ada4a24600d445813800b0619e30fbcc1ab410a08fc39075164e9d40");
+        consensus.defaultAssumeValid = uint256S("0x534b8c3c0639d062f1e910c521667551486e33318ca7252f2ce950a46ee4b6bd");
 
         // AuxPoW parameters
         consensus.nAuxpowChainId = 0x0016;
@@ -122,7 +122,7 @@ public:
         consensus.fAllowLegacyBlocks = true;
         consensus.nHeightEffective = 0;
 
-        // Blocks 145000 - 371336 are Digishield without AuxPoW
+        // Blocks 200 - 300 are Digishield without AuxPoW
         digishieldConsensus = consensus;
         digishieldConsensus.nHeightEffective = 200;
         digishieldConsensus.fSimplifiedRewards = false;
@@ -130,7 +130,7 @@ public:
         digishieldConsensus.nPowTargetTimespan = 60; // post-digishield: 1 minute
         digishieldConsensus.nCoinbaseMaturity = 500000;
 
-        // Blocks 371337+ are AuxPoW
+        // Blocks 300+ are AuxPoW
         auxpowConsensus = digishieldConsensus;
         auxpowConsensus.nHeightEffective = 300;
         auxpowConsensus.fAllowLegacyBlocks = false;
@@ -162,7 +162,11 @@ public:
 
         // Note that of those with the service bits flag, most only support a subset of possible options
         vSeeds.push_back(CDNSSeedData("67.219.100.165", "67.219.100.165", true));
-        vSeeds.push_back(CDNSSeedData("multicyber.org", "seed2.multicyber.org"));
+        vSeeds.push_back(CDNSSeedData("triplezen.org", "aus.triplezen.org"));
+        vSeeds.push_back(CDNSSeedData("triplezen.org", "ltc.triplezen.org"));
+        vSeeds.push_back(CDNSSeedData("triplezen.org", "dgb.triplezen.org"));
+        vSeeds.push_back(CDNSSeedData("161.43.201.255", "161.43.201.255"));
+        vSeeds.push_back(CDNSSeedData("207.148.87.64", "207.148.87.64"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,34);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,22);
@@ -183,15 +187,16 @@ public:
             (   7333, uint256S("0x1307f452ada4a24600d445813800b0619e30fbcc1ab410a08fc39075164e9d40"))
             (  12757, uint256S("0x2c0092c1772767364d092db509a219452d9f0111070a6a984b84d1670fbbaef5"))
             (  36369, uint256S("0xaf13d8761d3ac3fac45a0938813eaefa0daf3f88580c05c78854de50a21bf308"))
+            (  96369, uint256S("0x1fd25a6e76561ec3f04ed37d0f2a06b73568b943a29dac01ea9991added7b909"))
         };
 
         chainTxData = ChainTxData{
             // Data as of block ed7d266dcbd8bb8af80f9ccb8deb3e18f9cc3f6972912680feeb37b090f8cee0 (height 4303965).
             // Tx estimate based on average between 2021-07-01 (3793538) and 2022-07-01 (4288126)
-            1684929016, // * UNIX timestamp of last checkpoint block
-            13369,   // * total number of transactions between genesis and last checkpoint
+            1691310766, // * UNIX timestamp of last checkpoint block
+            96369,   // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
-            0.29        // * estimated number of transactions per second after checkpoint
+            0.02        // * estimated number of transactions per second after checkpoint
         };
     }
 };

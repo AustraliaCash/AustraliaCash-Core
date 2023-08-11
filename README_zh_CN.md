@@ -1,7 +1,7 @@
 <h1 align="center">
   <img align="center" src="https://static.tumblr.com/ppdj5y9/Ae9mxmxtp/300coin.png" width="300">
   <br/><br/>
-  狗狗币核心 (CyberDollar Core) [CYBER, Ð]
+  狗狗币核心 (CyberDollar Core) [CASH, ₡]
 </h1>
 
 <div align="center">

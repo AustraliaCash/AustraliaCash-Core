@@ -1621,8 +1621,8 @@ p, li { white-space: pre-wrap; }
         <translation>Chargement du portefeuille papier</translation>
     </message>
     <message>
-        <source>The paper wallet printing process has begun.&lt;br/&gt;Please wait for the wallets to print completely and verify that everything printed correctly.&lt;br/&gt;Check for misalignments, ink bleeding, smears, or anything else that could make the private keys unreadable.&lt;br/&gt;Now, enter the number of CYBER you wish to send to each wallet:</source>
-        <translation>Le processus d&apos;impression des portefeuilles en papier a commencé.&lt;br/&gt;Veuillez attendre que les portefeuilles s&apos;impriment complètement et vérifiez que tout s&apos;est imprimé correctement.&lt;br/&gt;Vérifiez que les clés privées ne sont pas mal alignées, que l&apos;encre ne coule pas, qu&apos;elles ne sont pas tachées ou que rien d&apos;autre ne risque de les rendre illisibles.&lt;br/&gt;Maintenant, entrez le nombre de CYBER que vous souhaitez envoyer à chaque porte-monnaie :</translation>
+        <source>The paper wallet printing process has begun.&lt;br/&gt;Please wait for the wallets to print completely and verify that everything printed correctly.&lt;br/&gt;Check for misalignments, ink bleeding, smears, or anything else that could make the private keys unreadable.&lt;br/&gt;Now, enter the number of CASH you wish to send to each wallet:</source>
+        <translation>Le processus d&apos;impression des portefeuilles en papier a commencé.&lt;br/&gt;Veuillez attendre que les portefeuilles s&apos;impriment complètement et vérifiez que tout s&apos;est imprimé correctement.&lt;br/&gt;Vérifiez que les clés privées ne sont pas mal alignées, que l&apos;encre ne coule pas, qu&apos;elles ne sont pas tachées ou que rien d&apos;autre ne risque de les rendre illisibles.&lt;br/&gt;Maintenant, entrez le nombre de CASH que vous souhaitez envoyer à chaque porte-monnaie :</translation>
     </message>
     <message>
         <source>Paper wallet %1</source>

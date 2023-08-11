@@ -1,5 +1,5 @@
 <h1 align="center">
-CyberDollar Core [CYBER, Ð]  
+CyberDollar Core [CASH, ₡]  
 <br/><br/>
 <img src="https://static.tumblr.com/ppdj5y9/Ae9mxmxtp/300coin.png" alt="CyberDollar" width="300"/>
 </h1>
@@ -42,7 +42,7 @@ A CyberDollar Core é um programa de código aberto gerido pela comunidade. O pr
 Recursos principais de Desenvolvimento:
 
 * [Projetos do Github](https://github.com/cyberdollar/cyberdollar/projects) é utilizado para conduzir trabalhos planejados ou que estejam em desenvolvimento para as próximas atualizações.
-* [Discussão do Github](https://github.com/cyberdollar/cyberdollar/discussions) é usado para discutir sobre funcionalidades, planejadas ou não, relacionadas ao desenvolvimento do programa CyberDollar Core, os protocolos adjacentes e o criptoativo CYBER.
+* [Discussão do Github](https://github.com/cyberdollar/cyberdollar/discussions) é usado para discutir sobre funcionalidades, planejadas ou não, relacionadas ao desenvolvimento do programa CyberDollar Core, os protocolos adjacentes e o criptoativo CASH.
 * [CyberDollardev subreddit](https://www.reddit.com/r/cyberdollardev/)
 
 ### Estratégia das Versões

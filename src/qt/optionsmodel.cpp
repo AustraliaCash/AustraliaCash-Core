@@ -76,7 +76,7 @@ void OptionsModel::Init(bool resetSettings)
     nDisplayUnit = settings.value("nDisplayUnit").toInt();
 
     if (!settings.contains("strThirdPartyTxUrls"))
-        settings.setValue("strThirdPartyTxUrls", "https://cyberchain.info/tx/%s|https://chain.so/tx/CYBER/%s");
+        settings.setValue("strThirdPartyTxUrls", "https://cyberchain.info/tx/%s|https://chain.so/tx/CASH/%s");
     strThirdPartyTxUrls = settings.value("strThirdPartyTxUrls", "").toString();
 
     if (!settings.contains("fCoinControlFeatures"))
