@@ -89,7 +89,7 @@ public:
         consensus.nPowTargetTimespan = 4 * 60 * 60; // pre-digishield: 4 hours
         consensus.nPowTargetSpacing = 60; // 1 minute
         consensus.fDigishieldDifficultyCalculation = true;
-        consensus.nCoinbaseMaturity = 200000;
+        consensus.nCoinbaseMaturity = 20000;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowAllowDigishieldMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
@@ -128,7 +128,7 @@ public:
         digishieldConsensus.fSimplifiedRewards = false;
         digishieldConsensus.fDigishieldDifficultyCalculation = true;
         digishieldConsensus.nPowTargetTimespan = 60; // post-digishield: 1 minute
-        digishieldConsensus.nCoinbaseMaturity = 500000;
+        digishieldConsensus.nCoinbaseMaturity = 20000;
 
         // Blocks 300+ are AuxPoW
         auxpowConsensus = digishieldConsensus;
