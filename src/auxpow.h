@@ -71,7 +71,7 @@ public:
         tx = std::move(arg);
     }
 
-    ADD_SERIALIZE_METHODS;
+    SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
@@ -129,7 +129,7 @@ public:
 
   CAuxPow () = default;
 
-  ADD_SERIALIZE_METHODS;
+  SERIALIZE_METHODS;
 
   template<typename Stream, typename Operation>
     inline void

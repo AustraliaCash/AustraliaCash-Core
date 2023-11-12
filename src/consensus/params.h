@@ -105,6 +105,10 @@ struct Params {
     bool fPowNoRetargeting;
     int64_t nPowTargetSpacing;
     int64_t nPowTargetTimespan;
+    int64_t nTargetTimespanRe;
+    int64_t nTargetSpacingRe;
+    int64_t nLWMAPowTargetTimespan;
+    int64_t lwmaAveragingWindow;
 
     /** Proof of stake parameters */
     uint256 posLimit;
