@@ -52,6 +52,7 @@
 #include <policy/fees.h>
 #include <policy/fees_args.h>
 #include <policy/policy.h>
+#include <rpc/auxpow_miner.h>
 #include <policy/settings.h>
 #include <pos/pos.h>
 #include <pos/manager.h>
@@ -249,6 +250,10 @@ void Shutdown(NodeContext& node)
     // using the other before destroying them.
     if (node.peerman) UnregisterValidationInterface(node.peerman.get());
     if (node.connman) node.connman->Stop();
+
+    if (g_auxpow_miner != nullptr) {
+        g_auxpow_miner.reset();
+    }
 
     StopTorControl();
 
@@ -1183,6 +1188,8 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
 #if ENABLE_ZMQ
     RegisterZMQRPCCommands(tableRPC);
 #endif
+
+    g_auxpow_miner.reset(new AuxpowMiner());
 
     /* Start the RPC server already.  It will be started in "warmup" mode
      * and not really process calls already (but it will signify connections

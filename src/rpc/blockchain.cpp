@@ -97,6 +97,42 @@ double GetDifficulty(const CBlockIndex* blockindex)
     return dDiff;
 }
 
+UniValue AuxpowToJSON(const CAuxPow& auxpow)
+{
+    UniValue result(UniValue::VOBJ);
+
+    {
+        UniValue tx(UniValue::VOBJ);
+        tx.pushKV("hex", EncodeHexTx(*auxpow.coinbaseTx.tx));
+        TxToUniv(*auxpow.coinbaseTx.tx, auxpow.parentBlock.GetHash(), tx);
+        result.pushKV("tx", tx);
+    }
+
+    result.pushKV("index", auxpow.coinbaseTx.nIndex);
+    result.pushKV("chainindex", auxpow.nChainIndex);
+
+    {
+        UniValue branch(UniValue::VARR);
+        for (const auto& node : auxpow.coinbaseTx.vMerkleBranch)
+            branch.push_back(node.GetHex());
+        result.pushKV("merklebranch", branch);
+    }
+
+    {
+        UniValue branch(UniValue::VARR);
+        for (const auto& node : auxpow.vChainMerkleBranch)
+            branch.push_back(node.GetHex());
+        result.pushKV("chainmerklebranch", branch);
+    }
+
+    CDataStream ssParent(SER_NETWORK, PROTOCOL_VERSION);
+    ssParent << auxpow.parentBlock;
+    const std::string strHex = HexStr(ssParent.begin(), ssParent.end());
+    result.pushKV("parentblock", strHex);
+
+    return result;
+}
+
 /* Calculate the difficulty for a given nBits value.
  */
 double GetDifficulty(unsigned int nBits)
@@ -219,6 +255,9 @@ UniValue blockToJSON(BlockManager& blockman, const CBlock& block, const CBlockIn
     }
 
     result.pushKV("tx", txs);
+
+    if (block.auxpow)
+        result.pushKV("auxpow", AuxpowToJSON(*block.auxpow));
 
     return result;
 }

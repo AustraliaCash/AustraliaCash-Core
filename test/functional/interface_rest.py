@@ -18,6 +18,7 @@ from test_framework.messages import (
     BLOCK_HEADER_SIZE,
     COIN,
 )
+from test_framework import auxpow
 from test_framework.test_framework import AustraliaCashTestFramework
 from test_framework.util import (
     assert_equal,
@@ -218,6 +219,9 @@ class RESTTest (AustraliaCashTestFramework):
         self.test_rest_request(f"/getutxos/checkmempool/{long_uri}", http_method='POST', status=200)
 
         self.generate(self.nodes[0], 1)  # generate block to not affect upcoming tests
+
+        mineAuxpowBlock(self.nodes[0])  # generate block to not affect upcoming tests
+        self.sync_all()
 
         self.log.info("Test the /block, /blockhashbyheight, /headers, and /blockfilterheaders URIs")
         bb_hash = self.nodes[0].getbestblockhash()

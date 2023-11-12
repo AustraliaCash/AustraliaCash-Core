@@ -9,6 +9,7 @@
 #include <tinyformat.h>
 #include <util/time.h>
 
+
 std::string CBlockFileInfo::ToString() const
 {
     return strprintf("CBlockFileInfo(blocks=%u, size=%u, heights=%u...%u, time=%s...%s)", nBlocks, nSize, nHeightFirst, nHeightLast, FormatISO8601Date(nTimeFirst), FormatISO8601Date(nTimeLast));
@@ -41,6 +42,35 @@ std::vector<uint256> LocatorEntries(const CBlockIndex* index)
         if (have.size() > 10) step *= 2;
     }
     return have;
+}
+
+/* Moved here from the header, because we need auxpow and the logic
+   becomes more involved.  */
+CBlockHeader CBlockIndex::GetBlockHeader(const Consensus::Params& consensusParams) const
+{
+    CBlockHeader block;
+   
+    /* SANDO: nVersion is required before calling block.IsAuxpow()
+       to correctly identify AuxPow blocks
+    */
+    block.nVersion       = nVersion;   
+   
+    /* The CBlockIndex object's block header is missing the auxpow.
+       So if this is an auxpow block, read it from disk instead.  We only
+       have to read the actual *header*, not the full block.  */
+    if (block.IsAuxpow())
+    {
+        ReadBlockHeaderFromDisk(block, this, consensusParams);
+        return block;
+    }
+
+    if (pprev)
+        block.hashPrevBlock = pprev->GetBlockHash();
+    block.hashMerkleRoot = hashMerkleRoot;
+    block.nTime          = nTime;
+    block.nBits          = nBits;
+    block.nNonce         = nNonce;
+    return block;
 }
 
 CBlockLocator GetLocator(const CBlockIndex* index)

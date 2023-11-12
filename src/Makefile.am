@@ -118,6 +118,7 @@ endif
 BITCOIN_CORE_H = \
   addrdb.h \
   addrman.h \
+  auxpow.h \
   addrman_impl.h \
   attributes.h \
   banman.h \
@@ -229,6 +230,7 @@ BITCOIN_CORE_H = \
   randomenv.h \
   rest.h \
   reverse_iterator.h \
+  rpc/auxpow_miner.h \
   rpc/blockchain.h \
   rpc/client.h \
   rpc/mempool.h \
@@ -412,6 +414,7 @@ libaustraliacash_node_a_SOURCES = \
   pos/manager.cpp \
   pos/minter.cpp \
   rest.cpp \
+  rpc/auxpow_miner.cpp \
   rpc/blockchain.cpp \
   rpc/fees.cpp \
   rpc/mempool.cpp \
@@ -669,6 +672,7 @@ libaustraliacash_consensus_a_SOURCES = \
 libaustraliacash_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libaustraliacash_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libaustraliacash_common_a_SOURCES = \
+  auxpow.cpp \
   base58.cpp \
   bech32.cpp \
   chainparams.cpp \

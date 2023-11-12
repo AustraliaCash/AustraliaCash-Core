@@ -87,6 +87,7 @@ struct Params {
     int BIP65Height;
     /** Block height at which BIP66 becomes active */
     int BIP66Height;
+    int64_t nDiffChangeTargetAuxpow;
     /** Don't warn about unknown BIP 9 activations below this height.
      * This prevents us from warning about the CSV and segwit activations. */
     int MinBIP9WarningHeight;
@@ -130,10 +131,38 @@ struct Params {
         return std::chrono::seconds{nPowTargetSpacing};
     }
     int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
+    int64_t DifficultyAdjustmentIntervalRe() const { return nTargetTimespanRe / nTargetSpacingRe; }
+    int64_t DifficultyAdjustmentIntervalLWMA() const { return nLWMAPowTargetTimespan / nTargetSpacingRe; }
     /** The best chain should have at least this much work */
     uint256 nMinimumChainWork;
     /** By default assume that the signatures in ancestors of this block are valid */
     uint256 defaultAssumeValid;
+
+    /** Auxpow parameters */
+    int32_t nAuxpowChainId;
+    int nAuxpowStartHeight;
+    bool fStrictChainId;
+    int nLegacyBlocksBefore; // -1 for "always allow"
+
+    /**
+     * Check whether or not to allow legacy blocks at the given height.
+     * @param nHeight Height of the block to check.
+     * @return True if it is allowed to have a legacy version.
+     */
+    bool AllowLegacyBlocks(unsigned nHeight) const
+    {
+        if (nLegacyBlocksBefore < 0)
+            return true;
+        return static_cast<int> (nHeight) < nLegacyBlocksBefore;
+    }
+    
+    // SANDO - define an interval in which both mining methods will be possible 
+    bool AllowAuxpowBlocks(unsigned nHeight) const
+    {
+        if (nAuxpowStartHeight < 0)
+            return false;
+        return static_cast<int> (nHeight) >= nAuxpowStartHeight;
+    }
 
     /**
      * If true, witness commitments contain a payload equal to a AustraliaCash Script solution

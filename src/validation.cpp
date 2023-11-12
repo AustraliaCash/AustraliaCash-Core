@@ -8,6 +8,7 @@
 #include <kernel/coinstats.h>
 #include <kernel/mempool_persist.h>
 
+#include <auxpow.h>
 #include <arith_uint256.h>
 #include <chain.h>
 #include <chainparams.h>
@@ -3344,7 +3345,7 @@ static bool CheckBlockHeader(const CBlockHeader& block, BlockValidationState& st
     bool isPoS = block.nNonce == 0;
 
     // Check proof of work matches claimed amount
-    if (fCheckPOW && !isPoS && !CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
+    if (fCheckPOW && !isPoS && !CheckAuxPowProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
         return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "high-hash", "proof of work failed");
 
     return true;
@@ -3514,7 +3515,7 @@ bool HasValidProofOfWork(const std::vector<CBlockHeader>& headers, const Consens
     return std::all_of(headers.cbegin(), headers.cend(),
             [&](const auto& header) {
                 bool isPoS = !header.nNonce;
-                return isPoS ? true : CheckProofOfWork(header.GetPoWHash(), header.nBits, consensusParams);
+                return isPoS ? true : CheckAuxPowProofOfWork(header.GetPoWHash(), header.nBits, consensusParams);
             });
 }
 
@@ -3549,6 +3550,22 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, BlockValidatio
     const int algoNum = GetAlgo(block.nVersion);
     if (algoNum != ALGO_SCRYPT && nHeight < consensusParams.nMultiAlgoStartBlock)
         return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "bad-algomode", "algorithm not allowed");
+
+    // Disallow legacy blocks after legacy mining period ended.
+    // This means only block mined by upgraded nodes will be accepted	
+    if ( (!Params().GetConsensus().AllowLegacyBlocks(nHeight))
+        && (block.IsLegacy()) )
+        return state.DoS(100, error("%s : legacy block after auxpow start",
+                                    __func__),
+                         REJECT_INVALID, "late-legacy-block");
+
+    // Disallow AuxPow blocks before it is activated.
+    // mixed mining period
+    if ( (!Params().GetConsensus().AllowAuxpowBlocks(nHeight))
+        && block.IsAuxpow())
+        return state.DoS(100, error("%s : auxpow blocks are not allowed at height %d",
+                                    __func__, pindexPrev->nHeight + 1),
+                         REJECT_INVALID, "early-auxpow-block");
 
     // Check proof of work
     bool isPoS = block.nNonce == 0;

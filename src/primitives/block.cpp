@@ -9,6 +9,19 @@
 #include <multialgo.h>
 #include <tinyformat.h>
 
+void CBlockHeader::SetAuxpow (std::unique_ptr<CAuxPow> apow)
+{
+    if (apow != nullptr)
+    {
+        auxpow.reset(apow.release());
+        SetAuxpowFlag(true);
+    } else
+    {
+        auxpow.reset();
+        SetAuxpowFlag(false);
+    }
+}
+
 void CBlockHeader::SetAlgo(int algo)
 {
     nVersion |= GetVersionForAlgo(algo);

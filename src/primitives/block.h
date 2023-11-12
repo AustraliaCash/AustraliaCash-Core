@@ -6,6 +6,7 @@
 #ifndef BITCOIN_PRIMITIVES_BLOCK_H
 #define BITCOIN_PRIMITIVES_BLOCK_H
 
+#include <auxpow.h>
 #include <arith_uint256.h>
 #include <primitives/transaction.h>
 #include <serialize.h>
@@ -19,9 +20,11 @@
  * in the block is a special one that creates a new coin owned by the creator
  * of the block.
  */
-class CBlockHeader
+class CBlockHeader : public CPureBlockHeader
 {
 public:
+
+    
     // header
     int32_t nVersion;
     uint256 hashPrevBlock;
@@ -30,6 +33,9 @@ public:
     uint32_t nBits;
     uint32_t nNonce;
 
+    // auxpow (if this is a merge-minded block)
+    std::shared_ptr<CAuxPow> auxpow;
+
     CBlockHeader()
     {
         SetNull();
@@ -37,15 +43,38 @@ public:
 
     SERIALIZE_METHODS(CBlockHeader, obj) { READWRITE(obj.nVersion, obj.hashPrevBlock, obj.hashMerkleRoot, obj.nTime, obj.nBits, obj.nNonce); }
 
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(*(CPureBlockHeader*)this);
+
+        if (this->IsAuxpow())
+        {
+            if (ser_action.ForRead())
+                auxpow = std::make_shared<CAuxPow>();
+            assert(auxpow != nullptr);
+            READWRITE(*auxpow);
+        } else if (ser_action.ForRead())
+            auxpow.reset();
+    }
+
     void SetNull()
     {
+        CPureBlockHeader::SetNull();
+        auxpow.reset();
         nVersion = 0;
         hashPrevBlock.SetNull();
         hashMerkleRoot.SetNull();
         nTime = 0;
         nBits = 0;
-        nNonce = 0;
     }
+
+    /**
+     * Set the block's auxpow (or unset it).  This takes care of updating
+     * the version accordingly.
+     */
+    void SetAuxpow (std::unique_ptr<CAuxPow> apow);
 
     bool IsNull() const
     {
@@ -138,6 +167,7 @@ public:
         block.nTime          = nTime;
         block.nBits          = nBits;
         block.nNonce         = nNonce;
+        block.auxpow         = auxpow;
         return block;
     }
 

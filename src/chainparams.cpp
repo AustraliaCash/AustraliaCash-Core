@@ -13,6 +13,7 @@
 #include <script/interpreter.h>
 #include <util/string.h>
 #include <util/system.h>
+#include <auxpowforkparams.h>
 
 #include <assert.h>
 
@@ -124,6 +125,17 @@ public:
 
         consensus.nMinimumChainWork = uint256S("000000000000000000000000000000000000000000000000037ca543d83432af");
         consensus.defaultAssumeValid = uint256S("0x1b340cd2dd8990b4e8c1c686038cb4d882cd6a71991bb0a0381027af7851e892");
+
+        // AuxPoW parameters
+		consensus.nAuxpowChainId = AUXPOW_CHAIN_ID;
+        consensus.nAuxpowStartHeight = AUXPOW_START_HEIGHT;
+        consensus.fStrictChainId = true;
+        consensus.nLegacyBlocksBefore = AUXPOW_START_HEIGHT;    
+
+        // LWMA
+        consensus.nDiffChangeTargetLWMA = LWMA_START_HEIGHT;
+        consensus.nLWMAPowTargetTimespan = 30;
+        consensus.lwmaAveragingWindow = 120;
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -293,6 +305,12 @@ public:
 
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000");
         consensus.defaultAssumeValid = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000");
+
+        // AuxPoW parameters
+        consensus.nAuxpowChainId = TN_AUXPOW_CHAIN_ID;
+        consensus.nAuxpowStartHeight = TN_AUXPOW_START_HEIGHT;	
+        consensus.fStrictChainId = true;
+        consensus.nLegacyBlocksBefore = TN_LWMA_START_HEIGHT;
 
         pchMessageStart[0] = 0xab;
         pchMessageStart[1] = 0xd2;

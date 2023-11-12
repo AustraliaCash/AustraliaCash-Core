@@ -8,4 +8,7 @@
 /** Default max timeout whilst mining in RPC generatetodescriptor, generatetoaddress, and generateblock. */
 static const uint64_t DEFAULT_MAX_TIMEOUT{60};
 
+/** Singleton instance of the AuxpowMiner, created during startup.  */
+extern std::unique_ptr<AuxpowMiner> g_auxpow_miner;
+
 #endif // BITCOIN_RPC_MINING_H
