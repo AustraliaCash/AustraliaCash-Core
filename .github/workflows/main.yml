@@ -150,6 +150,10 @@ jobs:
           brew install miniupnpc
           brew install libnatpmp
           brew install zeromq
+          brew install numpy
+          brew install wget
+          brew install python
+          curl https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py | sudo python
       - name: Checkout
         uses: actions/checkout@v2
       - name: SDK cache
