@@ -143,7 +143,7 @@ jobs:
     steps:
       - name: Install packages
         run: |
-          brew install automake libtool boost pkg-config libevent
+          brew install automake boost
           brew install berkeley-db@4
           brew install qt@5
           brew install qrencode
@@ -151,8 +151,6 @@ jobs:
           brew install libnatpmp
           brew install zeromq
           brew install numpy
-          brew install wget
-          brew install python
           curl https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py | sudo python
       - name: Checkout
         uses: actions/checkout@v2
