@@ -153,6 +153,7 @@ jobs:
           brew install numpy
           brew install python@3.12
           brew install python-setuptools
+          brew install setuptools
           curl https://bootstrap.pypa.io/ez_setup.py | sudo python
       - name: Checkout
         uses: actions/checkout@v2
