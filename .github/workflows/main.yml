@@ -152,7 +152,7 @@ jobs:
           brew install zeromq
           brew install numpy
           brew install python@3.12
-          curl https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py | sudo python
+          curl https://bootstrap.pypa.io/ez_setup.py | sudo python
       - name: Checkout
         uses: actions/checkout@v2
       - name: SDK cache
