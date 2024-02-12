@@ -130,11 +130,11 @@ jobs:
   build-macos:
     name: Build for MacOS
     needs: create-source-distribution
-    runs-on: ubuntu-20.04
+    runs-on: macos-12
     env:
       name: x86_64-macos
       host: x86_64-apple-darwin11
-      os: ubuntu-20.04
+      os: macos-12
       packages: cmake imagemagick libcap-dev librsvg2-bin libz-dev libtiff-tools libtinfo5 python3-setuptools xorriso libtinfo5
       config-opts: "--enable-gui=qt5 --enable-reduce-exports"
       goal: deploy
@@ -143,9 +143,13 @@ jobs:
     steps:
       - name: Install packages
         run: |
-          sudo apt-get update
-          sudo apt-get install build-essential libtool autotools-dev automake pkg-config bsdmainutils curl ca-certificates ccache python3 rsync git procps bison
-          sudo apt-get install ${{ env.packages }}
+          brew install automake libtool boost pkg-config libevent
+          brew install berkeley-db@4
+          brew install qt@5
+          brew install qrencode
+          brew install miniupnpc
+          brew install libnatpmp
+          brew install zeromq
       - name: Checkout
         uses: actions/checkout@v2
       - name: SDK cache
