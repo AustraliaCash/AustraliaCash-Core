@@ -23,7 +23,7 @@ jobs:
       PYTHON_DEBUG: "1"
       CACHE_NONCE: "1"
       WINEDEBUG: fixme-all
-      SDK_URL: https://depends.cyberdollarcore.org
+      SDK_URL: https://drahtbot.space/depends_download_fallback/
 
     strategy:
       fail-fast: false
