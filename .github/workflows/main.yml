@@ -139,7 +139,7 @@ jobs:
       config-opts: "--enable-gui=qt5 --enable-reduce-exports"
       goal: deploy
       sdk: 10.11
-      sdk-url: "https://drahtbot.space/depends_download_fallback"
+      sdk-url: "https://drahtbot.space/depends_download_fallback/"
     steps:
       - name: Install packages
         run: |
