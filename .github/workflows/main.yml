@@ -139,7 +139,7 @@ jobs:
       config-opts: "--enable-gui=qt5 --enable-reduce-exports"
       goal: deploy
       sdk: 10.11
-      sdk-url: "https://bitcoincore.org/depends-sources/sdks"
+      sdk-url: "https://drahtbot.space/depends_download_fallback"
     steps:
       - name: Install packages
         run: |
@@ -153,8 +153,6 @@ jobs:
           brew install numpy
           brew install python@3.12
           brew install python-setuptools
-          python -m pip install --upgrade setuptools
-          curl https://bootstrap.pypa.io/ez_setup.py | sudo python
       - name: Checkout
         uses: actions/checkout@v2
       - name: SDK cache
