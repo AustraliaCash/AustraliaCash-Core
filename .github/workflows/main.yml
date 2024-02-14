@@ -145,7 +145,7 @@ jobs:
           brew install berkeley-db
           brew install librsvg
           brew install python
-          brew install python3-setuptools
+          brew install python-setuptools
       - name: Checkout
         uses: actions/checkout@v2
       - name: Dependency cache
