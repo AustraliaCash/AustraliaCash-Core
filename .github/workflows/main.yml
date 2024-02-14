@@ -144,6 +144,8 @@ jobs:
           brew install automake libtool boost miniupnpc openssl pkg-config protobuf qt5 libevent
           brew install berkeley-db
           brew install librsvg
+          brew install python
+          brew install python3-setuptools
       - name: Checkout
         uses: actions/checkout@v2
       - name: Dependency cache
