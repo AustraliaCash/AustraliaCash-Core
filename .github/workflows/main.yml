@@ -138,38 +138,14 @@ jobs:
       packages: cmake imagemagick libcap-dev librsvg2-bin libz-dev libtiff-tools libtinfo5 python3-setuptools xorriso libtinfo5
       config-opts: "--enable-gui=qt5 --enable-reduce-exports"
       goal: deploy
-      sdk: 10.11
-      sdk-url: "https://drahtbot.space/depends_download_fallback/"
     steps:
       - name: Install packages
         run: |
-          brew install automake boost
-          brew install berkeley-db@4
-          brew install qt@5
-          brew install qrencode
-          brew install miniupnpc
-          brew install libnatpmp
-          brew install zeromq
-          brew install numpy
-          brew install python@3.12
-          brew install python-setuptools
+          brew install automake libtool boost miniupnpc openssl pkg-config protobuf qt5 libevent
+          brew install berkeley-db
+          brew install librsvg
       - name: Checkout
         uses: actions/checkout@v2
-      - name: SDK cache
-        if: ${{ env.sdk }}
-        uses: actions/cache@v2
-        env:
-          cache-name: sdk
-        with:
-          path: ./depends/sdk-sources
-          key: ${{ env.name }}-${{ env.cache-name }}
-      - name: Install SDK
-        if: ${{ env.sdk }}
-        run: |
-          mkdir -p ./depends/sdk-sources
-          mkdir -p ./depends/SDKs
-          curl --location --fail ${{ env.sdk-url }}/MacOSX${{ env.sdk }}.sdk.tar.gz -o depends/sdk-sources/MacOSX${{ env.sdk }}.sdk.tar.gz
-          tar -C depends/SDKs -xf depends/sdk-sources/MacOSX${{ env.sdk }}.sdk.tar.gz
       - name: Dependency cache
         uses: actions/cache@v2
         env:
