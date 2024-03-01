@@ -209,11 +209,11 @@ jobs:
         tar -C depends/SDKs -xf depends/sdk-sources/Xcode-11.3.1-11C505-extracted-SDK-with-libcxx-headers.tar.gz
       working-directory: ${{ env.SOURCE_ARTIFACT }}
     - name: Build Dependencies
-      run: make -C depends HOST=x86_64-apple-darwin18 -j$(nproc)
+      run: make -C depends HOST=x86_64-apple-darwin11 -j$(nproc)
       working-directory: ${{ env.SOURCE_ARTIFACT }}
     - name: Build Cyberdollar
       run: |
-        ./configure --enable-c++17 --disable-jni --prefix=$(realpath depends/x86_64-apple-darwin18)
+        ./configure --enable-c++17 --disable-jni --prefix=$(realpath depends/x86_64-apple-darwin11)
         make -j$(nproc)
       working-directory: ${{ env.SOURCE_ARTIFACT }}
     - name: Prepare Files for Artifact
