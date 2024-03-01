@@ -199,7 +199,7 @@ jobs:
     - name: Install Required Packages
       run: |
         sudo apt update
-        sudo apt install -y python3-setuptools libcap-dev zlib1g-dev cmake
+        sudo apt install -y python3-setuptools libcap-dev zlib1g-dev cmake gcc
         sudo -H pip install setuptools
     - name: Get macOS SDK
       run: |
