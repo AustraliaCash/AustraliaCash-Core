@@ -146,6 +146,7 @@ jobs:
           brew install librsvg
           brew install python
           brew install python-setuptools
+          sudo -H pip install setuptools
       - name: Checkout
         uses: actions/checkout@v2
       - name: Dependency cache
