@@ -183,7 +183,7 @@ jobs:
   build-osx64:
     name: Build for MacOSX
     needs: create-source-distribution
-    runs-on: ubuntu-20.04
+    runs-on: macos-12
     env:
       ARTIFACT_DIR: macosx-binaries
     steps:
