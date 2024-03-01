@@ -199,7 +199,7 @@ jobs:
     - name: Install Required Packages
       run: |
         sudo apt update
-        sudo apt install -y python3-setuptools libcap-dev zlib1g-dev cmake gcc
+        sudo apt install -y python3-setuptools libcap-dev zlib1g-dev cmake gcc libc6-dev build-essential
         sudo -H pip install setuptools
     - name: Get macOS SDK
       run: |
@@ -209,11 +209,11 @@ jobs:
         tar -C depends/SDKs -xf depends/sdk-sources/Xcode-11.3.1-11C505-extracted-SDK-with-libcxx-headers.tar.gz
       working-directory: ${{ env.SOURCE_ARTIFACT }}
     - name: Build Dependencies
-      run: make -C depends HOST=x86_64-apple-darwin11 -j$(nproc)
+      run: make -C depends HOST=x86_64-apple-darwin18 -j$(nproc)
       working-directory: ${{ env.SOURCE_ARTIFACT }}
     - name: Build Cyberdollar
       run: |
-        ./configure --enable-c++17 --disable-jni --prefix=$(realpath depends/x86_64-apple-darwin11)
+        ./configure --enable-c++17 --disable-jni --prefix=$(realpath depends/x86_64-apple-darwin18)
         make -j$(nproc)
       working-directory: ${{ env.SOURCE_ARTIFACT }}
     - name: Prepare Files for Artifact
