@@ -194,7 +194,7 @@ jobs:
     - name: Extract Archives
       run: |
         tar -xzf depends.tar.gz
-        tar -xzf veil-*.tar.gz --strip-components=1
+        tar -xzf cyberdollar-*.tar.gz --strip-components=1
       working-directory: ${{ env.SOURCE_ARTIFACT }}
     - name: Install Required Packages
       run: |
@@ -211,7 +211,7 @@ jobs:
     - name: Build Dependencies
       run: make -C depends HOST=x86_64-apple-darwin18 -j$(nproc)
       working-directory: ${{ env.SOURCE_ARTIFACT }}
-    - name: Build Veil
+    - name: Build Cyberdollar
       run: |
         ./configure --enable-c++17 --disable-jni --prefix=$(realpath depends/x86_64-apple-darwin18)
         make -j$(nproc)
@@ -220,8 +220,8 @@ jobs:
       run: |
         mkdir -p $ARTIFACT_DIR
         # strip fails with "Unable to recognise the format of the input file"
-        #strip $SOURCE_ARTIFACT/src/{veil-cli,veil-tx,veild,qt/veil-qt}
-        mv $SOURCE_ARTIFACT/src/{veil-cli,veil-tx,veild,qt/veil-qt} $ARTIFACT_DIR
+        #strip $SOURCE_ARTIFACT/src/{cyberdollar-cli,cyberdollar-tx,cyberdollard,qt/cyberdollar-qt}
+        mv $SOURCE_ARTIFACT/src/{cyberdollar-cli,cyberdollar-tx,cyberdollard,qt/cyberdollar-qt} $ARTIFACT_DIR
     - name: Upload Artifact
       uses: actions/upload-artifact@v1
       with:
