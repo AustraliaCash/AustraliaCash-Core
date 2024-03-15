@@ -2,10 +2,10 @@ name: Continuous Integration on Develop
 on:
   push:
     branches:
-    - dev
+    - auxpow-103
   pull_request:
     branches:
-    - dev
+    - auxpow-103
 env:
   SOURCE_ARTIFACT: source
 jobs:
