@@ -1,22 +1,21 @@
-// Copyright (c) 2017-2021 The AustraliaCash Core developers
+// Copyright (c) 2017-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <chainparams.h>
 #include <index/txindex.h>
-#include <interfaces/chain.h>
 #include <script/standard.h>
-#include <test/util/setup_common.h>
-#include <util/time.h>
+#include <test/test_australiacash.h>
+#include <util.h>
+#include <utiltime.h>
 #include <validation.h>
 
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(txindex_tests)
 
-BOOST_FIXTURE_TEST_CASE(txindex_initial_sync, TestChain100Setup)
+BOOST_FIXTURE_TEST_CASE(txindex_initial_sync, TestChain240Setup)
 {
-    TxIndex txindex(interfaces::MakeChain(m_node), 1 << 20, true);
+    TxIndex txindex(1 << 20, true);
 
     CTransactionRef tx_disk;
     uint256 block_hash;
@@ -29,20 +28,14 @@ BOOST_FIXTURE_TEST_CASE(txindex_initial_sync, TestChain100Setup)
     // BlockUntilSyncedToCurrentChain should return false before txindex is started.
     BOOST_CHECK(!txindex.BlockUntilSyncedToCurrentChain());
 
-    BOOST_REQUIRE(txindex.Start());
+    txindex.Start();
 
     // Allow tx index to catch up with the block index.
     constexpr int64_t timeout_ms = 10 * 1000;
     int64_t time_start = GetTimeMillis();
     while (!txindex.BlockUntilSyncedToCurrentChain()) {
         BOOST_REQUIRE(time_start + timeout_ms > GetTimeMillis());
-        UninterruptibleSleep(std::chrono::milliseconds{100});
-    }
-
-    // Check that txindex excludes genesis block transactions.
-    const CBlock& genesis_block = Params().GenesisBlock();
-    for (const auto& txn : genesis_block.vtx) {
-        BOOST_CHECK(!txindex.FindTx(txn->GetHash(), block_hash, tx_disk));
+        MilliSleep(100);
     }
 
     // Check that txindex has all txs that were in the chain before it started.
@@ -56,7 +49,7 @@ BOOST_FIXTURE_TEST_CASE(txindex_initial_sync, TestChain100Setup)
 
     // Check that new transactions in new blocks make it into the index.
     for (int i = 0; i < 10; i++) {
-        CScript coinbase_script_pub_key = GetScriptForDestination(PKHash(coinbaseKey.GetPubKey()));
+        CScript coinbase_script_pub_key = GetScriptForDestination(coinbaseKey.GetPubKey().GetID());
         std::vector<CMutableTransaction> no_txns;
         const CBlock& block = CreateAndProcessBlock(no_txns, coinbase_script_pub_key);
         const CTransaction& txn = *block.vtx[0];
@@ -69,11 +62,7 @@ BOOST_FIXTURE_TEST_CASE(txindex_initial_sync, TestChain100Setup)
         }
     }
 
-    // shutdown sequence (c.f. Shutdown() in init.cpp)
-    txindex.Stop();
-
-    // Let scheduler events finish running to avoid accessing any memory related to txindex after it is destructed
-    SyncWithValidationInterfaceQueue();
+    txindex.Stop(); // Stop thread before calling destructor
 }
 
 BOOST_AUTO_TEST_SUITE_END()

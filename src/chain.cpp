@@ -1,22 +1,50 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2019 The AustraliaCash Core developers
+// Copyright (c) 2009-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <chain.h>
-#include <multialgo.h>
-#include <pow.h>
-#include <tinyformat.h>
-#include <util/time.h>
+#include <validation.h>
 
-std::string CBlockFileInfo::ToString() const
+using namespace std;
+
+/* Moved here from the header, because we need auxpow and the logic
+   becomes more involved.  */
+CBlockHeader CBlockIndex::GetBlockHeader(const Consensus::Params& consensusParams) const
 {
-    return strprintf("CBlockFileInfo(blocks=%u, size=%u, heights=%u...%u, time=%s...%s)", nBlocks, nSize, nHeightFirst, nHeightLast, FormatISO8601Date(nTimeFirst), FormatISO8601Date(nTimeLast));
+    CBlockHeader block;
+   
+    /* SANDO: nVersion is required before calling block.IsAuxpow()
+       to correctly identify AuxPow blocks
+    */
+    block.nVersion       = nVersion;   
+   
+    /* The CBlockIndex object's block header is missing the auxpow.
+       So if this is an auxpow block, read it from disk instead.  We only
+       have to read the actual *header*, not the full block.  */
+    if (block.IsAuxpow())
+    {
+        ReadBlockHeaderFromDisk(block, this, consensusParams);
+        return block;
+    }
+
+    if (pprev)
+        block.hashPrevBlock = pprev->GetBlockHash();
+    block.hashMerkleRoot = hashMerkleRoot;
+    block.nTime          = nTime;
+    block.nBits          = nBits;
+    block.nNonce         = nNonce;
+    return block;
 }
 
-void CChain::SetTip(CBlockIndex& block)
-{
-    CBlockIndex* pindex = &block;
+/**
+ * CChain implementation
+ */
+void CChain::SetTip(CBlockIndex *pindex) {
+    if (pindex == nullptr) {
+        vChain.clear();
+        return;
+    }
     vChain.resize(pindex->nHeight + 1);
     while (pindex && vChain[pindex->nHeight] != pindex) {
         vChain[pindex->nHeight] = pindex;
@@ -24,33 +52,32 @@ void CChain::SetTip(CBlockIndex& block)
     }
 }
 
-std::vector<uint256> LocatorEntries(const CBlockIndex* index)
-{
-    int step = 1;
-    std::vector<uint256> have;
-    if (index == nullptr) return have;
+CBlockLocator CChain::GetLocator(const CBlockIndex *pindex) const {
+    int nStep = 1;
+    std::vector<uint256> vHave;
+    vHave.reserve(32);
 
-    have.reserve(32);
-    while (index) {
-        have.emplace_back(index->GetBlockHash());
-        if (index->nHeight == 0) break;
+    if (!pindex)
+        pindex = Tip();
+    while (pindex) {
+        vHave.push_back(pindex->GetBlockHash());
+        // Stop when we have added the genesis block.
+        if (pindex->nHeight == 0)
+            break;
         // Exponentially larger steps back, plus the genesis block.
-        int height = std::max(index->nHeight - step, 0);
-        // Use skiplist.
-        index = index->GetAncestor(height);
-        if (have.size() > 10) step *= 2;
+        int nHeight = std::max(pindex->nHeight - nStep, 0);
+        if (Contains(pindex)) {
+            // Use O(1) CChain index if possible.
+            pindex = (*this)[nHeight];
+        } else {
+            // Otherwise, use O(log n) skiplist.
+            pindex = pindex->GetAncestor(nHeight);
+        }
+        if (vHave.size() > 10)
+            nStep *= 2;
     }
-    return have;
-}
 
-CBlockLocator GetLocator(const CBlockIndex* index)
-{
-    return CBlockLocator{LocatorEntries(index)};
-}
-
-CBlockLocator CChain::GetLocator() const
-{
-    return ::GetLocator(Tip());
+    return CBlockLocator(vHave);
 }
 
 const CBlockIndex *CChain::FindFork(const CBlockIndex *pindex) const {
@@ -64,11 +91,10 @@ const CBlockIndex *CChain::FindFork(const CBlockIndex *pindex) const {
     return pindex;
 }
 
-CBlockIndex* CChain::FindEarliestAtLeast(int64_t nTime, int height) const
+CBlockIndex* CChain::FindEarliestAtLeast(int64_t nTime) const
 {
-    std::pair<int64_t, int> blockparams = std::make_pair(nTime, height);
-    std::vector<CBlockIndex*>::const_iterator lower = std::lower_bound(vChain.begin(), vChain.end(), blockparams,
-        [](CBlockIndex* pBlock, const std::pair<int64_t, int>& blockparams) -> bool { return pBlock->GetBlockTimeMax() < blockparams.first || pBlock->nHeight < blockparams.second; });
+    std::vector<CBlockIndex*>::const_iterator lower = std::lower_bound(vChain.begin(), vChain.end(), nTime,
+        [](CBlockIndex* pBlock, const int64_t& time) -> bool { return pBlock->GetBlockTimeMax() < time; });
     return (lower == vChain.end() ? nullptr : *lower);
 }
 
@@ -124,7 +150,7 @@ void CBlockIndex::BuildSkip()
         pskip = pprev->GetAncestor(GetSkipHeight(nHeight));
 }
 
-arith_uint256 GetBlockProofBase(const CBlockIndex& block)
+arith_uint256 GetBlockProof(const CBlockIndex& block)
 {
     arith_uint256 bnTarget;
     bool fNegative;
@@ -139,47 +165,6 @@ arith_uint256 GetBlockProofBase(const CBlockIndex& block)
     return (~bnTarget / (bnTarget + 1)) + 1;
 }
 
-arith_uint256 GetBlockProof(const CBlockIndex& block, const Consensus::Params& params)
-{
-    CBlockHeader header = block.GetBlockHeader();
-
-    const int nHeight = block.nHeight;
-    if (nHeight < params.nMultiAlgoStartBlock)
-    {
-        arith_uint256 bnBlockWork = GetBlockProofBase(block);
-        uint32_t nAlgoWork = GetAlgoWorkFactor(nHeight, GetAlgo(header.nVersion), params);
-        return bnBlockWork * nAlgoWork;
-    }
-    else
-    {
-        // Compute the geometric mean of the block targets for each individual algorithm.
-        arith_uint256 bnAvgTarget(1);
-
-        for (int i = 0; i < NUM_ALGOS; i++)
-        {
-            if (!IsAlgoActive(block.pprev, i, params))
-                continue;
-            unsigned int nBits = GetNextWorkRequiredMultiAlgo(block.pprev, &header, params, i);
-            arith_uint256 bnTarget;
-            bool fNegative;
-            bool fOverflow;
-            bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
-            if (fNegative || fOverflow || bnTarget == 0)
-                return 0;
-            // Instead of multiplying them all together and then taking the
-            // nth root at the end, take the roots individually then multiply so
-            // that all intermediate values fit in 256-bit integers.
-            bnAvgTarget *= bnTarget.ApproxNthRoot(NUM_ALGOS);
-        }
-        // see comment in GetProofBase
-        arith_uint256 bnRes = (~bnAvgTarget / (bnAvgTarget + 1)) + 1;
-        // Scale to roughly match the old work calculation
-        bnRes <<= 7;
-
-        return bnRes;
-    }
-}
-
 int64_t GetBlockProofEquivalentTime(const CBlockIndex& to, const CBlockIndex& from, const CBlockIndex& tip, const Consensus::Params& params)
 {
     arith_uint256 r;
@@ -190,11 +175,11 @@ int64_t GetBlockProofEquivalentTime(const CBlockIndex& to, const CBlockIndex& fr
         r = from.nChainWork - to.nChainWork;
         sign = -1;
     }
-    r = r * arith_uint256(params.nPowTargetSpacing) / GetBlockProof(tip, params);
+    r = r * arith_uint256(params.nPowTargetSpacing) / GetBlockProof(tip);
     if (r.bits() > 63) {
         return sign * std::numeric_limits<int64_t>::max();
     }
-    return sign * int64_t(r.GetLow64());
+    return sign * r.GetLow64();
 }
 
 /** Find the last common ancestor two blocks have.

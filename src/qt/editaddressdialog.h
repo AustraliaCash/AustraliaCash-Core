@@ -1,9 +1,9 @@
-// Copyright (c) 2011-2020 The AustraliaCash Core developers
+// Copyright (c) 2011-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_EDITADDRESSDIALOG_H
-#define BITCOIN_QT_EDITADDRESSDIALOG_H
+#ifndef AUSTRALIACASH_QT_EDITADDRESSDIALOG_H
+#define AUSTRALIACASH_QT_EDITADDRESSDIALOG_H
 
 #include <QDialog>
 
@@ -30,7 +30,7 @@ public:
         EditSendingAddress
     };
 
-    explicit EditAddressDialog(Mode mode, QWidget *parent = nullptr);
+    explicit EditAddressDialog(Mode mode, QWidget *parent = 0);
     ~EditAddressDialog();
 
     void setModel(AddressTableModel *model);
@@ -40,7 +40,7 @@ public:
     void setAddress(const QString &address);
 
 public Q_SLOTS:
-    void accept() override;
+    void accept();
 
 private:
     bool saveCurrentRow();
@@ -56,4 +56,4 @@ private:
     QString address;
 };
 
-#endif // BITCOIN_QT_EDITADDRESSDIALOG_H
+#endif // AUSTRALIACASH_QT_EDITADDRESSDIALOG_H

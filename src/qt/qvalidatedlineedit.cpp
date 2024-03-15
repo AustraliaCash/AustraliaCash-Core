@@ -4,21 +4,15 @@
 
 #include <qt/qvalidatedlineedit.h>
 
-#include <qt/bitcoinaddressvalidator.h>
+#include <qt/australiacashaddressvalidator.h>
 #include <qt/guiconstants.h>
 
 QValidatedLineEdit::QValidatedLineEdit(QWidget *parent) :
     QLineEdit(parent),
     valid(true),
-    checkValidator(nullptr)
+    checkValidator(0)
 {
-    connect(this, &QValidatedLineEdit::textChanged, this, &QValidatedLineEdit::markValid);
-}
-
-void QValidatedLineEdit::setText(const QString& text)
-{
-    QLineEdit::setText(text);
-    checkValidity();
+    connect(this, SIGNAL(textChanged(QString)), this, SLOT(markValid()));
 }
 
 void QValidatedLineEdit::setValid(bool _valid)
@@ -34,7 +28,7 @@ void QValidatedLineEdit::setValid(bool _valid)
     }
     else
     {
-        setStyleSheet("QValidatedLineEdit { " STYLE_INVALID "}");
+        setStyleSheet(STYLE_INVALID);
     }
     this->valid = _valid;
 }
@@ -112,7 +106,6 @@ void QValidatedLineEdit::checkValidity()
 void QValidatedLineEdit::setCheckValidator(const QValidator *v)
 {
     checkValidator = v;
-    checkValidity();
 }
 
 bool QValidatedLineEdit::isValid()

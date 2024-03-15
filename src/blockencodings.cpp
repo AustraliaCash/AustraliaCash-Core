@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2020 The AustraliaCash Core developers
+// Copyright (c) 2016-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -6,25 +6,24 @@
 #include <consensus/consensus.h>
 #include <consensus/validation.h>
 #include <chainparams.h>
-#include <crypto/sha256.h>
-#include <crypto/siphash.h>
+#include <hash.h>
 #include <random.h>
 #include <streams.h>
 #include <txmempool.h>
 #include <validation.h>
-#include <util/system.h>
+#include <util.h>
 
 #include <unordered_map>
 
-CBlockHeaderAndShortTxIDs::CBlockHeaderAndShortTxIDs(const CBlock& block) :
-        nonce(GetRand<uint64_t>()),
-        shorttxids(block.vtx.size() - 1), prefilledtxn(1), header(block), vchBlockSig(block.vchBlockSig) {
+CBlockHeaderAndShortTxIDs::CBlockHeaderAndShortTxIDs(const CBlock& block, bool fUseWTXID) :
+        nonce(GetRand(std::numeric_limits<uint64_t>::max())),
+        shorttxids(block.vtx.size() - 1), prefilledtxn(1), header(block) {
     FillShortTxIDSelector();
     //TODO: Use our mempool prior to block acceptance to predictively fill more than just the coinbase
     prefilledtxn[0] = {0, block.vtx[0]};
     for (size_t i = 1; i < block.vtx.size(); i++) {
         const CTransaction& tx = *block.vtx[i];
-        shorttxids[i - 1] = GetShortID(tx.GetWitnessHash());
+        shorttxids[i - 1] = GetShortID(fUseWTXID ? tx.GetWitnessHash() : tx.GetHash());
     }
 }
 
@@ -54,7 +53,6 @@ ReadStatus PartiallyDownloadedBlock::InitData(const CBlockHeaderAndShortTxIDs& c
 
     assert(header.IsNull() && txn_available.empty());
     header = cmpctblock.header;
-    vchBlockSig = cmpctblock.vchBlockSig;
     txn_available.resize(cmpctblock.BlockTxCount());
 
     int32_t lastprefilledindex = -1;
@@ -106,12 +104,13 @@ ReadStatus PartiallyDownloadedBlock::InitData(const CBlockHeaderAndShortTxIDs& c
     std::vector<bool> have_txn(txn_available.size());
     {
     LOCK(pool->cs);
-    for (size_t i = 0; i < pool->vTxHashes.size(); i++) {
-        uint64_t shortid = cmpctblock.GetShortID(pool->vTxHashes[i].first);
+    const std::vector<std::pair<uint256, CTxMemPool::txiter> >& vTxHashes = pool->vTxHashes;
+    for (size_t i = 0; i < vTxHashes.size(); i++) {
+        uint64_t shortid = cmpctblock.GetShortID(vTxHashes[i].first);
         std::unordered_map<uint64_t, uint16_t>::iterator idit = shorttxids.find(shortid);
         if (idit != shorttxids.end()) {
             if (!have_txn[idit->second]) {
-                txn_available[idit->second] = pool->vTxHashes[i].second->GetSharedTx();
+                txn_available[idit->second] = vTxHashes[i].second->GetSharedTx();
                 have_txn[idit->second]  = true;
                 mempool_count++;
             } else {
@@ -163,7 +162,7 @@ ReadStatus PartiallyDownloadedBlock::InitData(const CBlockHeaderAndShortTxIDs& c
             break;
     }
 
-    LogPrint(BCLog::CMPCTBLOCK, "Initialized PartiallyDownloadedBlock for block %s using a cmpctblock of size %lu\n", cmpctblock.header.GetHash().ToString(), GetSerializeSize(cmpctblock, PROTOCOL_VERSION));
+    LogPrint(BCLog::CMPCTBLOCK, "Initialized PartiallyDownloadedBlock for block %s using a cmpctblock of size %lu\n", cmpctblock.header.GetHash().ToString(), GetSerializeSize(cmpctblock, SER_NETWORK, PROTOCOL_VERSION));
 
     return READ_STATUS_OK;
 }
@@ -178,7 +177,6 @@ ReadStatus PartiallyDownloadedBlock::FillBlock(CBlock& block, const std::vector<
     assert(!header.IsNull());
     uint256 hash = header.GetHash();
     block = header;
-    block.vchBlockSig = vchBlockSig;
     block.vtx.resize(txn_available.size());
 
     size_t tx_missing_offset = 0;
@@ -198,13 +196,13 @@ ReadStatus PartiallyDownloadedBlock::FillBlock(CBlock& block, const std::vector<
     if (vtx_missing.size() != tx_missing_offset)
         return READ_STATUS_INVALID;
 
-    BlockValidationState state;
+    CValidationState state;
     if (!CheckBlock(block, state, Params().GetConsensus())) {
         // TODO: We really want to just check merkle tree manually here,
         // but that is expensive, and CheckBlock caches a block's
         // "checked-status" (in the CBlock?). CBlock should be able to
         // check its own merkle root and cache that check.
-        if (state.GetResult() == BlockValidationResult::BLOCK_MUTATED)
+        if (state.CorruptionPossible())
             return READ_STATUS_FAILED; // Possible Short ID collision
         return READ_STATUS_CHECKBLOCK_FAILED;
     }

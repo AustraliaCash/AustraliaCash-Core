@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2021 The AustraliaCash Core developers
+// Copyright (c) 2011-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 QValueComboBox::QValueComboBox(QWidget *parent) :
         QComboBox(parent), role(Qt::UserRole)
 {
-    connect(this, qOverload<int>(&QComboBox::currentIndexChanged), this, &QValueComboBox::handleSelectionChanged);
+    connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(handleSelectionChanged(int)));
 }
 
 QVariant QValueComboBox::value() const

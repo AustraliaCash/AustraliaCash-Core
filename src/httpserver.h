@@ -1,13 +1,13 @@
-// Copyright (c) 2015-2020 The AustraliaCash Core developers
+// Copyright (c) 2015-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_HTTPSERVER_H
-#define BITCOIN_HTTPSERVER_H
+#ifndef AUSTRALIACASH_HTTPSERVER_H
+#define AUSTRALIACASH_HTTPSERVER_H
 
-#include <functional>
-#include <optional>
 #include <string>
+#include <stdint.h>
+#include <functional>
 
 static const int DEFAULT_HTTP_THREADS=4;
 static const int DEFAULT_HTTP_WORKQUEUE=16;
@@ -32,8 +32,9 @@ void InterruptHTTPServer();
 /** Stop HTTP server */
 void StopHTTPServer();
 
-/** Change logging level for libevent. */
-void UpdateHTTPServerLogging(bool enable);
+/** Change logging level for libevent. Removes BCLog::LIBEVENT from log categories if
+ * libevent doesn't support debug logging.*/
+bool UpdateHTTPServerLogging(bool enable);
 
 /** Handler for requests to a certain HTTP path */
 typedef std::function<bool(HTTPRequest* req, const std::string &)> HTTPRequestHandler;
@@ -60,7 +61,7 @@ private:
     bool replySent;
 
 public:
-    explicit HTTPRequest(struct evhttp_request* req, bool replySent = false);
+    explicit HTTPRequest(struct evhttp_request* req);
     ~HTTPRequest();
 
     enum RequestMethod {
@@ -73,32 +74,21 @@ public:
 
     /** Get requested URI.
      */
-    std::string GetURI() const;
+    std::string GetURI();
 
     /** Get CService (address:ip) for the origin of the http request.
      */
-    CService GetPeer() const;
+    CService GetPeer();
 
     /** Get request method.
      */
-    RequestMethod GetRequestMethod() const;
-
-    /** Get the query parameter value from request uri for a specified key, or std::nullopt if the
-     * key is not found.
-     *
-     * If the query string contains duplicate keys, the first value is returned. Many web frameworks
-     * would instead parse this as an array of values, but this is not (yet) implemented as it is
-     * currently not needed in any of the endpoints.
-     *
-     * @param[in] key represents the query parameter of which the value is returned
-     */
-    std::optional<std::string> GetQueryParameter(const std::string& key) const;
+    RequestMethod GetRequestMethod();
 
     /**
      * Get the request header specified by hdr, or an empty string.
      * Return a pair (isPresent,string).
      */
-    std::pair<bool, std::string> GetHeader(const std::string& hdr) const;
+    std::pair<bool, std::string> GetHeader(const std::string& hdr);
 
     /**
      * Read request body.
@@ -126,20 +116,6 @@ public:
     void WriteReply(int nStatus, const std::string& strReply = "");
 };
 
-/** Get the query parameter value from request uri for a specified key, or std::nullopt if the key
- * is not found.
- *
- * If the query string contains duplicate keys, the first value is returned. Many web frameworks
- * would instead parse this as an array of values, but this is not (yet) implemented as it is
- * currently not needed in any of the endpoints.
- *
- * Helper function for HTTPRequest::GetQueryParameter.
- *
- * @param[in] uri is the entire request uri
- * @param[in] key represents the query parameter of which the value is returned
- */
-std::optional<std::string> GetQueryParameterFromUri(const char* uri, const std::string& key);
-
 /** Event handler closure.
  */
 class HTTPClosure
@@ -158,7 +134,7 @@ public:
      * deleteWhenTriggered deletes this event object after the event is triggered (and the handler called)
      * handler is the handler to call when the event is triggered.
      */
-    HTTPEvent(struct event_base* base, bool deleteWhenTriggered, const std::function<void()>& handler);
+    HTTPEvent(struct event_base* base, bool deleteWhenTriggered, const std::function<void(void)>& handler);
     ~HTTPEvent();
 
     /** Trigger the event. If tv is 0, trigger it immediately. Otherwise trigger it after
@@ -167,9 +143,11 @@ public:
     void trigger(struct timeval* tv);
 
     bool deleteWhenTriggered;
-    std::function<void()> handler;
+    std::function<void(void)> handler;
 private:
     struct event* ev;
 };
 
-#endif // BITCOIN_HTTPSERVER_H
+std::string urlDecode(const std::string &urlEncoded);
+
+#endif // AUSTRALIACASH_HTTPSERVER_H

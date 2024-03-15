@@ -44,7 +44,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>AustraliaCashGUI</name>
+    <name>BitcoinGUI</name>
     <message>
         <source>Error</source>
         <translation>பிழை</translation>
@@ -175,6 +175,9 @@
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
+    </context>
+<context>
+    <name>WalletController</name>
     </context>
 <context>
     <name>WalletFrame</name>

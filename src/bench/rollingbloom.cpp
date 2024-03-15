@@ -1,36 +1,32 @@
-// Copyright (c) 2016-2021 The AustraliaCash Core developers
+// Copyright (c) 2016-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include <iostream>
 
 #include <bench/bench.h>
-#include <common/bloom.h>
-#include <crypto/common.h>
+#include <bloom.h>
 
-#include <vector>
-
-static void RollingBloom(benchmark::Bench& bench)
+static void RollingBloom(benchmark::State& state)
 {
     CRollingBloomFilter filter(120000, 0.000001);
     std::vector<unsigned char> data(32);
     uint32_t count = 0;
-    bench.run([&] {
+    uint64_t match = 0;
+    while (state.KeepRunning()) {
         count++;
-        WriteLE32(data.data(), count);
+        data[0] = count;
+        data[1] = count >> 8;
+        data[2] = count >> 16;
+        data[3] = count >> 24;
         filter.insert(data);
 
-        WriteBE32(data.data(), count);
-        filter.contains(data);
-    });
+        data[0] = count >> 24;
+        data[1] = count >> 16;
+        data[2] = count >> 8;
+        data[3] = count;
+        match += filter.contains(data);
+    }
 }
 
-static void RollingBloomReset(benchmark::Bench& bench)
-{
-    CRollingBloomFilter filter(120000, 0.000001);
-    bench.run([&] {
-        filter.reset();
-    });
-}
-
-BENCHMARK(RollingBloom);
-BENCHMARK(RollingBloomReset);
+BENCHMARK(RollingBloom, 1500 * 1000);

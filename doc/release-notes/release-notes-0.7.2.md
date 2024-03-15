@@ -1,10 +1,10 @@
 AustraliaCash version 0.7.2 is now available from:
-  http://sourceforge.net/projects/bitcoin/files/AustraliaCash/bitcoin-0.7.2
+  http://sourceforge.net/projects/australiacash/files/AustraliaCash/australiacash-0.7.2
 
 This is a bug-fix minor release.
 
 Please report bugs using the issue tracker at github:
-  https://github.com/bitcoin/bitcoin/issues
+  https://github.com/australiacash/australiacash/issues
 
 How to Upgrade
 --------------
@@ -12,7 +12,7 @@ How to Upgrade
 If you are running an older version, shut it down. Wait
 until it has completely shut down (which might take a few minutes for older
 versions), then run the installer (on Windows) or just copy over
-/Applications/AustraliaCash-Qt (on Mac) or bitcoind/bitcoin-qt (on Linux).
+/Applications/AustraliaCash-Qt (on Mac) or australiacashd/australiacash-qt (on Linux).
 
 If you were running on Linux with a version that might have been compiled
 with a different version of Berkeley DB (for example, if you were using an

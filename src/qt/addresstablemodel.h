@@ -1,9 +1,9 @@
-// Copyright (c) 2011-2020 The AustraliaCash Core developers
+// Copyright (c) 2011-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_ADDRESSTABLEMODEL_H
-#define BITCOIN_QT_ADDRESSTABLEMODEL_H
+#ifndef AUSTRALIACASH_QT_ADDRESSTABLEMODEL_H
+#define AUSTRALIACASH_QT_ADDRESSTABLEMODEL_H
 
 #include <QAbstractTableModel>
 #include <QStringList>
@@ -25,7 +25,7 @@ class AddressTableModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    explicit AddressTableModel(WalletModel *parent = nullptr, bool pk_hash_only = false);
+    explicit AddressTableModel(WalletModel *parent = 0);
     ~AddressTableModel();
 
     enum ColumnIndex {
@@ -52,14 +52,14 @@ public:
 
     /** @name Methods overridden from QAbstractTableModel
         @{*/
-    int rowCount(const QModelIndex &parent) const override;
-    int columnCount(const QModelIndex &parent) const override;
-    QVariant data(const QModelIndex &index, int role) const override;
-    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
-    QModelIndex index(int row, int column, const QModelIndex &parent) const override;
-    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
-    Qt::ItemFlags flags(const QModelIndex &index) const override;
+    int rowCount(const QModelIndex &parent) const;
+    int columnCount(const QModelIndex &parent) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent) const;
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    Qt::ItemFlags flags(const QModelIndex &index) const;
     /*@}*/
 
     /* Add an address to the model.
@@ -102,4 +102,4 @@ public Q_SLOTS:
     friend class AddressTablePriv;
 };
 
-#endif // BITCOIN_QT_ADDRESSTABLEMODEL_H
+#endif // AUSTRALIACASH_QT_ADDRESSTABLEMODEL_H

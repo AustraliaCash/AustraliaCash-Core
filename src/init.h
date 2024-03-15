@@ -1,76 +1,70 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2021 The AustraliaCash Core developers
+// Copyright (c) 2009-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_INIT_H
-#define BITCOIN_INIT_H
+#ifndef AUSTRALIACASH_INIT_H
+#define AUSTRALIACASH_INIT_H
 
-#include <any>
 #include <memory>
 #include <string>
+#include <util.h>
 
-//! Default value for -daemon option
-static constexpr bool DEFAULT_DAEMON = false;
-//! Default value for -daemonwait option
-static constexpr bool DEFAULT_DAEMONWAIT = false;
+class CScheduler;
+class CWallet;
 
-class ArgsManager;
-namespace interfaces {
-struct BlockAndHeaderTipInfo;
-}
-namespace kernel {
-struct Context;
-}
-namespace node {
-struct NodeContext;
-} // namespace node
+class WalletInitInterface;
+extern const WalletInitInterface& g_wallet_init_interface;
+
+namespace boost
+{
+class thread_group;
+} // namespace boost
 
 /** Interrupt threads */
-void Interrupt(node::NodeContext& node);
-void Shutdown(node::NodeContext& node);
+void Interrupt();
+void Shutdown();
 //!Initialize the logging infrastructure
-void InitLogging(const ArgsManager& args);
+void InitLogging();
 //!Parameter interaction: change current parameters depending on various rules
-void InitParameterInteraction(ArgsManager& args);
+void InitParameterInteraction();
 
-/** Initialize bitcoin core: Basic context setup.
+/** Initialize australiacash core: Basic context setup.
  *  @note This can be done before daemonization. Do not call Shutdown() if this function fails.
  *  @pre Parameters should be parsed and config file should be read.
  */
-bool AppInitBasicSetup(const ArgsManager& args);
+bool AppInitBasicSetup();
 /**
  * Initialization: parameter interaction.
  * @note This can be done before daemonization. Do not call Shutdown() if this function fails.
  * @pre Parameters should be parsed and config file should be read, AppInitBasicSetup should have been called.
  */
-bool AppInitParameterInteraction(const ArgsManager& args, bool use_syscall_sandbox = true);
+bool AppInitParameterInteraction();
 /**
- * Initialization sanity checks.
+ * Initialization sanity checks: ecc init, sanity checks, dir lock.
  * @note This can be done before daemonization. Do not call Shutdown() if this function fails.
  * @pre Parameters should be parsed and config file should be read, AppInitParameterInteraction should have been called.
  */
-bool AppInitSanityChecks(const kernel::Context& kernel);
+bool AppInitSanityChecks();
 /**
- * Lock bitcoin core data directory.
+ * Lock australiacash core data directory.
  * @note This should only be done after daemonization. Do not call Shutdown() if this function fails.
  * @pre Parameters should be parsed and config file should be read, AppInitSanityChecks should have been called.
  */
 bool AppInitLockDataDirectory();
 /**
- * Initialize node and wallet interface pointers. Has no prerequisites or side effects besides allocating memory.
- */
-bool AppInitInterfaces(node::NodeContext& node);
-/**
  * AustraliaCash core main initialization.
  * @note This should only be done after daemonization. Call Shutdown() if this function fails.
  * @pre Parameters should be parsed and config file should be read, AppInitLockDataDirectory should have been called.
  */
-bool AppInitMain(node::NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info = nullptr);
+bool AppInitMain();
 
 /**
- * Register all arguments with the ArgsManager
+ * Setup the arguments for gArgs
  */
-void SetupServerArgs(ArgsManager& argsman);
+void SetupServerArgs();
 
-#endif // BITCOIN_INIT_H
+/** Returns licensing information (for -version) */
+std::string LicenseInfo();
+
+#endif // AUSTRALIACASH_INIT_H

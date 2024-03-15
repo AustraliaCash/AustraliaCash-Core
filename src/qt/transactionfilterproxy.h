@@ -1,16 +1,14 @@
-// Copyright (c) 2011-2021 The AustraliaCash Core developers
+// Copyright (c) 2011-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_TRANSACTIONFILTERPROXY_H
-#define BITCOIN_QT_TRANSACTIONFILTERPROXY_H
+#ifndef AUSTRALIACASH_QT_TRANSACTIONFILTERPROXY_H
+#define AUSTRALIACASH_QT_TRANSACTIONFILTERPROXY_H
 
-#include <consensus/amount.h>
+#include <amount.h>
 
 #include <QDateTime>
 #include <QSortFilterProxyModel>
-
-#include <optional>
 
 /** Filter the transaction list according to pre-specified rules. */
 class TransactionFilterProxy : public QSortFilterProxyModel
@@ -18,8 +16,12 @@ class TransactionFilterProxy : public QSortFilterProxyModel
     Q_OBJECT
 
 public:
-    explicit TransactionFilterProxy(QObject *parent = nullptr);
+    explicit TransactionFilterProxy(QObject *parent = 0);
 
+    /** Earliest date that can be represented (far in the past) */
+    static const QDateTime MIN_DATE;
+    /** Last date that can be represented (far in the future) */
+    static const QDateTime MAX_DATE;
     /** Type filter bit field (all types) */
     static const quint32 ALL_TYPES = 0xFFFFFFFF;
 
@@ -32,8 +34,7 @@ public:
         WatchOnlyFilter_No
     };
 
-    /** Filter transactions between date range. Use std::nullopt for open range. */
-    void setDateRange(const std::optional<QDateTime>& from, const std::optional<QDateTime>& to);
+    void setDateRange(const QDateTime &from, const QDateTime &to);
     void setSearchString(const QString &);
     /**
       @note Type filter takes a bit field created with TYPE() or ALL_TYPES
@@ -48,14 +49,14 @@ public:
     /** Set whether to show conflicted transactions. */
     void setShowInactive(bool showInactive);
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
 protected:
-    bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const override;
+    bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const;
 
 private:
-    std::optional<QDateTime> dateFrom;
-    std::optional<QDateTime> dateTo;
+    QDateTime dateFrom;
+    QDateTime dateTo;
     QString m_search_string;
     quint32 typeFilter;
     WatchOnlyFilter watchOnlyFilter;
@@ -64,4 +65,4 @@ private:
     bool showInactive;
 };
 
-#endif // BITCOIN_QT_TRANSACTIONFILTERPROXY_H
+#endif // AUSTRALIACASH_QT_TRANSACTIONFILTERPROXY_H

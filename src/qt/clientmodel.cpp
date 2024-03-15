@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2021 The AustraliaCash Core developers
+// Copyright (c) 2011-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,23 +8,24 @@
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
 #include <qt/peertablemodel.h>
-#include <qt/peertablesortproxy.h>
 
+#include <chain.h>
+#include <chainparams.h>
+#include <checkpoints.h>
 #include <clientversion.h>
 #include <interfaces/handler.h>
 #include <interfaces/node.h>
+#include <validation.h>
 #include <net.h>
 #include <netbase.h>
-#include <util/system.h>
-#include <util/threadnames.h>
-#include <util/time.h>
-#include <validation.h>
+#include <txmempool.h>
+#include <ui_interface.h>
+#include <util.h>
+#include <warnings.h>
 
 #include <stdint.h>
 
 #include <QDebug>
-#include <QMetaObject>
-#include <QThread>
 #include <QTimer>
 
 static int64_t nLastHeaderTipUpdateNotification = 0;
@@ -34,35 +35,17 @@ ClientModel::ClientModel(interfaces::Node& node, OptionsModel *_optionsModel, QO
     QObject(parent),
     m_node(node),
     optionsModel(_optionsModel),
-    peerTableModel(nullptr),
-    banTableModel(nullptr),
-    m_thread(new QThread(this))
+    peerTableModel(0),
+    banTableModel(0),
+    pollTimer(0)
 {
     cachedBestHeaderHeight = -1;
     cachedBestHeaderTime = -1;
-
     peerTableModel = new PeerTableModel(m_node, this);
-    m_peer_table_sort_proxy = new PeerTableSortProxy(this);
-    m_peer_table_sort_proxy->setSourceModel(peerTableModel);
-
     banTableModel = new BanTableModel(m_node, this);
-
-    QTimer* timer = new QTimer;
-    timer->setInterval(MODEL_UPDATE_DELAY);
-    connect(timer, &QTimer::timeout, [this] {
-        // no locking required at this point
-        // the following calls will acquire the required lock
-        Q_EMIT mempoolSizeChanged(m_node.getMempoolSize(), m_node.getMempoolDynamicUsage());
-        Q_EMIT bytesChanged(m_node.getTotalBytesRecv(), m_node.getTotalBytesSent());
-    });
-    connect(m_thread, &QThread::finished, timer, &QObject::deleteLater);
-    connect(m_thread, &QThread::started, [timer] { timer->start(); });
-    // move timer to thread so that polling doesn't disturb main event loop
-    timer->moveToThread(m_thread);
-    m_thread->start();
-    QTimer::singleShot(0, timer, []() {
-        util::ThreadRename("qt-clientmodl");
-    });
+    pollTimer = new QTimer(this);
+    connect(pollTimer, SIGNAL(timeout()), this, SLOT(updateTimer()));
+    pollTimer->start(MODEL_UPDATE_DELAY);
 
     subscribeToCoreSignals();
 }
@@ -70,21 +53,18 @@ ClientModel::ClientModel(interfaces::Node& node, OptionsModel *_optionsModel, QO
 ClientModel::~ClientModel()
 {
     unsubscribeFromCoreSignals();
-
-    m_thread->quit();
-    m_thread->wait();
 }
 
 int ClientModel::getNumConnections(unsigned int flags) const
 {
-    ConnectionDirection connections = ConnectionDirection::None;
+    CConnman::NumConnections connections = CConnman::CONNECTIONS_NONE;
 
     if(flags == CONNECTIONS_IN)
-        connections = ConnectionDirection::In;
+        connections = CConnman::CONNECTIONS_IN;
     else if (flags == CONNECTIONS_OUT)
-        connections = ConnectionDirection::Out;
+        connections = CConnman::CONNECTIONS_OUT;
     else if (flags == CONNECTIONS_ALL)
-        connections = ConnectionDirection::Both;
+        connections = CConnman::CONNECTIONS_ALL;
 
     return m_node.getNodeCount(connections);
 }
@@ -117,81 +97,27 @@ int64_t ClientModel::getHeaderTipTime() const
     return cachedBestHeaderTime;
 }
 
-int ClientModel::getNumBlocks() const
+void ClientModel::updateTimer()
 {
-    if (m_cached_num_blocks == -1) {
-        m_cached_num_blocks = m_node.getNumBlocks();
-    }
-    return m_cached_num_blocks;
+    // no locking required at this point
+    // the following calls will acquire the required lock
+    Q_EMIT mempoolSizeChanged(m_node.getMempoolSize(), m_node.getMempoolDynamicUsage());
+    Q_EMIT bytesChanged(m_node.getTotalBytesRecv(), m_node.getTotalBytesSent());
 }
 
-uint256 ClientModel::getBestBlockHash()
+void ClientModel::updateNumConnections(int numConnections)
 {
-    uint256 tip{WITH_LOCK(m_cached_tip_mutex, return m_cached_tip_blocks)};
-
-    if (!tip.IsNull()) {
-        return tip;
-    }
-
-    // Lock order must be: first `cs_main`, then `m_cached_tip_mutex`.
-    // The following will lock `cs_main` (and release it), so we must not
-    // own `m_cached_tip_mutex` here.
-    tip = m_node.getBestBlockHash();
-
-    LOCK(m_cached_tip_mutex);
-    // We checked that `m_cached_tip_blocks` is not null above, but then we
-    // released the mutex `m_cached_tip_mutex`, so it could have changed in the
-    // meantime. Thus, check again.
-    if (m_cached_tip_blocks.IsNull()) {
-        m_cached_tip_blocks = tip;
-    }
-    return m_cached_tip_blocks;
+    Q_EMIT numConnectionsChanged(numConnections);
 }
 
-uint256 ClientModel::getBestBlockPowHash()
+void ClientModel::updateNetworkActive(bool networkActive)
 {
-    uint256 tip{WITH_LOCK(m_cached_tip_mutex, return m_cached_pow_blocks)};
-
-    if (!tip.IsNull()) {
-        return tip;
-    }
-
-    // Lock order must be: first `cs_main`, then `m_cached_tip_mutex`.
-    // The following will lock `cs_main` (and release it), so we must not
-    // own `m_cached_tip_mutex` here.
-    tip = m_node.getBestBlockPowHash();
-
-    LOCK(m_cached_tip_mutex);
-    // We checked that `m_cached_tip_blocks` is not null above, but then we
-    // released the mutex `m_cached_tip_mutex`, so it could have changed in the
-    // meantime. Thus, check again.
-    if (m_cached_pow_blocks.IsNull()) {
-        m_cached_pow_blocks = tip;
-    }
-    return m_cached_pow_blocks;
+    Q_EMIT networkActiveChanged(networkActive);
 }
 
-std::string ClientModel::getBestBlockPowAlgo()
+void ClientModel::updateAlert()
 {
-    std::string tip{WITH_LOCK(m_cached_tip_mutex, return m_cached_algo_blocks)};
-
-    if (!tip.empty()) {
-        return tip;
-    }
-
-    // Lock order must be: first `cs_main`, then `m_cached_tip_mutex`.
-    // The following will lock `cs_main` (and release it), so we must not
-    // own `m_cached_tip_mutex` here.
-    tip = m_node.getBestBlockPowAlgo();
-
-    LOCK(m_cached_tip_mutex);
-    // We checked that `m_cached_tip_blocks` is not null above, but then we
-    // released the mutex `m_cached_tip_mutex`, so it could have changed in the
-    // meantime. Thus, check again.
-    if (m_cached_algo_blocks.empty()) {
-        m_cached_algo_blocks = tip;
-    }
-    return m_cached_algo_blocks;
+    Q_EMIT alertsChanged(getStatusBarWarnings());
 }
 
 enum BlockSource ClientModel::getBlockSource() const
@@ -208,7 +134,7 @@ enum BlockSource ClientModel::getBlockSource() const
 
 QString ClientModel::getStatusBarWarnings() const
 {
-    return QString::fromStdString(m_node.getWarnings().translated);
+    return QString::fromStdString(m_node.getWarnings("gui"));
 }
 
 OptionsModel *ClientModel::getOptionsModel()
@@ -219,11 +145,6 @@ OptionsModel *ClientModel::getOptionsModel()
 PeerTableModel *ClientModel::getPeerTableModel()
 {
     return peerTableModel;
-}
-
-PeerTableSortProxy* ClientModel::peerTableSortProxy()
-{
-    return m_peer_table_sort_proxy;
 }
 
 BanTableModel *ClientModel::getBanTableModel()
@@ -248,80 +169,96 @@ bool ClientModel::isReleaseVersion() const
 
 QString ClientModel::formatClientStartupTime() const
 {
-    return QDateTime::fromSecsSinceEpoch(GetStartupTime()).toString();
+    return QDateTime::fromTime_t(GetStartupTime()).toString();
 }
 
 QString ClientModel::dataDir() const
 {
-    return GUIUtil::PathToQString(gArgs.GetDataDirNet());
+    return GUIUtil::boostPathToQString(GetDataDir());
 }
 
-QString ClientModel::blocksDir() const
+void ClientModel::updateBanlist()
 {
-    return GUIUtil::PathToQString(gArgs.GetBlocksDirPath());
+    banTableModel->refresh();
 }
 
-void ClientModel::TipChanged(SynchronizationState sync_state, interfaces::BlockTip tip, double verification_progress, SyncType synctype)
+// Handlers for core signals
+static void ShowProgress(ClientModel *clientmodel, const std::string &title, int nProgress)
 {
-    if (synctype == SyncType::HEADER_SYNC) {
+    // emits signal "showProgress"
+    QMetaObject::invokeMethod(clientmodel, "showProgress", Qt::QueuedConnection,
+                              Q_ARG(QString, QString::fromStdString(title)),
+                              Q_ARG(int, nProgress));
+}
+
+static void NotifyNumConnectionsChanged(ClientModel *clientmodel, int newNumConnections)
+{
+    // Too noisy: qDebug() << "NotifyNumConnectionsChanged: " + QString::number(newNumConnections);
+    QMetaObject::invokeMethod(clientmodel, "updateNumConnections", Qt::QueuedConnection,
+                              Q_ARG(int, newNumConnections));
+}
+
+static void NotifyNetworkActiveChanged(ClientModel *clientmodel, bool networkActive)
+{
+    QMetaObject::invokeMethod(clientmodel, "updateNetworkActive", Qt::QueuedConnection,
+                              Q_ARG(bool, networkActive));
+}
+
+static void NotifyAlertChanged(ClientModel *clientmodel)
+{
+    qDebug() << "NotifyAlertChanged";
+    QMetaObject::invokeMethod(clientmodel, "updateAlert", Qt::QueuedConnection);
+}
+
+static void BannedListChanged(ClientModel *clientmodel)
+{
+    qDebug() << QString("%1: Requesting update for peer banlist").arg(__func__);
+    QMetaObject::invokeMethod(clientmodel, "updateBanlist", Qt::QueuedConnection);
+}
+
+static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, int height, int64_t blockTime, double verificationProgress, bool fHeader)
+{
+    // lock free async UI updates in case we have a new block tip
+    // during initial sync, only update the UI if the last update
+    // was > 250ms (MODEL_UPDATE_DELAY) ago
+    int64_t now = 0;
+    if (initialSync)
+        now = GetTimeMillis();
+
+    int64_t& nLastUpdateNotification = fHeader ? nLastHeaderTipUpdateNotification : nLastBlockTipUpdateNotification;
+
+    if (fHeader) {
         // cache best headers time and height to reduce future cs_main locks
-        cachedBestHeaderHeight = tip.block_height;
-        cachedBestHeaderTime = tip.block_time;
-    } else if (synctype == SyncType::BLOCK_SYNC) {
-        m_cached_num_blocks = tip.block_height;
-        WITH_LOCK(m_cached_tip_mutex, m_cached_tip_blocks = tip.block_hash;);
-        WITH_LOCK(m_cached_tip_mutex, m_cached_pow_blocks = tip.block_powhash;);
-        WITH_LOCK(m_cached_tip_mutex, m_cached_algo_blocks = tip.block_powalgo;);
+        clientmodel->cachedBestHeaderHeight = height;
+        clientmodel->cachedBestHeaderTime = blockTime;
     }
-
-    // Throttle GUI notifications about (a) blocks during initial sync, and (b) both blocks and headers during reindex.
-    const bool throttle = (sync_state != SynchronizationState::POST_INIT && synctype == SyncType::BLOCK_SYNC) || sync_state == SynchronizationState::INIT_REINDEX;
-    const int64_t now = throttle ? GetTimeMillis() : 0;
-    int64_t& nLastUpdateNotification = synctype != SyncType::BLOCK_SYNC ? nLastHeaderTipUpdateNotification : nLastBlockTipUpdateNotification;
-    if (throttle && now < nLastUpdateNotification + count_milliseconds(MODEL_UPDATE_DELAY)) {
-        return;
+    // if we are in-sync, update the UI regardless of last update time
+    if (!initialSync || now - nLastUpdateNotification > MODEL_UPDATE_DELAY) {
+        //pass an async signal to the UI thread
+        QMetaObject::invokeMethod(clientmodel, "numBlocksChanged", Qt::QueuedConnection,
+                                  Q_ARG(int, height),
+                                  Q_ARG(QDateTime, QDateTime::fromTime_t(blockTime)),
+                                  Q_ARG(double, verificationProgress),
+                                  Q_ARG(bool, fHeader));
+        nLastUpdateNotification = now;
     }
-
-    Q_EMIT numBlocksChanged(tip.block_height, QDateTime::fromSecsSinceEpoch(tip.block_time), QString::fromStdString(tip.block_hash.ToString()), QString::fromStdString(tip.block_powhash.ToString()), QString::fromStdString(tip.block_powalgo), verification_progress, synctype, sync_state);
-    nLastUpdateNotification = now;
 }
 
 void ClientModel::subscribeToCoreSignals()
 {
-    m_handler_show_progress = m_node.handleShowProgress(
-        [this](const std::string& title, int progress, [[maybe_unused]] bool resume_possible) {
-            Q_EMIT showProgress(QString::fromStdString(title), progress);
-        });
-    m_handler_notify_num_connections_changed = m_node.handleNotifyNumConnectionsChanged(
-        [this](int new_num_connections) {
-            Q_EMIT numConnectionsChanged(new_num_connections);
-        });
-    m_handler_notify_network_active_changed = m_node.handleNotifyNetworkActiveChanged(
-        [this](bool network_active) {
-            Q_EMIT networkActiveChanged(network_active);
-        });
-    m_handler_notify_alert_changed = m_node.handleNotifyAlertChanged(
-        [this]() {
-            qDebug() << "ClientModel: NotifyAlertChanged";
-            Q_EMIT alertsChanged(getStatusBarWarnings());
-        });
-    m_handler_banned_list_changed = m_node.handleBannedListChanged(
-        [this]() {
-            qDebug() << "ClienModel: Requesting update for peer banlist";
-            QMetaObject::invokeMethod(banTableModel, [this] { banTableModel->refresh(); });
-        });
-    m_handler_notify_block_tip = m_node.handleNotifyBlockTip(
-        [this](SynchronizationState sync_state, interfaces::BlockTip tip, double verification_progress) {
-            TipChanged(sync_state, tip, verification_progress, SyncType::BLOCK_SYNC);
-        });
-    m_handler_notify_header_tip = m_node.handleNotifyHeaderTip(
-        [this](SynchronizationState sync_state, interfaces::BlockTip tip, bool presync) {
-            TipChanged(sync_state, tip, /*verification_progress=*/0.0, presync ? SyncType::HEADER_PRESYNC : SyncType::HEADER_SYNC);
-        });
+    // Connect signals to client
+    m_handler_show_progress = m_node.handleShowProgress(boost::bind(ShowProgress, this, _1, _2));
+    m_handler_notify_num_connections_changed = m_node.handleNotifyNumConnectionsChanged(boost::bind(NotifyNumConnectionsChanged, this, _1));
+    m_handler_notify_network_active_changed = m_node.handleNotifyNetworkActiveChanged(boost::bind(NotifyNetworkActiveChanged, this, _1));
+    m_handler_notify_alert_changed = m_node.handleNotifyAlertChanged(boost::bind(NotifyAlertChanged, this));
+    m_handler_banned_list_changed = m_node.handleBannedListChanged(boost::bind(BannedListChanged, this));
+    m_handler_notify_block_tip = m_node.handleNotifyBlockTip(boost::bind(BlockTipChanged, this, _1, _2, _3, _4, false));
+    m_handler_notify_header_tip = m_node.handleNotifyHeaderTip(boost::bind(BlockTipChanged, this, _1, _2, _3, _4, true));
 }
 
 void ClientModel::unsubscribeFromCoreSignals()
 {
+    // Disconnect signals from client
     m_handler_show_progress->disconnect();
     m_handler_notify_num_connections_changed->disconnect();
     m_handler_notify_network_active_changed->disconnect();
@@ -333,7 +270,7 @@ void ClientModel::unsubscribeFromCoreSignals()
 
 bool ClientModel::getProxyInfo(std::string& ip_port) const
 {
-    Proxy ipv4, ipv6;
+    proxyType ipv4, ipv6;
     if (m_node.getProxy((Network) 1, ipv4) && m_node.getProxy((Network) 2, ipv6)) {
       ip_port = ipv4.proxy.ToStringIPPort();
       return true;

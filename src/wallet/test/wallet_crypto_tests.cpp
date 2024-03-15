@@ -1,16 +1,15 @@
-// Copyright (c) 2014-2020 The AustraliaCash Core developers
+// Copyright (c) 2014-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <test/util/setup_common.h>
-#include <util/strencodings.h>
+#include <test/test_australiacash.h>
+#include <utilstrencodings.h>
 #include <wallet/crypter.h>
 
 #include <vector>
 
 #include <boost/test/unit_test.hpp>
 
-namespace wallet {
 BOOST_FIXTURE_TEST_SUITE(wallet_crypto_tests, BasicTestingSetup)
 
 class TestCrypter
@@ -25,10 +24,10 @@ static void TestPassphraseSingle(const std::vector<unsigned char>& vchSalt, cons
 
     if(!correctKey.empty())
         BOOST_CHECK_MESSAGE(memcmp(crypt.vchKey.data(), correctKey.data(), crypt.vchKey.size()) == 0, \
-            HexStr(crypt.vchKey) + std::string(" != ") + HexStr(correctKey));
+            HexStr(crypt.vchKey.begin(), crypt.vchKey.end()) + std::string(" != ") + HexStr(correctKey.begin(), correctKey.end()));
     if(!correctIV.empty())
         BOOST_CHECK_MESSAGE(memcmp(crypt.vchIV.data(), correctIV.data(), crypt.vchIV.size()) == 0,
-            HexStr(crypt.vchIV) + std::string(" != ") + HexStr(correctIV));
+            HexStr(crypt.vchIV.begin(), crypt.vchIV.end()) + std::string(" != ") + HexStr(correctIV.begin(), correctIV.end()));
 }
 
 static void TestPassphrase(const std::vector<unsigned char>& vchSalt, const SecureString& passphrase, uint32_t rounds,
@@ -81,7 +80,7 @@ BOOST_AUTO_TEST_CASE(passphrase) {
 
     std::string hash(GetRandHash().ToString());
     std::vector<unsigned char> vchSalt(8);
-    GetRandBytes(vchSalt);
+    GetRandBytes(vchSalt.data(), vchSalt.size());
     uint32_t rounds = InsecureRand32();
     if (rounds > 30000)
         rounds = 30000;
@@ -125,4 +124,3 @@ BOOST_AUTO_TEST_CASE(decrypt) {
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-} // namespace wallet

@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2021 The AustraliaCash Core developers
+// Copyright (c) 2011-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,11 +7,9 @@
 #include <qt/clientmodel.h>
 
 #include <QPainter>
-#include <QPainterPath>
 #include <QColor>
 #include <QTimer>
 
-#include <chrono>
 #include <cmath>
 
 #define DESIRED_SAMPLES         800
@@ -21,16 +19,17 @@
 
 TrafficGraphWidget::TrafficGraphWidget(QWidget *parent) :
     QWidget(parent),
-    timer(nullptr),
+    timer(0),
     fMax(0.0f),
+    nMins(0),
     vSamplesIn(),
     vSamplesOut(),
     nLastBytesIn(0),
     nLastBytesOut(0),
-    clientModel(nullptr)
+    clientModel(0)
 {
     timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &TrafficGraphWidget::updateRates);
+    connect(timer, SIGNAL(timeout()), SLOT(updateRates()));
 }
 
 void TrafficGraphWidget::setClientModel(ClientModel *model)
@@ -42,7 +41,10 @@ void TrafficGraphWidget::setClientModel(ClientModel *model)
     }
 }
 
-std::chrono::minutes TrafficGraphWidget::getGraphRange() const { return m_range; }
+int TrafficGraphWidget::getGraphRangeMins() const
+{
+    return nMins;
+}
 
 void TrafficGraphWidget::paintPath(QPainterPath &path, QQueue<float> &samples)
 {
@@ -76,7 +78,7 @@ void TrafficGraphWidget::paintEvent(QPaintEvent *)
     int base = floor(log10(fMax));
     float val = pow(10.0f, base);
 
-    const QString units = tr("kB/s");
+    const QString units     = tr("KB/s");
     const float yMarginText = 2.0;
 
     // draw lines
@@ -102,7 +104,6 @@ void TrafficGraphWidget::paintEvent(QPaintEvent *)
         }
     }
 
-    painter.setRenderHint(QPainter::Antialiasing);
     if(!vSamplesIn.empty()) {
         QPainterPath p;
         paintPath(p, vSamplesIn);
@@ -125,10 +126,10 @@ void TrafficGraphWidget::updateRates()
 
     quint64 bytesIn = clientModel->node().getTotalBytesRecv(),
             bytesOut = clientModel->node().getTotalBytesSent();
-    float in_rate_kilobytes_per_sec = static_cast<float>(bytesIn - nLastBytesIn) / timer->interval();
-    float out_rate_kilobytes_per_sec = static_cast<float>(bytesOut - nLastBytesOut) / timer->interval();
-    vSamplesIn.push_front(in_rate_kilobytes_per_sec);
-    vSamplesOut.push_front(out_rate_kilobytes_per_sec);
+    float inRate = (bytesIn - nLastBytesIn) / 1024.0f * 1000 / timer->interval();
+    float outRate = (bytesOut - nLastBytesOut) / 1024.0f * 1000 / timer->interval();
+    vSamplesIn.push_front(inRate);
+    vSamplesOut.push_front(outRate);
     nLastBytesIn = bytesIn;
     nLastBytesOut = bytesOut;
 
@@ -140,22 +141,22 @@ void TrafficGraphWidget::updateRates()
     }
 
     float tmax = 0.0f;
-    for (const float f : vSamplesIn) {
+    for (float f : vSamplesIn) {
         if(f > tmax) tmax = f;
     }
-    for (const float f : vSamplesOut) {
+    for (float f : vSamplesOut) {
         if(f > tmax) tmax = f;
     }
     fMax = tmax;
     update();
 }
 
-void TrafficGraphWidget::setGraphRange(std::chrono::minutes new_range)
+void TrafficGraphWidget::setGraphRangeMins(int mins)
 {
-    m_range = new_range;
-    const auto msecs_per_sample{std::chrono::duration_cast<std::chrono::milliseconds>(m_range) / DESIRED_SAMPLES};
+    nMins = mins;
+    int msecsPerSample = nMins * 60 * 1000 / DESIRED_SAMPLES;
     timer->stop();
-    timer->setInterval(msecs_per_sample);
+    timer->setInterval(msecsPerSample);
 
     clear();
 }

@@ -2,12 +2,16 @@
 #
 # linearize-hashes.py:  List blocks in a linear, no-fork version of the chain.
 #
-# Copyright (c) 2013-2019 The AustraliaCash Core developers
+# Copyright (c) 2013-2018 The AustraliaCash Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #
 
-from http.client import HTTPConnection
+from __future__ import print_function
+try: # Python 3
+    import http.client as httplib
+except ImportError: # Python 2
+    import httplib
 import json
 import re
 import base64
@@ -17,12 +21,17 @@ import os.path
 
 settings = {}
 
+def hex_switchEndian(s):
+    """ Switches the endianness of a hex string (in pairs of hex chars) """
+    pairList = [s[i:i+2].encode() for i in range(0, len(s), 2)]
+    return b''.join(pairList[::-1]).decode()
+
 class AustraliaCashRPC:
     def __init__(self, host, port, username, password):
         authpair = "%s:%s" % (username, password)
         authpair = authpair.encode('utf-8')
         self.authhdr = b"Basic " + base64.b64encode(authpair)
-        self.conn = HTTPConnection(host, port=port, timeout=30)
+        self.conn = httplib.HTTPConnection(host, port=port, timeout=30)
 
     def execute(self, obj):
         try:
@@ -80,7 +89,7 @@ def get_block_hashes(settings, max_blocks_per_call=10000):
                 sys.exit(1)
             assert(resp_obj['id'] == x) # assume replies are in-sequence
             if settings['rev_hash_bytes'] == 'true':
-                resp_obj['result'] = bytes.fromhex(resp_obj['result'])[::-1].hex()
+                resp_obj['result'] = hex_switchEndian(resp_obj['result'])
             print(resp_obj['result'])
 
         height += num_blocks
@@ -98,23 +107,24 @@ if __name__ == '__main__':
         print("Usage: linearize-hashes.py CONFIG-FILE")
         sys.exit(1)
 
-    with open(sys.argv[1], encoding="utf8") as f:
-        for line in f:
-            # skip comment lines
-            m = re.search(r'^\s*#', line)
-            if m:
-                continue
+    f = open(sys.argv[1], encoding="utf8")
+    for line in f:
+        # skip comment lines
+        m = re.search('^\s*#', line)
+        if m:
+            continue
 
-            # parse key=value lines
-            m = re.search(r'^(\w+)\s*=\s*(\S.*)$', line)
-            if m is None:
-                continue
-            settings[m.group(1)] = m.group(2)
+        # parse key=value lines
+        m = re.search('^(\w+)\s*=\s*(\S.*)$', line)
+        if m is None:
+            continue
+        settings[m.group(1)] = m.group(2)
+    f.close()
 
     if 'host' not in settings:
         settings['host'] = '127.0.0.1'
     if 'port' not in settings:
-        settings['port'] = 8332
+        settings['port'] = 11081
     if 'min_height' not in settings:
         settings['min_height'] = 0
     if 'max_height' not in settings:

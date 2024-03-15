@@ -1,14 +1,12 @@
-// Copyright (c) 2011-2020 The AustraliaCash Core developers
+// Copyright (c) 2011-2015 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_TRAFFICGRAPHWIDGET_H
-#define BITCOIN_QT_TRAFFICGRAPHWIDGET_H
+#ifndef AUSTRALIACASH_QT_TRAFFICGRAPHWIDGET_H
+#define AUSTRALIACASH_QT_TRAFFICGRAPHWIDGET_H
 
 #include <QWidget>
 #include <QQueue>
-
-#include <chrono>
 
 class ClientModel;
 
@@ -22,16 +20,16 @@ class TrafficGraphWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit TrafficGraphWidget(QWidget *parent = nullptr);
+    explicit TrafficGraphWidget(QWidget *parent = 0);
     void setClientModel(ClientModel *model);
-    std::chrono::minutes getGraphRange() const;
+    int getGraphRangeMins() const;
 
 protected:
-    void paintEvent(QPaintEvent *) override;
+    void paintEvent(QPaintEvent *);
 
 public Q_SLOTS:
     void updateRates();
-    void setGraphRange(std::chrono::minutes new_range);
+    void setGraphRangeMins(int mins);
     void clear();
 
 private:
@@ -39,7 +37,7 @@ private:
 
     QTimer *timer;
     float fMax;
-    std::chrono::minutes m_range{0};
+    int nMins;
     QQueue<float> vSamplesIn;
     QQueue<float> vSamplesOut;
     quint64 nLastBytesIn;
@@ -47,4 +45,4 @@ private:
     ClientModel *clientModel;
 };
 
-#endif // BITCOIN_QT_TRAFFICGRAPHWIDGET_H
+#endif // AUSTRALIACASH_QT_TRAFFICGRAPHWIDGET_H

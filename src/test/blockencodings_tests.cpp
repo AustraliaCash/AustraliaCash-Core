@@ -1,20 +1,24 @@
-// Copyright (c) 2011-2020 The AustraliaCash Core developers
+// Copyright (c) 2011-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <blockencodings.h>
-#include <chainparams.h>
 #include <consensus/merkle.h>
+#include <chainparams.h>
 #include <pow.h>
-#include <streams.h>
+#include <random.h>
 
-#include <test/util/setup_common.h>
+#include <test/test_australiacash.h>
 
 #include <boost/test/unit_test.hpp>
 
 std::vector<std::pair<uint256, CTransactionRef>> extra_txn;
 
-BOOST_FIXTURE_TEST_SUITE(blockencodings_tests, RegTestingSetup)
+struct RegtestingSetup : public TestingSetup {
+    RegtestingSetup() : TestingSetup(CBaseChainParams::REGTEST) {}
+};
+
+BOOST_FIXTURE_TEST_SUITE(blockencodings_tests, RegtestingSetup)
 
 static CBlock BuildBlockTestCase() {
     CBlock block;
@@ -44,7 +48,7 @@ static CBlock BuildBlockTestCase() {
     bool mutated;
     block.hashMerkleRoot = BlockMerkleRoot(block, &mutated);
     assert(!mutated);
-    while (!CheckProofOfWork(block.GetHash(), block.nBits, Params().GetConsensus())) ++block.nNonce;
+    while (!CheckProofOfWork(block.GetPoWHash(), block.nBits, Params().GetConsensus())) ++block.nNonce;
     return block;
 }
 
@@ -54,17 +58,17 @@ constexpr long SHARED_TX_OFFSET{3};
 
 BOOST_AUTO_TEST_CASE(SimpleRoundTripTest)
 {
-    CTxMemPool& pool = *Assert(m_node.mempool);
+    CTxMemPool pool;
     TestMemPoolEntryHelper entry;
     CBlock block(BuildBlockTestCase());
 
-    LOCK2(cs_main, pool.cs);
-    pool.addUnchecked(entry.FromTx(block.vtx[2]));
+    LOCK(pool.cs);
+    pool.addUnchecked(block.vtx[2]->GetHash(), entry.FromTx(block.vtx[2]));
     BOOST_CHECK_EQUAL(pool.mapTx.find(block.vtx[2]->GetHash())->GetSharedTx().use_count(), SHARED_TX_OFFSET + 0);
 
     // Do a simple ShortTxIDs RT
     {
-        CBlockHeaderAndShortTxIDs shortIDs{block};
+        CBlockHeaderAndShortTxIDs shortIDs(block, true);
 
         CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
         stream << shortIDs;
@@ -81,7 +85,7 @@ BOOST_AUTO_TEST_CASE(SimpleRoundTripTest)
         BOOST_CHECK_EQUAL(pool.mapTx.find(block.vtx[2]->GetHash())->GetSharedTx().use_count(), SHARED_TX_OFFSET + 1);
 
         size_t poolSize = pool.size();
-        pool.removeRecursive(*block.vtx[2], MemPoolRemovalReason::REPLACED);
+        pool.removeRecursive(*block.vtx[2]);
         BOOST_CHECK_EQUAL(pool.size(), poolSize - 1);
 
         CBlock block2;
@@ -122,7 +126,7 @@ public:
         stream >> *this;
     }
     explicit TestHeaderAndShortIDs(const CBlock& block) :
-        TestHeaderAndShortIDs(CBlockHeaderAndShortTxIDs{block}) {}
+        TestHeaderAndShortIDs(CBlockHeaderAndShortTxIDs(block, true)) {}
 
     uint64_t GetShortID(const uint256& txhash) const {
         CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
@@ -132,17 +136,34 @@ public:
         return base.GetShortID(txhash);
     }
 
-    SERIALIZE_METHODS(TestHeaderAndShortIDs, obj) { READWRITE(obj.header, obj.nonce, Using<VectorFormatter<CustomUintFormatter<CBlockHeaderAndShortTxIDs::SHORTTXIDS_LENGTH>>>(obj.shorttxids), obj.prefilledtxn); }
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(header);
+        READWRITE(nonce);
+        size_t shorttxids_size = shorttxids.size();
+        READWRITE(VARINT(shorttxids_size));
+        shorttxids.resize(shorttxids_size);
+        for (size_t i = 0; i < shorttxids.size(); i++) {
+            uint32_t lsb = shorttxids[i] & 0xffffffff;
+            uint16_t msb = (shorttxids[i] >> 32) & 0xffff;
+            READWRITE(lsb);
+            READWRITE(msb);
+            shorttxids[i] = (uint64_t(msb) << 32) | uint64_t(lsb);
+        }
+        READWRITE(prefilledtxn);
+    }
 };
 
 BOOST_AUTO_TEST_CASE(NonCoinbasePreforwardRTTest)
 {
-    CTxMemPool& pool = *Assert(m_node.mempool);
+    CTxMemPool pool;
     TestMemPoolEntryHelper entry;
     CBlock block(BuildBlockTestCase());
 
-    LOCK2(cs_main, pool.cs);
-    pool.addUnchecked(entry.FromTx(block.vtx[2]));
+    LOCK(pool.cs);
+    pool.addUnchecked(block.vtx[2]->GetHash(), entry.FromTx(block.vtx[2]));
     BOOST_CHECK_EQUAL(pool.mapTx.find(block.vtx[2]->GetHash())->GetSharedTx().use_count(), SHARED_TX_OFFSET + 0);
 
     uint256 txhash;
@@ -207,12 +228,12 @@ BOOST_AUTO_TEST_CASE(NonCoinbasePreforwardRTTest)
 
 BOOST_AUTO_TEST_CASE(SufficientPreforwardRTTest)
 {
-    CTxMemPool& pool = *Assert(m_node.mempool);
+    CTxMemPool pool;
     TestMemPoolEntryHelper entry;
     CBlock block(BuildBlockTestCase());
 
-    LOCK2(cs_main, pool.cs);
-    pool.addUnchecked(entry.FromTx(block.vtx[1]));
+    LOCK(pool.cs);
+    pool.addUnchecked(block.vtx[1]->GetHash(), entry.FromTx(block.vtx[1]));
     BOOST_CHECK_EQUAL(pool.mapTx.find(block.vtx[1]->GetHash())->GetSharedTx().use_count(), SHARED_TX_OFFSET + 0);
 
     uint256 txhash;
@@ -258,7 +279,7 @@ BOOST_AUTO_TEST_CASE(SufficientPreforwardRTTest)
 
 BOOST_AUTO_TEST_CASE(EmptyBlockRoundTripTest)
 {
-    CTxMemPool& pool = *Assert(m_node.mempool);
+    CTxMemPool pool;
     CMutableTransaction coinbase;
     coinbase.vin.resize(1);
     coinbase.vin[0].scriptSig.resize(10);
@@ -275,11 +296,11 @@ BOOST_AUTO_TEST_CASE(EmptyBlockRoundTripTest)
     bool mutated;
     block.hashMerkleRoot = BlockMerkleRoot(block, &mutated);
     assert(!mutated);
-    while (!CheckProofOfWork(block.GetHash(), block.nBits, Params().GetConsensus())) ++block.nNonce;
+    while (!CheckProofOfWork(block.GetPoWHash(), block.nBits, Params().GetConsensus())) ++block.nNonce;
 
     // Test simple header round-trip with only coinbase
     {
-        CBlockHeaderAndShortTxIDs shortIDs{block};
+        CBlockHeaderAndShortTxIDs shortIDs(block, false);
 
         CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
         stream << shortIDs;
@@ -365,7 +386,6 @@ BOOST_AUTO_TEST_CASE(TransactionsRequestDeserializationOverflowTest) {
         BOOST_CHECK(0);
     } catch(std::ios_base::failure &) {
         // deserialize should fail
-        BOOST_CHECK(true); // Needed to suppress "Test case [...] did not check any assertions"
     }
 }
 

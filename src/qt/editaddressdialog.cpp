@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2021 The AustraliaCash Core developers
+// Copyright (c) 2011-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -13,11 +13,11 @@
 
 
 EditAddressDialog::EditAddressDialog(Mode _mode, QWidget *parent) :
-    QDialog(parent, GUIUtil::dialog_flags),
+    QDialog(parent),
     ui(new Ui::EditAddressDialog),
-    mapper(nullptr),
+    mapper(0),
     mode(_mode),
-    model(nullptr)
+    model(0)
 {
     ui->setupUi(this);
 
@@ -43,8 +43,6 @@ EditAddressDialog::EditAddressDialog(Mode _mode, QWidget *parent) :
     GUIUtil::ItemDelegate* delegate = new GUIUtil::ItemDelegate(mapper);
     connect(delegate, &GUIUtil::ItemDelegate::keyEscapePressed, this, &EditAddressDialog::reject);
     mapper->setItemDelegate(delegate);
-
-    GUIUtil::handleCloseWindowShortcut(this);
 }
 
 EditAddressDialog::~EditAddressDialog()

@@ -36,7 +36,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>AustraliaCashGUI</name>
+    <name>BitcoinGUI</name>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -167,6 +167,9 @@
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
+    </context>
+<context>
+    <name>WalletController</name>
     </context>
 <context>
     <name>WalletFrame</name>

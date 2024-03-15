@@ -6,10 +6,10 @@ Some notes on how to build AustraliaCash Core in Unix.
 
 Note
 ---------------------
-Always use absolute paths to configure and compile AustraliaCash Core and the dependencies.
-For example, when specifying the path of the dependency:
+Always use absolute paths to configure and compile AustraliaCash Core and the dependencies,
+for example, when specifying the path of the dependency:
 
-    ../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX
+	../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX
 
 Here BDB_PREFIX must be an absolute path - it is defined using $(pwd) which ensures
 the usage of the absolute path.
@@ -20,13 +20,36 @@ To Build
 ```bash
 ./autogen.sh
 ./configure
-make # use "-j N" for N parallel jobs
+make
 make install # optional
 ```
 
-This will build bitcoin-qt as well, if the dependencies are met.
+This will build australiacash-qt as well if the dependencies are met.
 
-See [dependencies.md](dependencies.md) for a complete overview.
+Dependencies
+---------------------
+
+These dependencies are required:
+
+ Library     | Purpose          | Description
+ ------------|------------------|----------------------
+ libssl      | Crypto           | Random Number Generation, Elliptic Curve Cryptography
+ libboost    | Utility          | Library for threading, data structures, etc
+ libevent    | Networking       | OS independent asynchronous networking
+
+Optional dependencies:
+
+ Library     | Purpose          | Description
+ ------------|------------------|----------------------
+ miniupnpc   | UPnP Support     | Firewall-jumping support
+ libdb5.3    | Berkeley DB      | Wallet storage (only needed when wallet enabled)
+ qt          | GUI              | GUI toolkit (only needed when GUI enabled)
+ protobuf    | Payments in GUI  | Data interchange format used for payment protocol (only needed when GUI enabled)
+ libqrencode | QR codes in GUI  | Optional for generating QR codes (only needed when GUI enabled)
+ univalue    | Utility          | JSON parsing and encoding (bundled version will be used unless --with-system-univalue passed to configure)
+ libzmq3     | ZMQ notification | Optional, allows generating ZMQ notifications (requires ZMQ version >= 4.x)
+
+For the versions used, see [dependencies.md](dependencies.md)
 
 Memory Requirements
 --------------------
@@ -38,14 +61,6 @@ tuned to conserve memory with additional CXXFLAGS:
 
     ./configure CXXFLAGS="--param ggc-min-expand=1 --param ggc-min-heapsize=32768"
 
-Alternatively, or in addition, debugging information can be skipped for compilation. The default compile flags are
-`-g -O2`, and can be changed with:
-
-    ./configure CXXFLAGS="-O2"
-
-Finally, clang (often less resource hungry) can be used instead of gcc, which is used by default:
-
-    ./configure CXX=clang++ CC=clang
 
 ## Linux Distribution Specific Instructions
 
@@ -55,54 +70,37 @@ Finally, clang (often less resource hungry) can be used instead of gcc, which is
 
 Build requirements:
 
-    sudo apt-get install build-essential libtool autotools-dev automake pkg-config bsdmainutils python3
+    sudo apt-get install build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils python3 libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev
 
-Now, you can either build from self-compiled [depends](/depends/README.md) or install the required dependencies:
+BerkeleyDB is required for the wallet.
 
-    sudo apt-get install libevent-dev libboost-dev
+    sudo apt-get install libdb5.3-dev libdb5.3++-dev
 
-SQLite is required for the descriptor wallet:
+See the section "Disable-wallet mode" to build AustraliaCash Core without wallet.
 
-    sudo apt install libsqlite3-dev
+Optional (see --with-miniupnpc and --enable-upnp-default):
 
-Berkeley DB is required for the legacy wallet. Ubuntu and Debian have their own `libdb-dev` and `libdb++-dev` packages,
-but these will install Berkeley DB 5.1 or later. This will break binary wallet compatibility with the distributed
-executables, which are based on BerkeleyDB 4.8. If you do not care about wallet compatibility, pass
-`--with-incompatible-bdb` to configure. Otherwise, you can build Berkeley DB [yourself](#berkeley-db).
+    sudo apt-get install libminiupnpc-dev
 
-To build AustraliaCash Core without wallet, see [*Disable-wallet mode*](#disable-wallet-mode)
-
-Optional port mapping libraries (see: `--with-miniupnpc`, `--enable-upnp-default`, and `--with-natpmp`, `--enable-natpmp-default`):
-
-    sudo apt install libminiupnpc-dev libnatpmp-dev
-
-ZMQ dependencies (provides ZMQ API):
+ZMQ dependencies (provides ZMQ API 4.x):
 
     sudo apt-get install libzmq3-dev
 
-User-Space, Statically Defined Tracing (USDT) dependencies:
+#### Dependencies for the GUI
 
-    sudo apt install systemtap-sdt-dev
-
-GUI dependencies:
-
-If you want to build bitcoin-qt, make sure that the required packages for Qt development
+If you want to build australiacash-qt, make sure that the required packages for Qt development
 are installed. Qt 5 is necessary to build the GUI.
 To build without GUI pass `--without-gui`.
 
 To build with Qt 5 you need the following:
 
-    sudo apt-get install libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools
-
-Additionally, to support Wayland protocol for modern desktop environments:
-
-    sudo apt install qtwayland5
+    sudo apt-get install libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler
 
 libqrencode (optional) can be installed with:
 
     sudo apt-get install libqrencode-dev
 
-Once these are installed, they will be found by configure and a bitcoin-qt executable will be
+Once these are installed, they will be found by configure and a australiacash-qt executable will be
 built by default.
 
 
@@ -112,104 +110,79 @@ built by default.
 
 Build requirements:
 
-    sudo dnf install gcc-c++ libtool make autoconf automake python3
+    sudo dnf install gcc-c++ libtool make autoconf automake openssl-devel libevent-devel boost-devel libdb5.3-devel libdb5.3-cxx-devel python3
 
-Now, you can either build from self-compiled [depends](/depends/README.md) or install the required dependencies:
+Optional:
 
-    sudo dnf install libevent-devel boost-devel
-
-SQLite is required for the descriptor wallet:
-
-    sudo dnf install sqlite-devel
-
-Berkeley DB is required for the legacy wallet:
-
-    sudo dnf install libdb4-devel libdb4-cxx-devel
-
-Newer Fedora releases, since Fedora 33, have only `libdb-devel` and `libdb-cxx-devel` packages, but these will install
-Berkeley DB 5.3 or later. This will break binary wallet compatibility with the distributed executables, which
-are based on Berkeley DB 4.8. If you do not care about wallet compatibility,
-pass `--with-incompatible-bdb` to configure. Otherwise, you can build Berkeley DB [yourself](#berkeley-db).
-
-To build AustraliaCash Core without wallet, see [*Disable-wallet mode*](#disable-wallet-mode)
-
-Optional port mapping libraries (see: `--with-miniupnpc`, `--enable-upnp-default`, and `--with-natpmp`, `--enable-natpmp-default`):
-
-    sudo dnf install miniupnpc-devel libnatpmp-devel
-
-ZMQ dependencies (provides ZMQ API):
-
-    sudo dnf install zeromq-devel
-
-User-Space, Statically Defined Tracing (USDT) dependencies:
-
-    sudo dnf install systemtap
-
-GUI dependencies:
-
-If you want to build bitcoin-qt, make sure that the required packages for Qt development
-are installed. Qt 5 is necessary to build the GUI.
-To build without GUI pass `--without-gui`.
+    sudo dnf install miniupnpc-devel
 
 To build with Qt 5 you need the following:
 
-    sudo dnf install qt5-qttools-devel qt5-qtbase-devel
-
-Additionally, to support Wayland protocol for modern desktop environments:
-
-    sudo dnf install qt5-qtwayland
+    sudo dnf install qt5-qttools-devel qt5-qtbase-devel protobuf-devel
 
 libqrencode (optional) can be installed with:
 
     sudo dnf install qrencode-devel
 
-Once these are installed, they will be found by configure and a bitcoin-qt executable will be
-built by default.
-
 Notes
 -----
-The release is built with GCC and then "strip bitcoind" to strip the debug
+The release is built with GCC and then "strip australiacashd" to strip the debug
 symbols, which reduces the executable size by about 90%.
+
 
 miniupnpc
 ---------
 
-[miniupnpc](https://miniupnp.tuxfamily.org) may be used for UPnP port mapping.  It can be downloaded from [here](
-https://miniupnp.tuxfamily.org/files/).  UPnP support is compiled in and
-turned off by default.  See the configure options for UPnP behavior desired:
+[miniupnpc](http://miniupnp.free.fr/) may be used for UPnP port mapping.  It can be downloaded from [here](
+http://miniupnp.tuxfamily.org/files/).  UPnP support is compiled in and
+turned off by default.  See the configure options for upnp behavior desired:
 
-    --without-miniupnpc      No UPnP support, miniupnp not required
-    --disable-upnp-default   (the default) UPnP support turned off by default at runtime
-    --enable-upnp-default    UPnP support turned on by default at runtime
+	--without-miniupnpc      No UPnP support miniupnp not required
+	--disable-upnp-default   (the default) UPnP support turned off by default at runtime
+	--enable-upnp-default    UPnP support turned on by default at runtime
 
-libnatpmp
----------
-
-[libnatpmp](https://miniupnp.tuxfamily.org/libnatpmp.html) may be used for NAT-PMP port mapping. It can be downloaded
-from [here](https://miniupnp.tuxfamily.org/files/). NAT-PMP support is compiled in and
-turned off by default. See the configure options for NAT-PMP behavior desired:
-
-    --without-natpmp          No NAT-PMP support, libnatpmp not required
-    --disable-natpmp-default  (the default) NAT-PMP support turned off by default at runtime
-    --enable-natpmp-default   NAT-PMP support turned on by default at runtime
 
 Berkeley DB
 -----------
-
-The legacy wallet uses Berkeley DB. To ensure backwards compatibility it is
-recommended to use Berkeley DB 4.8. If you have to build it yourself, you can
-use [the installation script included in contrib/](/contrib/install_db4.sh)
-like so:
+It is recommended to use Berkeley DB 5.3. If you have to build it yourself:
 
 ```shell
-./contrib/install_db4.sh `pwd`
+AUSTRALIACASH_ROOT=$(pwd)
+
+# Pick some path to install BDB to, here we create a directory within the australiacash directory
+BDB_PREFIX="${AUSTRALIACASH_ROOT}/db5"
+mkdir -p $BDB_PREFIX
+
+# Fetch the source and verify that it is not tampered with
+wget 'http://download.oracle.com/berkeley-db/db-5.3.28.NC.tar.gz'
+echo '76a25560d9e52a198d37a31440fd07632b5f1f8f9f2b6d5438f4bc3e7c9013ef db-5.3.28.NC.tar.gz' | sha256sum -c
+# -> db-5.3.28.NC.tar.gz: OK
+tar -xzvf db-5.3.28.NC.tar.gz
+
+# Build the library and install to our prefix
+cd db-5.3.28.NC/build_unix/
+#  Note: Do a static build so that it can be embedded into the executable, instead of having to find a .so at runtime
+../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX
+make install
+
+# Configure AustraliaCash Core to use our own-built instance of BDB
+cd $AUSTRALIACASH_ROOT
+./autogen.sh
+./configure LDFLAGS="-L${BDB_PREFIX}/lib/" CPPFLAGS="-I${BDB_PREFIX}/include/" # (other args...)
 ```
 
 from the root of the repository.
 
-Otherwise, you can build AustraliaCash Core from self-compiled [depends](/depends/README.md).
+**Note**: You only need Berkeley DB if the wallet is enabled (see the section *Disable-Wallet mode* below).
 
-**Note**: You only need Berkeley DB if the legacy wallet is enabled (see [*Disable-wallet mode*](#disable-wallet-mode)).
+Boost
+-----
+If you need to build Boost yourself:
+
+	sudo su
+	./bootstrap.sh
+	./bjam install
+
 
 Security
 --------
@@ -219,12 +192,14 @@ This can be disabled with:
 
 Hardening Flags:
 
-    ./configure --enable-hardening
-    ./configure --disable-hardening
+	./configure --enable-hardening
+	./configure --disable-hardening
 
 
 Hardening enables the following features:
-* _Position Independent Executable_: Build position independent code to take advantage of Address Space Layout Randomization
+
+* Position Independent Executable
+    Build position independent code to take advantage of Address Space Layout Randomization
     offered by some kernels. Attackers who can cause execution of code at an arbitrary memory
     location are thwarted if they don't know where anything useful is located.
     The stack and heap are randomly located by default, but this allows the code section to be
@@ -235,38 +210,40 @@ Hardening enables the following features:
 
     To test that you have built PIE executable, install scanelf, part of paxutils, and use:
 
-        scanelf -e ./bitcoin
+    	scanelf -e ./australiacash
 
     The output should contain:
 
      TYPE
     ET_DYN
 
-* _Non-executable Stack_: If the stack is executable then trivial stack-based buffer overflow exploits are possible if
+* Non-executable Stack
+    If the stack is executable then trivial stack-based buffer overflow exploits are possible if
     vulnerable buffers are found. By default, AustraliaCash Core should be built with a non-executable stack,
     but if one of the libraries it uses asks for an executable stack or someone makes a mistake
     and uses a compiler extension which requires an executable stack, it will silently build an
     executable without the non-executable stack protection.
 
     To verify that the stack is non-executable after compiling use:
-    `scanelf -e ./bitcoin`
+    `scanelf -e ./australiacash`
 
     The output should contain:
-    STK/REL/PTL
-    RW- R-- RW-
+	STK/REL/PTL
+	RW- R-- RW-
 
     The STK RW- means that the stack is readable and writeable but not executable.
 
 Disable-wallet mode
 --------------------
-When the intention is to only run a P2P node, without a wallet, AustraliaCash Core can
-be compiled in disable-wallet mode with:
+When the intention is to run only a P2P node without a wallet, AustraliaCash Core may be compiled in
+disable-wallet mode with:
 
     ./configure --disable-wallet
 
-In this case there is no dependency on SQLite or Berkeley DB.
+In this case there is no dependency on Berkeley DB 4.8.
 
-Mining is also possible in disable-wallet mode using the `getblocktemplate` RPC call.
+Mining is also possible in disable-wallet mode, but only using the `getblocktemplate` RPC
+call not `getwork`.
 
 Additional Configure Flags
 --------------------------
@@ -277,14 +254,45 @@ A list of additional configure flags can be displayed with:
 
 Setup and Build Example: Arch Linux
 -----------------------------------
-This example lists the steps necessary to setup and build a command line only distribution of the latest changes on Arch Linux:
+This example lists the steps necessary to setup and build a command line only, non-wallet distribution of the latest changes on Arch Linux:
 
-    pacman --sync --needed autoconf automake boost gcc git libevent libtool make pkgconf python sqlite
-    git clone https://github.com/bitcoin/bitcoin.git
-    cd bitcoin/
+    pacman -S git base-devel boost libevent python
+    git clone https://github.com/AustraliaCash-Network/AustraliaCash.git
+    cd AustraliaCash/
     ./autogen.sh
-    ./configure
-    make check
-    ./src/bitcoind
+    ./configure --without-gui --without-miniupnpc --disable-tests --disable-man
+    make
+    cd src
+    strip australiacashd australiacash-cli australiacash-tx
 
-If you intend to work with legacy Berkeley DB wallets, see [Berkeley DB](#berkeley-db) section.
+Note:
+Enabling wallet support requires either compiling against a Berkeley DB newer than 4.8 (package `db`) using `--with-incompatible-bdb`,
+or building and depending on a local version of Berkeley DB 4.8. The readily available Arch Linux packages are currently built using
+`--with-incompatible-bdb` according to the [PKGBUILD](https://projects.archlinux.org/svntogit/community.git/tree/australiacash/trunk/PKGBUILD).
+As mentioned above, when maintaining portability of the wallet between the standard AustraliaCash Core distributions and independently built
+node software is desired, Berkeley DB 4.8 must be used.
+
+
+ARM Cross-compilation
+-------------------
+These steps can be performed on, for example, an Ubuntu VM. The depends system
+will also work on other Linux distributions, however the commands for
+installing the toolchain will be different.
+
+Make sure you install the build requirements mentioned above.
+Then, install the toolchain and curl:
+
+    sudo apt-get install g++-arm-linux-gnueabihf curl
+
+To build executables for ARM:
+
+    cd depends
+    make HOST=arm-linux-gnueabihf NO_QT=1
+    cd ..
+    ./autogen.sh
+    ./configure --prefix=$PWD/depends/arm-linux-gnueabihf --enable-glibc-back-compat --enable-reduce-exports LDFLAGS=-static-libstdc++
+    make
+
+
+For further documentation on the depends system see [README.md](../depends/README.md) in the depends directory.
+

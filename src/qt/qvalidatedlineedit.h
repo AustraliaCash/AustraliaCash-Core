@@ -1,9 +1,9 @@
-// Copyright (c) 2011-2020 The AustraliaCash Core developers
+// Copyright (c) 2011-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_QVALIDATEDLINEEDIT_H
-#define BITCOIN_QT_QVALIDATEDLINEEDIT_H
+#ifndef AUSTRALIACASH_QT_QVALIDATEDLINEEDIT_H
+#define AUSTRALIACASH_QT_QVALIDATEDLINEEDIT_H
 
 #include <QLineEdit>
 
@@ -21,15 +21,14 @@ public:
     bool isValid();
 
 protected:
-    void focusInEvent(QFocusEvent *evt) override;
-    void focusOutEvent(QFocusEvent *evt) override;
+    void focusInEvent(QFocusEvent *evt);
+    void focusOutEvent(QFocusEvent *evt);
 
 private:
     bool valid;
     const QValidator *checkValidator;
 
 public Q_SLOTS:
-    void setText(const QString&);
     void setValid(bool valid);
     void setEnabled(bool enabled);
 
@@ -41,4 +40,4 @@ private Q_SLOTS:
     void checkValidity();
 };
 
-#endif // BITCOIN_QT_QVALIDATEDLINEEDIT_H
+#endif // AUSTRALIACASH_QT_QVALIDATEDLINEEDIT_H

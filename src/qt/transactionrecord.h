@@ -1,11 +1,11 @@
-// Copyright (c) 2011-2021 The AustraliaCash Core developers
+// Copyright (c) 2011-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_TRANSACTIONRECORD_H
-#define BITCOIN_QT_TRANSACTIONRECORD_H
+#ifndef AUSTRALIACASH_QT_TRANSACTIONRECORD_H
+#define AUSTRALIACASH_QT_TRANSACTIONRECORD_H
 
-#include <consensus/amount.h>
+#include <amount.h>
 #include <uint256.h>
 
 #include <QList>
@@ -20,10 +20,19 @@ struct WalletTxStatus;
 
 /** UI model for transaction status. The transaction status is the part of a transaction that will change over time.
  */
-struct TransactionStatus {
+class TransactionStatus
+{
+public:
+    TransactionStatus():
+        countsForBalance(false), sortKey(""),
+        matures_in(0), status(Unconfirmed), depth(0), open_for(0), cur_num_blocks(-1)
+    { }
+
     enum Status {
         Confirmed,          /**< Have 6 or more confirmations (normal tx) or fully mature (mined tx) **/
         /// Normal (sent/received) transactions
+        OpenUntilDate,      /**< Transaction not yet final, waiting for date */
+        OpenUntilBlock,     /**< Transaction not yet final, waiting for block */
         Unconfirmed,        /**< Not yet mined into a block **/
         Confirming,         /**< Confirmed, but waiting for the recommended number of confirmations **/
         Conflicted,         /**< Conflicts with other transaction or mempool **/
@@ -34,25 +43,28 @@ struct TransactionStatus {
     };
 
     /// Transaction counts towards available balance
-    bool countsForBalance{false};
+    bool countsForBalance;
     /// Sorting key based on status
     std::string sortKey;
 
     /** @name Generated (mined) transactions
        @{*/
-    int matures_in{0};
+    int matures_in;
     /**@}*/
 
     /** @name Reported status
        @{*/
-    Status status{Unconfirmed};
-    qint64 depth{0};
+    Status status;
+    qint64 depth;
+    qint64 open_for; /**< Timestamp if status==OpenUntilDate, otherwise number
+                      of additional blocks that need to be mined before
+                      finalization */
     /**@}*/
 
-    /** Current block hash (to know whether cached status is still valid) */
-    uint256 m_cur_block_hash{};
+    /** Current number of blocks (to know whether cached status is still valid) */
+    int cur_num_blocks;
 
-    bool needsUpdate{false};
+    bool needsUpdate;
 };
 
 /** UI model for a transaction. A core transaction can be represented by multiple UI transactions if it has
@@ -69,8 +81,7 @@ public:
         SendToOther,
         RecvWithAddress,
         RecvFromOther,
-        SendToSelf,
-        Staked
+        SendToSelf
     };
 
     /** Number of confirmation recommended for accepting a transaction */
@@ -127,11 +138,11 @@ public:
 
     /** Update status from core wallet tx.
      */
-    void updateStatus(const interfaces::WalletTxStatus& wtx, const uint256& block_hash, int numBlocks, int64_t block_time);
+    void updateStatus(const interfaces::WalletTxStatus& wtx, int numBlocks, int64_t adjustedTime);
 
     /** Return whether a status update is needed.
      */
-    bool statusUpdateNeeded(const uint256& block_hash) const;
+    bool statusUpdateNeeded(int numBlocks) const;
 };
 
-#endif // BITCOIN_QT_TRANSACTIONRECORD_H
+#endif // AUSTRALIACASH_QT_TRANSACTIONRECORD_H

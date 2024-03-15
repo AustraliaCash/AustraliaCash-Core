@@ -32,14 +32,10 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>AustraliaCashGUI</name>
+    <name>BitcoinGUI</name>
     <message>
         <source>Quit application</source>
         <translation>Κλείσιμο εφαρμογής</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Πορτοφόλι</translation>
     </message>
     <message>
         <source>Error</source>
@@ -136,6 +132,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Wallet</source>
+        <translation>Πορτοφόλι</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -187,6 +187,9 @@
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
+    </context>
+<context>
+    <name>WalletController</name>
     </context>
 <context>
     <name>WalletFrame</name>

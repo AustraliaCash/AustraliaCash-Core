@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2014-2021 The AustraliaCash Core developers
+# Copyright (c) 2014-2018 The AustraliaCash Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the wallet accounts properly when there are cloned transactions with malleated scriptsigs."""
@@ -7,18 +7,14 @@
 from test_framework.test_framework import AustraliaCashTestFramework
 from test_framework.util import (
     assert_equal,
-    find_vout_for_address
+    connect_nodes,
+    disconnect_nodes,
+    sync_blocks,
 )
-from test_framework.messages import (
-    COIN,
-    tx_from_hex,
-)
-
 
 class TxnMallTest(AustraliaCashTestFramework):
     def set_test_params(self):
-        self.num_nodes = 3
-        self.supports_cli = False
+        self.num_nodes = 4
 
     def skip_test_if_missing_module(self):
         self.skip_if_no_wallet()
@@ -27,19 +23,13 @@ class TxnMallTest(AustraliaCashTestFramework):
         parser.add_argument("--mineblock", dest="mine_block", default=False, action="store_true",
                             help="Test double-spend of 1-confirmed transaction")
         parser.add_argument("--segwit", dest="segwit", default=False, action="store_true",
-                            help="Test behaviour with SegWit txn (which should fail)")
+                            help="Test behaviour with SegWit txn (which should fail")
 
     def setup_network(self):
         # Start with split network:
-        super().setup_network()
-        self.disconnect_nodes(1, 2)
-
-    def spend_txid(self, txid, vout, outputs):
-        inputs = [{"txid": txid, "vout": vout}]
-        tx = self.nodes[0].createrawtransaction(inputs, outputs)
-        tx = self.nodes[0].fundrawtransaction(tx)
-        tx = self.nodes[0].signrawtransactionwithwallet(tx['hex'])
-        return self.nodes[0].sendrawtransaction(tx['hex'])
+        super(TxnMallTest, self).setup_network()
+        disconnect_nodes(self.nodes[1], 2)
+        disconnect_nodes(self.nodes[2], 1)
 
     def run_test(self):
         if self.options.segwit:
@@ -47,17 +37,17 @@ class TxnMallTest(AustraliaCashTestFramework):
         else:
             output_type = "legacy"
 
-        # All nodes should start with 1,250 BTC:
+        # All nodes should start with 1,250 AUS:
         starting_balance = 1250
-        for i in range(3):
+        for i in range(4):
             assert_equal(self.nodes[i].getbalance(), starting_balance)
+            self.nodes[i].getnewaddress()  # bug workaround, coins generated assigned to first getnewaddress!
 
         self.nodes[0].settxfee(.001)
 
         node0_address1 = self.nodes[0].getnewaddress(address_type=output_type)
         node0_txid1 = self.nodes[0].sendtoaddress(node0_address1, 1219)
         node0_tx1 = self.nodes[0].gettransaction(node0_txid1)
-        self.nodes[0].lockunspent(False, [{"txid":node0_txid1, "vout": find_vout_for_address(self.nodes[0], node0_txid1, node0_address1)}])
 
         node0_address2 = self.nodes[0].getnewaddress(address_type=output_type)
         node0_txid2 = self.nodes[0].sendtoaddress(node0_address2, 29)
@@ -70,35 +60,42 @@ class TxnMallTest(AustraliaCashTestFramework):
         node1_address = self.nodes[1].getnewaddress()
 
         # Send tx1, and another transaction tx2 that won't be cloned
-        txid1 = self.spend_txid(node0_txid1, find_vout_for_address(self.nodes[0], node0_txid1, node0_address1), {node1_address: 40})
-        txid2 = self.spend_txid(node0_txid2, find_vout_for_address(self.nodes[0], node0_txid2, node0_address2), {node1_address: 20})
+        txid1 = self.nodes[0].sendtoaddress(node1_address, 40)
+        txid2 = self.nodes[0].sendtoaddress(node1_address, 20)
 
         # Construct a clone of tx1, to be malleated
         rawtx1 = self.nodes[0].getrawtransaction(txid1, 1)
-        clone_inputs = [{"txid": rawtx1["vin"][0]["txid"], "vout": rawtx1["vin"][0]["vout"], "sequence": rawtx1["vin"][0]["sequence"]}]
-        clone_outputs = {rawtx1["vout"][0]["scriptPubKey"]["address"]: rawtx1["vout"][0]["value"],
-                         rawtx1["vout"][1]["scriptPubKey"]["address"]: rawtx1["vout"][1]["value"]}
+        clone_inputs = [{"txid": rawtx1["vin"][0]["txid"], "vout": rawtx1["vin"][0]["vout"]}]
+        clone_outputs = {rawtx1["vout"][0]["scriptPubKey"]["addresses"][0]: rawtx1["vout"][0]["value"],
+                         rawtx1["vout"][1]["scriptPubKey"]["addresses"][0]: rawtx1["vout"][1]["value"]}
         clone_locktime = rawtx1["locktime"]
         clone_raw = self.nodes[0].createrawtransaction(clone_inputs, clone_outputs, clone_locktime)
 
         # createrawtransaction randomizes the order of its outputs, so swap them if necessary.
-        clone_tx = tx_from_hex(clone_raw)
-        if (rawtx1["vout"][0]["value"] == 40 and clone_tx.vout[0].nValue != 40*COIN or rawtx1["vout"][0]["value"] != 40 and clone_tx.vout[0].nValue == 40*COIN):
-            (clone_tx.vout[0], clone_tx.vout[1]) = (clone_tx.vout[1], clone_tx.vout[0])
+        # output 0 is at version+#inputs+input+sigstub+sequence+#outputs
+        # 40 AUS serialized is 00286bee00000000
+        pos0 = 2 * (4 + 1 + 36 + 1 + 4 + 1)
+        hex40 = "00286bee00000000"
+        output_len = 16 + 2 + 2 * int("0x" + clone_raw[pos0 + 16:pos0 + 16 + 2], 0)
+        if (rawtx1["vout"][0]["value"] == 40 and clone_raw[pos0:pos0 + 16] != hex40 or rawtx1["vout"][0]["value"] != 40 and clone_raw[pos0:pos0 + 16] == hex40):
+            output0 = clone_raw[pos0:pos0 + output_len]
+            output1 = clone_raw[pos0 + output_len:pos0 + 2 * output_len]
+            clone_raw = clone_raw[:pos0] + output1 + output0 + clone_raw[pos0 + 2 * output_len:]
 
         # Use a different signature hash type to sign.  This creates an equivalent but malleated clone.
         # Don't send the clone anywhere yet
-        tx1_clone = self.nodes[0].signrawtransactionwithwallet(clone_tx.serialize().hex(), None, "ALL|ANYONECANPAY")
+        tx1_clone = self.nodes[0].signrawtransactionwithwallet(clone_raw, None, "ALL|ANYONECANPAY")
         assert_equal(tx1_clone["complete"], True)
 
         # Have node0 mine a block, if requested:
         if (self.options.mine_block):
-            self.generate(self.nodes[0], 1, sync_fun=lambda: self.sync_blocks(self.nodes[0:2]))
+            self.nodes[0].generate(1)
+            sync_blocks(self.nodes[0:2])
 
         tx1 = self.nodes[0].gettransaction(txid1)
         tx2 = self.nodes[0].gettransaction(txid2)
 
-        # Node0's balance should be starting balance, plus 50BTC for another
+        # Node0's balance should be starting balance, plus 50AUS for another
         # matured block, minus tx1 and tx2 amounts, and minus transaction fees:
         expected = starting_balance + node0_tx1["fee"] + node0_tx2["fee"]
         if self.options.mine_block:
@@ -122,13 +119,14 @@ class TxnMallTest(AustraliaCashTestFramework):
             return
 
         # ... mine a block...
-        self.generate(self.nodes[2], 1, sync_fun=self.no_op)
+        self.nodes[2].generate(1)
 
         # Reconnect the split network, and sync chain:
-        self.connect_nodes(1, 2)
+        connect_nodes(self.nodes[1], 2)
         self.nodes[2].sendrawtransaction(node0_tx2["hex"])
         self.nodes[2].sendrawtransaction(tx2["hex"])
-        self.generate(self.nodes[2], 1)  # Mine another block to make sure we sync
+        self.nodes[2].generate(1)  # Mine another block to make sure we sync
+        sync_blocks(self.nodes)
 
         # Re-fetch transaction info:
         tx1 = self.nodes[0].gettransaction(txid1)
@@ -140,13 +138,12 @@ class TxnMallTest(AustraliaCashTestFramework):
         assert_equal(tx1_clone["confirmations"], 2)
         assert_equal(tx2["confirmations"], 1)
 
-        # Check node0's total balance; should be same as before the clone, + 100 BTC for 2 matured,
+        # Check node0's total balance; should be same as before the clone, + 100 AUS for 2 matured,
         # less possible orphaned matured subsidy
         expected += 100
         if (self.options.mine_block):
             expected -= 50
         assert_equal(self.nodes[0].getbalance(), expected)
-
 
 if __name__ == '__main__':
     TxnMallTest().main()

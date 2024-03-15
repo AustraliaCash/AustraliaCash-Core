@@ -1,15 +1,14 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2021 The AustraliaCash Core developers
+// Copyright (c) 2009-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_SUPPORT_ALLOCATORS_SECURE_H
-#define BITCOIN_SUPPORT_ALLOCATORS_SECURE_H
+#ifndef AUSTRALIACASH_SUPPORT_ALLOCATORS_SECURE_H
+#define AUSTRALIACASH_SUPPORT_ALLOCATORS_SECURE_H
 
 #include <support/lockedpool.h>
 #include <support/cleanse.h>
 
-#include <memory>
 #include <string>
 
 //
@@ -18,13 +17,15 @@
 //
 template <typename T>
 struct secure_allocator : public std::allocator<T> {
-    using base = std::allocator<T>;
-    using traits = std::allocator_traits<base>;
-    using size_type = typename traits::size_type;
-    using difference_type = typename traits::difference_type;
-    using pointer = typename traits::pointer;
-    using const_pointer = typename traits::const_pointer;
-    using value_type = typename traits::value_type;
+    // MSVC8 default copy constructor is broken
+    typedef std::allocator<T> base;
+    typedef typename base::size_type size_type;
+    typedef typename base::difference_type difference_type;
+    typedef typename base::pointer pointer;
+    typedef typename base::const_pointer const_pointer;
+    typedef typename base::reference reference;
+    typedef typename base::const_reference const_reference;
+    typedef typename base::value_type value_type;
     secure_allocator() noexcept {}
     secure_allocator(const secure_allocator& a) noexcept : base(a) {}
     template <typename U>
@@ -37,13 +38,9 @@ struct secure_allocator : public std::allocator<T> {
         typedef secure_allocator<_Other> other;
     };
 
-    T* allocate(std::size_t n, const void* hint = nullptr)
+    T* allocate(std::size_t n, const void* hint = 0)
     {
-        T* allocation = static_cast<T*>(LockedPoolManager::Instance().alloc(sizeof(T) * n));
-        if (!allocation) {
-            throw std::bad_alloc();
-        }
-        return allocation;
+        return static_cast<T*>(LockedPoolManager::Instance().alloc(sizeof(T) * n));
     }
 
     void deallocate(T* p, std::size_t n)
@@ -58,4 +55,4 @@ struct secure_allocator : public std::allocator<T> {
 // This is exactly like std::string, but with a custom allocator.
 typedef std::basic_string<char, std::char_traits<char>, secure_allocator<char> > SecureString;
 
-#endif // BITCOIN_SUPPORT_ALLOCATORS_SECURE_H
+#endif // AUSTRALIACASH_SUPPORT_ALLOCATORS_SECURE_H

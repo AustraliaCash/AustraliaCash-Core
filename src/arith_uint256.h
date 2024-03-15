@@ -1,16 +1,17 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2019 The AustraliaCash Core developers
+// Copyright (c) 2009-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_ARITH_UINT256_H
-#define BITCOIN_ARITH_UINT256_H
+#ifndef AUSTRALIACASH_ARITH_UINT256_H
+#define AUSTRALIACASH_ARITH_UINT256_H
 
+#include <assert.h>
 #include <cstring>
-#include <limits>
 #include <stdexcept>
 #include <stdint.h>
 #include <string>
+#include <vector>
 
 class uint256;
 
@@ -24,19 +25,22 @@ template<unsigned int BITS>
 class base_uint
 {
 protected:
-    static_assert(BITS / 32 > 0 && BITS % 32 == 0, "Template parameter BITS must be a positive multiple of 32.");
     static constexpr int WIDTH = BITS / 32;
     uint32_t pn[WIDTH];
 public:
 
     base_uint()
     {
+        static_assert(BITS/32 > 0 && BITS%32 == 0, "Template parameter BITS must be a positive multiple of 32.");
+
         for (int i = 0; i < WIDTH; i++)
             pn[i] = 0;
     }
 
     base_uint(const base_uint& b)
     {
+        static_assert(BITS/32 > 0 && BITS%32 == 0, "Template parameter BITS must be a positive multiple of 32.");
+
         for (int i = 0; i < WIDTH; i++)
             pn[i] = b.pn[i];
     }
@@ -50,6 +54,8 @@ public:
 
     base_uint(uint64_t b)
     {
+        static_assert(BITS/32 > 0 && BITS%32 == 0, "Template parameter BITS must be a positive multiple of 32.");
+
         pn[0] = (unsigned int)b;
         pn[1] = (unsigned int)(b >> 32);
         for (int i = 2; i < WIDTH; i++)
@@ -183,7 +189,7 @@ public:
     {
         // prefix operator
         int i = 0;
-        while (i < WIDTH && --pn[i] == std::numeric_limits<uint32_t>::max())
+        while (i < WIDTH && --pn[i] == (uint32_t)-1)
             i++;
         return *this;
     }
@@ -234,8 +240,6 @@ public:
      */
     unsigned int bits() const;
 
-    base_uint ApproxNthRoot(int n) const;
-
     uint64_t GetLow64() const
     {
         static_assert(WIDTH >= 2, "Assertion WIDTH >= 2 failed (WIDTH = BITS / 32). BITS is a template parameter.");
@@ -281,6 +285,4 @@ public:
 uint256 ArithToUint256(const arith_uint256 &);
 arith_uint256 UintToArith256(const uint256 &);
 
-extern template class base_uint<256>;
-
-#endif // BITCOIN_ARITH_UINT256_H
+#endif // AUSTRALIACASH_ARITH_UINT256_H

@@ -1,11 +1,9 @@
-// Copyright (c) 2016-2020 The AustraliaCash Core developers
+// Copyright (c) 2016 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_INDIRECTMAP_H
-#define BITCOIN_INDIRECTMAP_H
-
-#include <map>
+#ifndef AUSTRALIACASH_INDIRECTMAP_H
+#define AUSTRALIACASH_INDIRECTMAP_H
 
 template <class T>
 struct DereferencingComparator { bool operator()(const T a, const T b) const { return *a < *b; } };
@@ -55,4 +53,4 @@ public:
     const_iterator cend() const     { return m.cend(); }
 };
 
-#endif // BITCOIN_INDIRECTMAP_H
+#endif // AUSTRALIACASH_INDIRECTMAP_H

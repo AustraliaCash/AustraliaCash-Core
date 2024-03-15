@@ -44,7 +44,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>AustraliaCashGUI</name>
+    <name>BitcoinGUI</name>
     <message>
         <source>Warning</source>
         <translation>අවවාදය</translation>
@@ -133,10 +133,6 @@
     </context>
 <context>
     <name>OptionsDialog</name>
-    <message>
-        <source>MB</source>
-        <translation>MB</translation>
-    </message>
     <message>
         <source>IPv4</source>
         <translation>IPv4</translation>
@@ -295,6 +291,9 @@
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
+    </context>
+<context>
+    <name>WalletController</name>
     </context>
 <context>
     <name>WalletFrame</name>

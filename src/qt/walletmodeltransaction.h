@@ -1,14 +1,13 @@
-// Copyright (c) 2011-2021 The AustraliaCash Core developers
+// Copyright (c) 2011-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_WALLETMODELTRANSACTION_H
-#define BITCOIN_QT_WALLETMODELTRANSACTION_H
+#ifndef AUSTRALIACASH_QT_WALLETMODELTRANSACTION_H
+#define AUSTRALIACASH_QT_WALLETMODELTRANSACTION_H
 
-#include <primitives/transaction.h>
-#include <qt/sendcoinsrecipient.h>
+#include <qt/walletmodel.h>
 
-#include <consensus/amount.h>
+#include <memory>
 
 #include <QObject>
 
@@ -16,6 +15,7 @@ class SendCoinsRecipient;
 
 namespace interfaces {
 class Node;
+class PendingWalletTx;
 }
 
 /** Data model for a walletmodel transaction. */
@@ -26,9 +26,7 @@ public:
 
     QList<SendCoinsRecipient> getRecipients() const;
 
-    CTransactionRef& getWtx();
-    void setWtx(const CTransactionRef&);
-
+    std::unique_ptr<interfaces::PendingWalletTx>& getWtx();
     unsigned int getTransactionSize();
 
     void setTransactionFee(const CAmount& newFee);
@@ -40,8 +38,8 @@ public:
 
 private:
     QList<SendCoinsRecipient> recipients;
-    CTransactionRef wtx;
+    std::unique_ptr<interfaces::PendingWalletTx> wtx;
     CAmount fee;
 };
 
-#endif // BITCOIN_QT_WALLETMODELTRANSACTION_H
+#endif // AUSTRALIACASH_QT_WALLETMODELTRANSACTION_H

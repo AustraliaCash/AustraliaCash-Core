@@ -2,11 +2,12 @@
 #
 # linearize-data.py: Construct a linear, no-fork version of the chain.
 #
-# Copyright (c) 2013-2021 The AustraliaCash Core developers
+# Copyright (c) 2013-2018 The AustraliaCash Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #
 
+from __future__ import print_function, division
 import struct
 import re
 import os
@@ -15,14 +16,54 @@ import sys
 import hashlib
 import datetime
 import time
-import glob
 from collections import namedtuple
+from binascii import hexlify, unhexlify
 
 settings = {}
 
+def hex_switchEndian(s):
+    """ Switches the endianness of a hex string (in pairs of hex chars) """
+    pairList = [s[i:i+2].encode() for i in range(0, len(s), 2)]
+    return b''.join(pairList[::-1]).decode()
+
+def uint32(x):
+    return x & 0xffffffff
+
+def bytereverse(x):
+    return uint32(( ((x) << 24) | (((x) << 8) & 0x00ff0000) |
+               (((x) >> 8) & 0x0000ff00) | ((x) >> 24) ))
+
+def bufreverse(in_buf):
+    out_words = []
+    for i in range(0, len(in_buf), 4):
+        word = struct.unpack('@I', in_buf[i:i+4])[0]
+        out_words.append(struct.pack('@I', bytereverse(word)))
+    return b''.join(out_words)
+
+def wordreverse(in_buf):
+    out_words = []
+    for i in range(0, len(in_buf), 4):
+        out_words.append(in_buf[i:i+4])
+    out_words.reverse()
+    return b''.join(out_words)
+
+def calc_hdr_hash(blk_hdr):
+    hash1 = hashlib.sha256()
+    hash1.update(blk_hdr)
+    hash1_o = hash1.digest()
+
+    hash2 = hashlib.sha256()
+    hash2.update(hash1_o)
+    hash2_o = hash2.digest()
+
+    return hash2_o
+
 def calc_hash_str(blk_hdr):
-    blk_hdr_hash = hashlib.sha256(hashlib.sha256(blk_hdr).digest()).digest()
-    return blk_hdr_hash[::-1].hex()
+    hash = calc_hdr_hash(blk_hdr)
+    hash = bufreverse(hash)
+    hash = wordreverse(hash)
+    hash_str = hexlify(hash).decode('utf-8')
+    return hash_str
 
 def get_blk_dt(blk_hdr):
     members = struct.unpack("<I", blk_hdr[68:68+4])
@@ -34,12 +75,12 @@ def get_blk_dt(blk_hdr):
 # When getting the list of block hashes, undo any byte reversals.
 def get_block_hashes(settings):
     blkindex = []
-    with open(settings['hashlist'], "r", encoding="utf8") as f:
-        for line in f:
-            line = line.rstrip()
-            if settings['rev_hash_bytes'] == 'true':
-                line = bytes.fromhex(line)[::-1].hex()
-            blkindex.append(line)
+    f = open(settings['hashlist'], "r", encoding="utf8")
+    for line in f:
+        line = line.rstrip()
+        if settings['rev_hash_bytes'] == 'true':
+            line = hex_switchEndian(line)
+        blkindex.append(line)
 
     print("Read " + str(len(blkindex)) + " hashes")
 
@@ -52,30 +93,6 @@ def mkblockmap(blkindex):
         blkmap[hash] = height
     return blkmap
 
-# This gets the first block file ID that exists from the input block
-# file directory.
-def getFirstBlockFileId(block_dir_path):
-    # First, this sets up a pattern to search for block files, for
-    # example 'blkNNNNN.dat'.
-    blkFilePattern = os.path.join(block_dir_path, "blk[0-9][0-9][0-9][0-9][0-9].dat")
-
-    # This search is done with glob
-    blkFnList = glob.glob(blkFilePattern)
-
-    if len(blkFnList) == 0:
-        print("blocks not pruned - starting at 0")
-        return 0
-    # We then get the lexicographic minimum, which should be the first
-    # block file name.
-    firstBlkFilePath = min(blkFnList)
-    firstBlkFn = os.path.basename(firstBlkFilePath)
-
-    # now, the string should be ['b','l','k','N','N','N','N','N','.','d','a','t']
-    # So get the ID by choosing:              3   4   5   6   7
-    # The ID is not necessarily 0 if this is a pruned node.
-    blkId = int(firstBlkFn[3:8])
-    return blkId
-
 # Block header and extent on disk
 BlockExtent = namedtuple('BlockExtent', ['fn', 'offset', 'inhdr', 'blkhdr', 'size'])
 
@@ -85,9 +102,7 @@ class BlockDataCopier:
         self.blkindex = blkindex
         self.blkmap = blkmap
 
-        # Get first occurring block file id - for pruned nodes this
-        # will not necessarily be 0
-        self.inFn = getFirstBlockFileId(self.settings['input'])
+        self.inFn = 0
         self.inF = None
         self.outFn = 0
         self.outsz = 0
@@ -199,11 +214,8 @@ class BlockDataCopier:
 
             inMagic = inhdr[:4]
             if (inMagic != self.settings['netmagic']):
-                # Seek backwards 7 bytes (skipping the first byte in the previous search)
-                # and continue searching from the new position if the magic bytes are not
-                # found.
-                self.inF.seek(-7, os.SEEK_CUR)
-                continue
+                print("Invalid magic: " + hexlify(inMagic).decode('utf-8'))
+                return
             inLenLE = inhdr[4:]
             su = struct.unpack("<I", inLenLE)
             inLen = su[0] - 80 # length without header
@@ -249,18 +261,19 @@ if __name__ == '__main__':
         print("Usage: linearize-data.py CONFIG-FILE")
         sys.exit(1)
 
-    with open(sys.argv[1], encoding="utf8") as f:
-        for line in f:
-            # skip comment lines
-            m = re.search(r'^\s*#', line)
-            if m:
-                continue
+    f = open(sys.argv[1], encoding="utf8")
+    for line in f:
+        # skip comment lines
+        m = re.search('^\s*#', line)
+        if m:
+            continue
 
-            # parse key=value lines
-            m = re.search(r'^(\w+)\s*=\s*(\S.*)$', line)
-            if m is None:
-                continue
-            settings[m.group(1)] = m.group(2)
+        # parse key=value lines
+        m = re.search('^(\w+)\s*=\s*(\S.*)$', line)
+        if m is None:
+            continue
+        settings[m.group(1)] = m.group(2)
+    f.close()
 
     # Force hash byte format setting to be lowercase to make comparisons easier.
     # Also place upfront in case any settings need to know about it.
@@ -290,7 +303,7 @@ if __name__ == '__main__':
     settings['max_out_sz'] = int(settings['max_out_sz'])
     settings['split_timestamp'] = int(settings['split_timestamp'])
     settings['file_timestamp'] = int(settings['file_timestamp'])
-    settings['netmagic'] = bytes.fromhex(settings['netmagic'])
+    settings['netmagic'] = unhexlify(settings['netmagic'].encode('utf-8'))
     settings['out_of_order_cache_sz'] = int(settings['out_of_order_cache_sz'])
     settings['debug_output'] = settings['debug_output'].lower()
 

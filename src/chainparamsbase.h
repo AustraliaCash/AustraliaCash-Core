@@ -1,41 +1,34 @@
-// Copyright (c) 2014-2020 The AustraliaCash Core developers
+// Copyright (c) 2014-2018 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CHAINPARAMSBASE_H
-#define BITCOIN_CHAINPARAMSBASE_H
+#ifndef AUSTRALIACASH_CHAINPARAMSBASE_H
+#define AUSTRALIACASH_CHAINPARAMSBASE_H
 
 #include <memory>
 #include <string>
-
-class ArgsManager;
+#include <vector>
 
 /**
- * CBaseChainParams defines the base parameters (shared between bitcoin-cli and bitcoind)
+ * CBaseChainParams defines the base parameters (shared between australiacash-cli and australiacashd)
  * of a given instance of the AustraliaCash system.
  */
 class CBaseChainParams
 {
 public:
-    ///@{
-    /** Chain name strings */
+    /** BIP70 chain name strings (main, test or regtest) */
     static const std::string MAIN;
     static const std::string TESTNET;
-    static const std::string SIGNET;
     static const std::string REGTEST;
-    ///@}
 
     const std::string& DataDir() const { return strDataDir; }
-    uint16_t RPCPort() const { return m_rpc_port; }
-    uint16_t OnionServiceTargetPort() const { return m_onion_service_target_port; }
+    int RPCPort() const { return nRPCPort; }
 
     CBaseChainParams() = delete;
-    CBaseChainParams(const std::string& data_dir, uint16_t rpc_port, uint16_t onion_service_target_port)
-        : m_rpc_port(rpc_port), m_onion_service_target_port(onion_service_target_port), strDataDir(data_dir) {}
+    CBaseChainParams(const std::string& data_dir, int rpc_port) : nRPCPort(rpc_port), strDataDir(data_dir) {}
 
 private:
-    const uint16_t m_rpc_port;
-    const uint16_t m_onion_service_target_port;
+    int nRPCPort;
     std::string strDataDir;
 };
 
@@ -49,7 +42,7 @@ std::unique_ptr<CBaseChainParams> CreateBaseChainParams(const std::string& chain
 /**
  *Set the arguments for chainparams
  */
-void SetupChainParamsBaseOptions(ArgsManager& argsman);
+void SetupChainParamsBaseOptions();
 
 /**
  * Return the currently selected parameters. This won't change after app
@@ -60,4 +53,4 @@ const CBaseChainParams& BaseParams();
 /** Sets the params returned by Params() to those for the given network. */
 void SelectBaseParams(const std::string& chain);
 
-#endif // BITCOIN_CHAINPARAMSBASE_H
+#endif // AUSTRALIACASH_CHAINPARAMSBASE_H
