@@ -1187,8 +1187,7 @@ bool ReadRawBlockFromDisk(std::vector<uint8_t>& block, const CBlockIndex* pindex
 
 CAmount GetAUSSubsidy(int nHeight, const Consensus::Params& consensusParams) 
 {
-	// thanks to RealSolid for helping out with this code
-	CAmount qSubsidy = 64 * COIN;
+	CAmount qSubsidy = 50 * COIN;
 	int blocks = nHeight - consensusParams.nDiffChangeTarget;
 	int weeks = (blocks / consensusParams.patchBlockRewardDuration)+1;
 	//for each week that has passed, decrease reward by 1%
@@ -1204,7 +1203,7 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 
     // Force block reward to zero when right shift is undefined.
     if (nHeight < consensusParams.nDiffChangeTarget){
-        nSubsidy = 32 * COIN;
+        nSubsidy = 50 * COIN;
     } else { 
         //patch takes effect after 600,000 blocks solved
         nSubsidy = GetAUSSubsidy(nHeight, consensusParams);
@@ -2435,11 +2434,11 @@ private:
 
 public:
     explicit ConnectTrace(CTxMemPool &_pool) : blocksConnected(1), pool(_pool) {
-        pool.NotifyEntryRemoved.connect(boost::bind(&ConnectTrace::NotifyEntryRemoved, this, _1, _2));
+        pool.NotifyEntryRemoved.connect(boost::bind(&ConnectTrace::NotifyEntryRemoved, this, boost::placeholders::_1, boost::placeholders::_2));
     }
 
     ~ConnectTrace() {
-        pool.NotifyEntryRemoved.disconnect(boost::bind(&ConnectTrace::NotifyEntryRemoved, this, _1, _2));
+        pool.NotifyEntryRemoved.disconnect(boost::bind(&ConnectTrace::NotifyEntryRemoved, this, boost::placeholders::_1, boost::placeholders::_2));
     }
 
     void BlockConnected(CBlockIndex* pindex, std::shared_ptr<const CBlock> pblock) {

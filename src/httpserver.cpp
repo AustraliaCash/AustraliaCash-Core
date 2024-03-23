@@ -13,6 +13,7 @@
 #include <sync.h>
 #include <ui_interface.h>
 
+#include <deque>
 #include <memory>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,7 +31,7 @@
 #include <event2/keyvalq_struct.h>
 
 #include <support/events.h>
-
+#include <deque>
 #ifdef EVENT__HAVE_NETINET_IN_H
 #include <netinet/in.h>
 #ifdef _XOPEN_SOURCE_EXTENDED
