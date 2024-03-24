@@ -1185,32 +1185,28 @@ bool ReadRawBlockFromDisk(std::vector<uint8_t>& block, const CBlockIndex* pindex
     return ReadRawBlockFromDisk(block, block_pos, message_start);
 }
 
-CAmount GetAUSSubsidy(int nHeight, const Consensus::Params& consensusParams) 
-{
-	CAmount qSubsidy = 50 * COIN;
-	int blocks = nHeight - consensusParams.nDiffChangeTarget;
-	int weeks = (blocks / consensusParams.patchBlockRewardDuration)+1;
+//CAmount GetAUSSubsidy(int nHeight, const Consensus::Params& consensusParams) 
+//{
+//	CAmount qSubsidy = 50 * COIN;
+//	int blocks = nHeight - consensusParams.nDiffChangeTarget;
+//	int weeks = (blocks / consensusParams.patchBlockRewardDuration)+1;
 	//for each week that has passed, decrease reward by 1%
-	for(int i = 0; i < weeks; i++)  qSubsidy -= (qSubsidy/100);  
+//	for(int i = 0; i < weeks; i++)  qSubsidy -= (qSubsidy/100);  
 
-	return qSubsidy;
-}
+//	return qSubsidy;
+//}
 
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
-    CAmount nSubsidy = COIN;
-
+    int halvings = nHeight / consensusParams.nSubsidyHalvingInterval;
     // Force block reward to zero when right shift is undefined.
-    if (nHeight < consensusParams.nDiffChangeTarget){
-        nSubsidy = 50 * COIN;
-    } else { 
-        //patch takes effect after 600,000 blocks solved
-        nSubsidy = GetAUSSubsidy(nHeight, consensusParams);
-    }
-	//make sure the reward is at least 1 AUS
-    if (nSubsidy < COIN) nSubsidy = COIN;
+    if (halvings >= 64)
+        return 0;
 
+    CAmount nSubsidy = 50 * COIN;
+    // Subsidy is cut in half every 210,000 blocks which will occur approximately every 4 years.
+    nSubsidy >>= halvings;
     return nSubsidy;
     // block rewards are now defined in src/australiacash.cpp
     //return GetAustraliaCashBlockSubsidy(nHeight, consensusParams);
