@@ -1,3 +1,5 @@
+This is WDC code adapted to AUS params. Not connecting to peers. More consensus updates may be needed.
+
 AustraliaCash Core integration/staging tree
 =====================================
 
