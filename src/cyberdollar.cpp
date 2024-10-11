@@ -20,9 +20,6 @@ int static generateMTRandom(unsigned int s, int range)
     return dist(gen);
 }
 
-// CyberDollar: Normally minimum difficulty blocks can only occur in between
-// retarget blocks. However, once we introduce Digishield every block is
-// a retarget, so we need to handle minimum difficulty on all blocks.
 bool AllowDigishieldMinDifficultyForBlock(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
     // check if the chain allows minimum difficulty blocks
@@ -30,15 +27,14 @@ bool AllowDigishieldMinDifficultyForBlock(const CBlockIndex* pindexLast, const C
         return false;
 
     // check if the chain allows minimum difficulty blocks on recalc blocks
-    if (pindexLast->nHeight < 10000)
-    // if (!params.fPowAllowDigishieldMinDifficultyBlocks)
+    if (!params.fPowAllowDigishieldMinDifficultyBlocks)
         return false;
 
-    // Allow for a minimum block time if the elapsed time > 8*nTargetSpacing
+    // Allow for a minimum block time if the elapsed time > 8*nTargetSpacing = 4mins at 30 sec block times
     return (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing*8);
 }
 
-unsigned int CalculateCyberDollarNextWorkRequired(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params& params)
+unsigned int CalculateCyberdollarNextWorkRequired(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params& params)
 {
     int nHeight = pindexLast->nHeight + 1;
     const int64_t retargetTimespan = params.nPowTargetTimespan;
