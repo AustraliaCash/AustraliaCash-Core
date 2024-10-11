@@ -137,33 +137,20 @@ jobs:
       host: x86_64-apple-darwin11
       os: ubuntu-22.04
       packages: cmake imagemagick libcap-dev librsvg2-bin libz-dev libtiff-tools libtinfo5 python3-setuptools xorriso libtinfo5
+
       config-opts: "--enable-gui=qt5 --enable-reduce-exports"
       goal: deploy
-      sdk: 10.11
-      sdk-url: "https://bitcoincore.org/depends-sources/sdks"
     steps:
       - name: Install packages
         run: |
-          sudo apt-get update
-          sudo apt-get install build-essential libtool autotools-dev automake pkg-config bsdmainutils curl ca-certificates ccache python3 rsync git procps bison
-          sudo apt-get install ${{ env.packages }}
+          brew install automake libtool boost miniupnpc openssl pkg-config protobuf qt5 libevent
+          brew install berkeley-db
+          brew install librsvg
+          brew install python
+          brew install python-setuptools
+          sudo -H pip install setuptools
       - name: Checkout
         uses: actions/checkout@v2
-      - name: SDK cache
-        if: ${{ env.sdk }}
-        uses: actions/cache@v2
-        env:
-          cache-name: sdk
-        with:
-          path: ./depends/sdk-sources
-          key: ${{ env.name }}-${{ env.cache-name }}
-      - name: Install SDK
-        if: ${{ env.sdk }}
-        run: |
-          mkdir -p ./depends/sdk-sources
-          mkdir -p ./depends/SDKs
-          curl --location --fail ${{ env.sdk-url }}/MacOSX${{ env.sdk }}.sdk.tar.gz -o depends/sdk-sources/MacOSX${{ env.sdk }}.sdk.tar.gz
-          tar -C depends/SDKs -xf depends/sdk-sources/MacOSX${{ env.sdk }}.sdk.tar.gz
       - name: Dependency cache
         uses: actions/cache@v2
         env:
@@ -194,3 +181,51 @@ jobs:
           name: macos-binaries
           path: |
             CyberDollar.dmg
+
+  build-osx64:
+    name: Build for MacOSX
+    needs: create-source-distribution
+    runs-on: macos-12
+    env:
+      ARTIFACT_DIR: macosx-binaries
+    steps:
+    - name: Getting Source
+      uses: actions/download-artifact@v1
+      with:
+        name: ${{ env.SOURCE_ARTIFACT }}
+    - name: Extract Archives
+      run: |
+        tar -xzf depends.tar.gz
+        tar -xzf cyberdollar-*.tar.gz --strip-components=1
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Install Required Packages
+      run: |
+        sudo apt update
+        sudo apt install -y python3-setuptools libcap-dev zlib1g-dev cmake gcc libc6-dev build-essential
+        sudo -H pip install setuptools
+    - name: Get macOS SDK
+      run: |
+        mkdir -p depends/sdk-sources
+        mkdir -p depends/SDKs
+        curl https://bitcoincore.org/depends-sources/sdks/Xcode-11.3.1-11C505-extracted-SDK-with-libcxx-headers.tar.gz -o depends/sdk-sources/Xcode-11.3.1-11C505-extracted-SDK-with-libcxx-headers.tar.gz
+        tar -C depends/SDKs -xf depends/sdk-sources/Xcode-11.3.1-11C505-extracted-SDK-with-libcxx-headers.tar.gz
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Build Dependencies
+      run: make -C depends HOST=x86_64-apple-darwin18 -j$(nproc)
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Build Cyberdollar
+      run: |
+        ./configure --enable-c++17 --disable-jni --prefix=$(realpath depends/x86_64-apple-darwin18)
+        make -j$(nproc)
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Prepare Files for Artifact
+      run: |
+        mkdir -p $ARTIFACT_DIR
+        # strip fails with "Unable to recognise the format of the input file"
+        #strip $SOURCE_ARTIFACT/src/{cyberdollar-cli,cyberdollar-tx,cyberdollard,qt/cyberdollar-qt}
+        mv $SOURCE_ARTIFACT/src/{cyberdollar-cli,cyberdollar-tx,cyberdollard,qt/cyberdollar-qt} $ARTIFACT_DIR
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ env.ARTIFACT_DIR }}
+        path: ${{ env.ARTIFACT_DIR }}
