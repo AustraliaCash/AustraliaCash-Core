@@ -42,7 +42,7 @@ jobs:
     - name: Prepare Files for Artifact
       run: |
         mkdir -p $ARTIFACT_DIR
-        mv depends.tar.gz CyberDollar-*.tar.gz $ARTIFACT_DIR
+        mv depends.tar.gz cyberdollar-*.tar.gz $ARTIFACT_DIR
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -63,7 +63,7 @@ jobs:
     - name: Extract Archives
       run: |
         tar -xzf depends.tar.gz
-        tar -xzf CyberDollar-*.tar.gz --strip-components=1
+        tar -xzf cyberdollar-*.tar.gz --strip-components=1
     - name: Install Required Packages
       run: |
         sudo apt-get update
