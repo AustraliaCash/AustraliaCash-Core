@@ -2956,6 +2956,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         // Log a message if needed
         LogPrintf("Skipping validation for block %s\n", block.GetHash().ToString());
         return true;  // Skip validation and return true (successful)
+    }
 
     // These are checks that are independent of context.
 
