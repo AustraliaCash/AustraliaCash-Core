@@ -42,7 +42,7 @@ jobs:
     - name: Prepare Files for Artifact
       run: |
         mkdir -p $ARTIFACT_DIR
-        mv depends.tar.gz $ARTIFACT_DIR
+        mv depends.tar.gz CyberDollar-*.tar.gz $ARTIFACT_DIR
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -63,6 +63,7 @@ jobs:
     - name: Extract Archives
       run: |
         tar -xzf depends.tar.gz
+        tar -xzf CyberDollar-*.tar.gz --strip-components=1
     - name: Install Required Packages
       run: |
         sudo apt-get update
@@ -76,7 +77,7 @@ jobs:
     - name: Prepare Files for Artifact
       run: |
         mkdir -p $ARTIFACT_DIR
-        mv ./src/{acash-cli,acash-tx,acashd,qt/acash-qt} $ARTIFACT_DIR
+        mv ./src/{cyberdollar-cli,cyberdollar-tx,cyberdollard,qt/cyberdollar-qt} $ARTIFACT_DIR
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -96,7 +97,7 @@ jobs:
     - name: Extract Archives
       run: |
         tar -xzf depends.tar.gz
-        tar -xzf acash-*.tar.gz --strip-components=1
+        tar -xzf cyberdollar-*.tar.gz --strip-components=1
     - name: Install Required Packages
       run: |
         sudo apt-get update
@@ -114,7 +115,7 @@ jobs:
     - name: Prepare Files for Artifact
       run: |
         mkdir -p $ARTIFACT_DIR
-        mv ./src/{acash-cli.exe,acash-tx.exe,acashd.exe,qt/acash-qt.exe} $ARTIFACT_DIR
+        mv ./src/{cyberdollar-cli.exe,cyberdollar-tx.exe,cyberdollard.exe,qt/cyberdollar-qt.exe} $ARTIFACT_DIR
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
