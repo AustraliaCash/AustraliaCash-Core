@@ -2950,6 +2950,13 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool f
 
 bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bool fCheckMerkleRoot)
 {
+    // Check if this is the block you want to skip validation for
+    uint256 skipBlockHash = uint256S("3eadc6fed1e037f03b4afbc8bb9685fafb1a20a94d12782cc370a8f17a4224b6");  // Specify the block hash you want to skip
+    if (block.GetHash() == skipBlockHash) {
+        // Log a message if needed
+        LogPrintf("Skipping validation for block %s\n", block.GetHash().ToString());
+        return true;  // Skip validation and return true (successful)
+
     // These are checks that are independent of context.
 
     if (block.fChecked)

@@ -162,9 +162,9 @@ public:
 
         // Note that of those with the service bits flag, most only support a subset of possible options
         vSeeds.push_back(CDNSSeedData("67.219.100.165", "67.219.100.165", true));
-        vSeeds.push_back(CDNSSeedData("triplezen.org", "aus.triplezen.org"));
-        vSeeds.push_back(CDNSSeedData("triplezen.org", "ltc.triplezen.org"));
-        vSeeds.push_back(CDNSSeedData("triplezen.org", "dgb.triplezen.org"));
+        vSeeds.push_back(CDNSSeedData("triplezen.org", "seednode1.triplezen.org"));
+        vSeeds.push_back(CDNSSeedData("triplezen.org", "seednode2.triplezen.org"));
+        vSeeds.push_back(CDNSSeedData("triplezen.org", "seednode3.triplezen.org"));
         vSeeds.push_back(CDNSSeedData("161.43.201.255", "161.43.201.255"));
         vSeeds.push_back(CDNSSeedData("207.148.87.64", "207.148.87.64"));
 
