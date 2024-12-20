@@ -42,7 +42,7 @@ jobs:
     - name: Prepare Files for Artifact
       run: |
         mkdir -p $ARTIFACT_DIR
-        mv depends.tar.gz acash-*.tar.gz $ARTIFACT_DIR
+        mv depends.tar.gz $ARTIFACT_DIR
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
