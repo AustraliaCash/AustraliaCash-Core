@@ -1,5 +1,5 @@
 <h1 align="center">
-<img src="https://static.tumblr.com/ppdj5y9/Ae9mxmxtp/300coin.png" alt="CyberDollar" width="300"/>
+<img src="" alt="CyberDollar" width="300"/>
 <br/><br/>
 CyberDollar Core [CASH, ₡]  
 </h1>
