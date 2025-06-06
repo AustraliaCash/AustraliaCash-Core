@@ -218,8 +218,8 @@
         <translation>Réindexer les blocs sur le disque...</translation>
     </message>
     <message>
-        <source>Send coins to a CyberDollar address</source>
-        <translation>Envoyer des pièces à une adresse CyberDollar</translation>
+        <source>Send coins to a AustraliaCash address</source>
+        <translation>Envoyer des pièces à une adresse AustraliaCash</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -242,8 +242,8 @@
         <translation>&amp;Vérification du message</translation>
     </message>
     <message>
-        <source>CyberDollar</source>
-        <translation>CyberDollar</translation>
+        <source>AustraliaCash</source>
+        <translation>AustraliaCash</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -270,8 +270,8 @@
         <translation>Crypter les clé privées qui appartiennent votre portefeuille</translation>
     </message>
     <message>
-        <source>Sign messages with your CyberDollar addresses to prove you own them</source>
-        <translation>Signer vos messages avec vos adresses CyberDollar pour prouver que vous les détenez</translation>
+        <source>Sign messages with your AustraliaCash addresses to prove you own them</source>
+        <translation>Signer vos messages avec vos adresses AustraliaCash pour prouver que vous les détenez</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -290,24 +290,24 @@
         <translation>Barre d'outils des onglets</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and cyberdollar: URIs)</source>
-        <translation>Demander des paiements (générer QR codes et cyberdollar: URIs)</translation>
+        <source>Request payments (generates QR codes and australiacash: URIs)</source>
+        <translation>Demander des paiements (générer QR codes et australiacash: URIs)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
         <translation>Montrer la liste des adresses d'envois utilisées et les étiquettes</translation>
     </message>
     <message>
-        <source>Open a cyberdollar: URI or payment request</source>
-        <translation>Ouvrir un cyberdollar: URI ou demande de paiement</translation>
+        <source>Open a australiacash: URI or payment request</source>
+        <translation>Ouvrir un australiacash: URI ou demande de paiement</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Options de ligne de commande</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to CyberDollar network</source>
-        <translation><numerusform>%n connexion active au réseau CyberDollar</numerusform><numerusform>%n connexions actives au réseau CyberDollar</numerusform></translation>
+        <source>%n active connection(s) to AustraliaCash network</source>
+        <translation><numerusform>%n connexion active au réseau AustraliaCash</numerusform><numerusform>%n connexions actives au réseau AustraliaCash</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -684,8 +684,8 @@
         <translation>Expert</translation>
     </message>
     <message>
-        <source>Automatically open the CyberDollar client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Ouvrir le port du client CyberDollar automatiquement sur le routeur. Cela ne fonctionne que si votre routeur supporte l'UPnP et si la fonctionnalité est activée.</translation>
+        <source>Automatically open the AustraliaCash client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Ouvrir le port du client AustraliaCash automatiquement sur le routeur. Cela ne fonctionne que si votre routeur supporte l'UPnP et si la fonctionnalité est activée.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -844,8 +844,8 @@
         <translation>Montant</translation>
     </message>
     <message>
-        <source>Enter a CyberDollar address (e.g. %1)</source>
-        <translation>Entrer une adresse CyberDollar (e.g. %1)</translation>
+        <source>Enter a AustraliaCash address (e.g. %1)</source>
+        <translation>Entrer une adresse AustraliaCash (e.g. %1)</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1662,8 +1662,8 @@
         <translation>Impossible de démarrer le serveur HTTP. Voir le journal de débogage pour plus de détails.</translation>
     </message>
     <message>
-        <source>CyberDollar Core</source>
-        <translation>CyberDollar Core</translation>
+        <source>AustraliaCash Core</source>
+        <translation>AustraliaCash Core</translation>
     </message>
     <message>
         <source>&lt;category&gt; can be:</source>

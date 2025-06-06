@@ -24,23 +24,23 @@ BITCOIN_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BDB_CPPFLAGS) $(BOOST_CPPFLAG
 BITCOIN_INCLUDES += -I$(srcdir)/secp256k1/include
 BITCOIN_INCLUDES += $(UNIVALUE_CFLAGS)
 
-LIBCYBERDOLLAR_SERVER=libcyberdollar_server.a
-LIBCYBERDOLLAR_COMMON=libcyberdollar_common.a
-LIBCYBERDOLLAR_CONSENSUS=libcyberdollar_consensus.a
-LIBCYBERDOLLAR_CLI=libcyberdollar_cli.a
-LIBCYBERDOLLAR_UTIL=libcyberdollar_util.a
-LIBCYBERDOLLAR_CRYPTO=crypto/libcyberdollar_crypto.a
-LIBCYBERDOLLARQT=qt/libcyberdollarqt.a
+LIBCYBERDOLLAR_SERVER=libaustraliacash_server.a
+LIBCYBERDOLLAR_COMMON=libaustraliacash_common.a
+LIBCYBERDOLLAR_CONSENSUS=libaustraliacash_consensus.a
+LIBCYBERDOLLAR_CLI=libaustraliacash_cli.a
+LIBCYBERDOLLAR_UTIL=libaustraliacash_util.a
+LIBCYBERDOLLAR_CRYPTO=crypto/libaustraliacash_crypto.a
+LIBCYBERDOLLARQT=qt/libaustraliacashqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 
 if ENABLE_ZMQ
-LIBCYBERDOLLAR_ZMQ=libcyberdollar_zmq.a
+LIBCYBERDOLLAR_ZMQ=libaustraliacash_zmq.a
 endif
 if BUILD_BITCOIN_LIBS
-LIBCYBERDOLLARCONSENSUS=libcyberdollarconsensus.la
+LIBCYBERDOLLARCONSENSUS=libaustraliacashconsensus.la
 endif
 if ENABLE_WALLET
-LIBCYBERDOLLAR_WALLET=libcyberdollar_wallet.a
+LIBCYBERDOLLAR_WALLET=libaustraliacash_wallet.a
 endif
 
 $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
@@ -66,11 +66,11 @@ TESTS =
 BENCHMARKS =
 
 if BUILD_BITCOIND
-  bin_PROGRAMS += cyberdollard
+  bin_PROGRAMS += australiacashd
 endif
 
 if BUILD_BITCOIN_UTILS
-  bin_PROGRAMS += cyberdollar-cli cyberdollar-tx
+  bin_PROGRAMS += australiacash-cli australiacash-tx
 endif
 
 .PHONY: FORCE check-symbols check-security
@@ -99,10 +99,10 @@ BITCOIN_CORE_H = \
   core_io.h \
   core_memusage.h \
   cuckoocache.h \
-  cyberdollar.cpp \
-  cyberdollar.h \
-  cyberdollar-fees.cpp \
-  cyberdollar-fees.h \
+  australiacash.cpp \
+  australiacash.h \
+  australiacash-fees.cpp \
+  australiacash-fees.h \
   httprpc.h \
   httpserver.h \
   indirectmap.h \
@@ -177,12 +177,12 @@ obj/build.h: FORCE
 	@$(MKDIR_P) $(builddir)/obj
 	@$(top_srcdir)/share/genbuild.sh $(abs_top_builddir)/src/obj/build.h \
 	  $(abs_top_srcdir)
-libcyberdollar_util_a-clientversion.$(OBJEXT): obj/build.h
+libaustraliacash_util_a-clientversion.$(OBJEXT): obj/build.h
 
 # server: shared between bitcoind and bitcoin-qt
-libcyberdollar_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
-libcyberdollar_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libcyberdollar_server_a_SOURCES = \
+libaustraliacash_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
+libaustraliacash_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaustraliacash_server_a_SOURCES = \
   addrman.cpp \
   addrdb.cpp \
   bloom.cpp \
@@ -221,9 +221,9 @@ libcyberdollar_server_a_SOURCES = \
   $(BITCOIN_CORE_H)
 
 if ENABLE_ZMQ
-libcyberdollar_zmq_a_CPPFLAGS = $(BITCOIN_INCLUDES) $(ZMQ_CFLAGS)
-libcyberdollar_zmq_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libcyberdollar_zmq_a_SOURCES = \
+libaustraliacash_zmq_a_CPPFLAGS = $(BITCOIN_INCLUDES) $(ZMQ_CFLAGS)
+libaustraliacash_zmq_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaustraliacash_zmq_a_SOURCES = \
   zmq/zmqabstractnotifier.cpp \
   zmq/zmqnotificationinterface.cpp \
   zmq/zmqpublishnotifier.cpp
@@ -232,9 +232,9 @@ endif
 
 # wallet: shared between bitcoind and bitcoin-qt, but only linked
 # when wallet enabled
-libcyberdollar_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-libcyberdollar_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libcyberdollar_wallet_a_SOURCES = \
+libaustraliacash_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libaustraliacash_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaustraliacash_wallet_a_SOURCES = \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/rpcdump.cpp \
@@ -246,9 +246,9 @@ libcyberdollar_wallet_a_SOURCES = \
   $(BITCOIN_CORE_H)
 
 # crypto primitives library
-crypto_libcyberdollar_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_CONFIG_INCLUDES)
-crypto_libcyberdollar_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-crypto_libcyberdollar_crypto_a_SOURCES = \
+crypto_libaustraliacash_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_CONFIG_INCLUDES)
+crypto_libaustraliacash_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+crypto_libaustraliacash_crypto_a_SOURCES = \
   crypto/aes.cpp \
   crypto/aes.h \
   crypto/common.h \
@@ -268,9 +268,9 @@ crypto_libcyberdollar_crypto_a_SOURCES = \
   crypto/sha512.h
 
 # consensus: shared between all executables that validate any consensus rules.
-libcyberdollar_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-libcyberdollar_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libcyberdollar_consensus_a_SOURCES = \
+libaustraliacash_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libaustraliacash_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaustraliacash_consensus_a_SOURCES = \
   amount.h \
   arith_uint256.cpp \
   arith_uint256.h \
@@ -305,9 +305,9 @@ libcyberdollar_consensus_a_SOURCES = \
   version.h
 
 # common: shared between bitcoind, and bitcoin-qt and non-server tools
-libcyberdollar_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-libcyberdollar_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libcyberdollar_common_a_SOURCES = \
+libaustraliacash_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libaustraliacash_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaustraliacash_common_a_SOURCES = \
   amount.cpp \
   arith_uint256.cpp \
   auxpow.cpp \
@@ -334,9 +334,9 @@ libcyberdollar_common_a_SOURCES = \
 # util: shared between all executables.
 # This library *must* be included to make sure that the glibc
 # backward-compatibility objects and their sanity checks are linked.
-libcyberdollar_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-libcyberdollar_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libcyberdollar_util_a_SOURCES = \
+libaustraliacash_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libaustraliacash_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaustraliacash_util_a_SOURCES = \
   support/lockedpool.cpp \
   chainparamsbase.cpp \
   clientversion.cpp \
@@ -356,32 +356,32 @@ libcyberdollar_util_a_SOURCES = \
 
 if GLIBC_BACK_COMPAT
 
-libcyberdollar_util_a_SOURCES += compat/glibc_compat.cpp
+libaustraliacash_util_a_SOURCES += compat/glibc_compat.cpp
 AM_LDFLAGS += $(COMPAT_LDFLAGS)
 
 endif
 
 # cli: shared between bitcoin-cli and bitcoin-qt
-libcyberdollar_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-libcyberdollar_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libcyberdollar_cli_a_SOURCES = \
+libaustraliacash_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libaustraliacash_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaustraliacash_cli_a_SOURCES = \
   rpc/client.cpp \
   $(BITCOIN_CORE_H)
 
-nodist_libcyberdollar_util_a_SOURCES = $(srcdir)/obj/build.h
+nodist_libaustraliacash_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
 # bitcoind binary #
-cyberdollard_SOURCES = bitcoind.cpp
-cyberdollard_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-cyberdollard_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-cyberdollard_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+australiacashd_SOURCES = bitcoind.cpp
+australiacashd_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+australiacashd_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+australiacashd_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-cyberdollard_SOURCES += bitcoind-res.rc
+australiacashd_SOURCES += bitcoind-res.rc
 endif
 
-cyberdollard_LDADD = \
+australiacashd_LDADD = \
   $(LIBCYBERDOLLAR_SERVER) \
   $(LIBCYBERDOLLAR_COMMON) \
   $(LIBUNIVALUE) \
@@ -394,38 +394,38 @@ cyberdollard_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-cyberdollard_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
+australiacashd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
 
 # bitcoin-cli binary #
-cyberdollar_cli_SOURCES = bitcoin-cli.cpp
-cyberdollar_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
-cyberdollar_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-cyberdollar_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+australiacash_cli_SOURCES = bitcoin-cli.cpp
+australiacash_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
+australiacash_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+australiacash_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-cyberdollar_cli_SOURCES += bitcoin-cli-res.rc
+australiacash_cli_SOURCES += bitcoin-cli-res.rc
 endif
 
-cyberdollar_cli_LDADD = \
+australiacash_cli_LDADD = \
   $(LIBCYBERDOLLAR_CLI) \
   $(LIBUNIVALUE) \
   $(LIBCYBERDOLLAR_UTIL) \
   $(LIBCYBERDOLLAR_CRYPTO)
 
-cyberdollar_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+australiacash_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
 # bitcoin-tx binary #
-cyberdollar_tx_SOURCES = bitcoin-tx.cpp
-cyberdollar_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-cyberdollar_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-cyberdollar_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+australiacash_tx_SOURCES = bitcoin-tx.cpp
+australiacash_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+australiacash_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+australiacash_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-cyberdollar_tx_SOURCES += bitcoin-tx-res.rc
+australiacash_tx_SOURCES += bitcoin-tx-res.rc
 endif
 
-cyberdollar_tx_LDADD = \
+australiacash_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBCYBERDOLLAR_COMMON) \
   $(LIBCYBERDOLLAR_UTIL) \
@@ -433,22 +433,22 @@ cyberdollar_tx_LDADD = \
   $(LIBCYBERDOLLAR_CRYPTO) \
   $(LIBSECP256K1)
 
-cyberdollar_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+australiacash_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
 # bitcoinconsensus library #
 if BUILD_BITCOIN_LIBS
 include_HEADERS = script/bitcoinconsensus.h
-libcyberdollarconsensus_la_SOURCES = $(crypto_libcyberdollar_crypto_a_SOURCES) $(libcyberdollar_consensus_a_SOURCES)
+libaustraliacashconsensus_la_SOURCES = $(crypto_libaustraliacash_crypto_a_SOURCES) $(libaustraliacash_consensus_a_SOURCES)
 
 if GLIBC_BACK_COMPAT
-  libcyberdollarconsensus_la_SOURCES += compat/glibc_compat.cpp
+  libaustraliacashconsensus_la_SOURCES += compat/glibc_compat.cpp
 endif
 
-libcyberdollarconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
-libcyberdollarconsensus_la_LIBADD = $(LIBSECP256K1)
-libcyberdollarconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_BITCOIN_INTERNAL
-libcyberdollarconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaustraliacashconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
+libaustraliacashconsensus_la_LIBADD = $(LIBSECP256K1)
+libaustraliacashconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_BITCOIN_INTERNAL
+libaustraliacashconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
 endif
 #

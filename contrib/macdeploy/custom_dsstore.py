@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Copyright (c) 2013-2016 The Bitcoin Core developers
-# Copyright (c) 2018 The CyberDollar Core developers
+# Copyright (c) 2018 The AustraliaCash Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 from __future__ import division,print_function,unicode_literals
@@ -46,8 +46,8 @@ alias = Alias.from_bytes(icvp['backgroundImageAlias'])
 alias.volume.name = package_name_ns
 alias.volume.posix_path = '/Volumes/' + package_name_ns
 alias.volume.disk_image_alias.target.filename = package_name_ns + '.temp.dmg'
-alias.volume.disk_image_alias.target.carbon_path = 'Macintosh HD:Users:\x00cyberdollaruser:\x00Documents:\x00cyberdollar:\x00cyberdollar:\x00' + package_name_ns + '.temp.dmg'
-alias.volume.disk_image_alias.target.posix_path = 'Users/cyberdollaruser/Documents/cyberdollar/cyberdollar/' + package_name_ns + '.temp.dmg'
+alias.volume.disk_image_alias.target.carbon_path = 'Macintosh HD:Users:\x00australiacashuser:\x00Documents:\x00australiacash:\x00australiacash:\x00' + package_name_ns + '.temp.dmg'
+alias.volume.disk_image_alias.target.posix_path = 'Users/australiacashuser/Documents/australiacash/australiacash/' + package_name_ns + '.temp.dmg'
 alias.target.carbon_path = package_name_ns + ':.background:\x00background.tiff'
 icvp['backgroundImageAlias'] = biplist.Data(alias.to_bytes())
 ds['.']['icvp'] = icvp
@@ -55,7 +55,7 @@ ds['.']['icvp'] = icvp
 ds['.']['vSrn'] = ('long', 1)
 
 ds['Applications']['Iloc'] = (370, 156)
-ds['CyberDollar-Qt.app']['Iloc'] = (128, 156)
+ds['AustraliaCash-Qt.app']['Iloc'] = (128, 156)
 
 ds.flush()
 ds.close()

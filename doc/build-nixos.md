@@ -5,10 +5,10 @@ of the latest changes on NixOS.
 
 Clone and enter the repo:
 
-    $ git clone https://github.com/cyberdollar/cyberdollar
-    $ cd cyberdollar
+    $ git clone https://github.com/australiacash/australiacash
+    $ cd australiacash
 
-Enter the `nix-shell` environment with all the CyberDollar dependencies present:
+Enter the `nix-shell` environment with all the AustraliaCash dependencies present:
 
     $ nix-shell ./contrib/nixos/shell.nix
 
@@ -20,4 +20,4 @@ Run the build steps with flags necessary for NixOS:
 
 Start the GUI!
 
-    $ ./src/qt/cyberdollar-qt
+    $ ./src/qt/australiacash-qt

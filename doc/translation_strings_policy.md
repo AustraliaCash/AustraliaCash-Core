@@ -1,7 +1,7 @@
 Translation Strings Policy
 ===========================
 
-This document provides guidelines for internationalization of the CyberDollar Core software.
+This document provides guidelines for internationalization of the AustraliaCash Core software.
 
 How to translate?
 ------------------

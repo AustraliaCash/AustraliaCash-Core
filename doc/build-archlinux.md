@@ -5,12 +5,12 @@ Arch Linux build guide
 **Test date:** 2022/07/15
 
 This example lists the steps necessary to setup and build a command line only
-cyberdollard on archlinux:
+australiacashd on archlinux:
 
 ```sh
 pacman -S git base-devel boost libevent python db
-git clone https://github.com/cyberdollar/cyberdollar.git
-cd cyberdollar/
+git clone https://github.com/australiacash/australiacash.git
+cd australiacash/
 ./autogen.sh
 ./configure --without-gui --without-miniupnpc
 make

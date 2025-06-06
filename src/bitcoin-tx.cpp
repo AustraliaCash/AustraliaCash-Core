@@ -54,10 +54,10 @@ static int AppInitRawTx(int argc, char* argv[])
     if (argc<2 || IsArgSet("-?") || IsArgSet("-h") || IsArgSet("-help"))
     {
         // First part of help message is specific to this utility
-        std::string strUsage = strprintf(_("%s cyberdollar-tx utility version"), _(PACKAGE_NAME)) + " " + FormatFullVersion() + "\n\n" +
+        std::string strUsage = strprintf(_("%s australiacash-tx utility version"), _(PACKAGE_NAME)) + " " + FormatFullVersion() + "\n\n" +
             _("Usage:") + "\n" +
-              "  cyberdollar-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded cyberdollar transaction") + "\n" +
-              "  cyberdollar-tx [options] -create [commands]   " + _("Create hex-encoded cyberdollar transaction") + "\n" +
+              "  australiacash-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded australiacash transaction") + "\n" +
+              "  australiacash-tx [options] -create [commands]   " + _("Create hex-encoded australiacash transaction") + "\n" +
               "\n";
 
         fprintf(stdout, "%s", strUsage.c_str());

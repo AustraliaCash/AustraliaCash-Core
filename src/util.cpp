@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
-// Copyright (c) 2022 The CyberDollar Core developers
+// Copyright (c) 2022 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -104,8 +104,8 @@ namespace boost {
 
 using namespace std;
 
-const char * const BITCOIN_CONF_FILENAME = "cyberdollar.conf";
-const char * const BITCOIN_PID_FILENAME = "cyberdollard.pid";
+const char * const BITCOIN_CONF_FILENAME = "australiacash.conf";
+const char * const BITCOIN_PID_FILENAME = "australiacashd.pid";
 
 CCriticalSection cs_args;
 map<string, string> mapArgs;
@@ -463,7 +463,7 @@ static std::string FormatException(const std::exception* pex, const char* pszThr
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(NULL, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "cyberdollar";
+    const char* pszModule = "australiacash";
 #endif
     if (pex)
         return strprintf(
@@ -489,7 +489,7 @@ boost::filesystem::path GetDefaultDataDir()
     // Unix: ~/.bitcoin
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "CyberDollar";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "AustraliaCash";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -499,10 +499,10 @@ boost::filesystem::path GetDefaultDataDir()
         pathRet = fs::path(pszHome);
 #ifdef MAC_OSX
     // Mac
-    return pathRet / "Library/Application Support/CyberDollar";
+    return pathRet / "Library/Application Support/AustraliaCash";
 #else
     // Unix
-    return pathRet / ".cyberdollar";
+    return pathRet / ".australiacash";
 #endif
 #endif
 }

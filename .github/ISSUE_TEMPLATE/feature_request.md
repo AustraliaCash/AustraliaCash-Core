@@ -4,11 +4,11 @@ about: Suggest an idea for this project
 title: '[feat] '
 ---
 
-<!-- Please make sure you are posting an technical issue related to CyberDollar Core. --> 
+<!-- Please make sure you are posting an technical issue related to AustraliaCash Core. --> 
 
-<!-- For general questions about CyberDollar or wallet recovery please use one of the various communities:
+<!-- For general questions about AustraliaCash or wallet recovery please use one of the various communities:
 * [Cyberducation on reddit](https://www.reddit.com/r/cyberducation/)
-* [Discord](https://discord.com/invite/cyberdollar) -->
+* [Discord](https://discord.com/invite/australiacash) -->
 
 <!-- ISSUES MISSING IMPORTANT INFORMATION MAY BE CLOSED WITHOUT INVESTIGATION. -->
 

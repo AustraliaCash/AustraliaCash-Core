@@ -11,7 +11,7 @@
   </array>
 
   <key>CFBundleIconFile</key>
-  <string>cyberdollar.icns</string>
+  <string>australiacash.icns</string>
 
   <key>CFBundlePackageType</key>
   <string>APPL</string>
@@ -29,16 +29,16 @@
   <string>????</string>
 
   <key>CFBundleExecutable</key>
-  <string>CyberDollar-Qt</string>
+  <string>AustraliaCash-Qt</string>
 
   <key>CFBundleName</key>
-  <string>CyberDollar-Qt</string>
+  <string>AustraliaCash-Qt</string>
 
   <key>LSHasLocalizedDisplayName</key>
   <true/>
 
   <key>CFBundleIdentifier</key>
-  <string>com.cyberdollar.CyberDollar-Qt</string>
+  <string>com.australiacash.AustraliaCash-Qt</string>
 
   <key>CFBundleURLTypes</key>
   <array>
@@ -46,10 +46,10 @@
       <key>CFBundleTypeRole</key>
       <string>Editor</string>
       <key>CFBundleURLName</key>
-      <string>com.cyberdollar.CyberDollarPayment</string>
+      <string>com.australiacash.AustraliaCashPayment</string>
       <key>CFBundleURLSchemes</key>
       <array>
-        <string>cyberdollar</string>
+        <string>australiacash</string>
       </array>
     </dict>
   </array>
@@ -58,9 +58,9 @@
   <array>
     <dict>
       <key>UTTypeIdentifier</key>
-      <string>com.cyberdollar.paymentrequest</string>
+      <string>com.australiacash.paymentrequest</string>
       <key>UTTypeDescription</key>
-      <string>CyberDollar payment request</string>
+      <string>AustraliaCash payment request</string>
       <key>UTTypeConformsTo</key>
       <array>
         <string>public.data</string>
@@ -68,10 +68,10 @@
       <key>UTTypeTagSpecification</key>
       <dict>
         <key>public.mime-type</key>
-        <string>application/cyberdollar-paymentrequest</string>
+        <string>application/australiacash-paymentrequest</string>
         <key>public.filename-extension</key>
         <array>
-          <string>cyberdollarpaymentrequest</string>
+          <string>australiacashpaymentrequest</string>
         </array>
       </dict>
     </dict>
@@ -84,7 +84,7 @@
       <string>Editor</string>
       <key>LSItemContentTypes</key>
       <array>
-        <string>com.cyberdollar.paymentrequest</string>
+        <string>com.australiacash.paymentrequest</string>
       </array>
       <key>LSHandlerRank</key>
       <string>Owner</string>

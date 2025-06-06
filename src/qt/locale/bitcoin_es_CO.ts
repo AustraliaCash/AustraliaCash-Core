@@ -126,8 +126,8 @@
         <translation>Abrir &amp;URL...</translation>
     </message>
     <message>
-        <source>Send coins to a CyberDollar address</source>
-        <translation>Enviando monedas a una dirección de CyberDollar</translation>
+        <source>Send coins to a AustraliaCash address</source>
+        <translation>Enviando monedas a una dirección de AustraliaCash</translation>
     </message>
     <message>
         <source>Change the passphrase used for wallet encryption</source>
@@ -146,8 +146,8 @@
         <translation>&amp;Verificar Mensaje...</translation>
     </message>
     <message>
-        <source>CyberDollar</source>
-        <translation>CyberDollar</translation>
+        <source>AustraliaCash</source>
+        <translation>AustraliaCash</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -296,8 +296,8 @@
 <context>
     <name>bitcoin-core</name>
     <message>
-        <source>CyberDollar Core</source>
-        <translation>CyberDollar Core</translation>
+        <source>AustraliaCash Core</source>
+        <translation>AustraliaCash Core</translation>
     </message>
     <message>
         <source>Insufficient funds</source>

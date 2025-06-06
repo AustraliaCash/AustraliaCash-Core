@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
-// Copyright (c) 2021 The CyberDollar Core developers
+// Copyright (c) 2021 The AustraliaCash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -165,7 +165,7 @@ public:
         return (nValue == -1);
     }
 
-    // CyberDollar: allow comparison against different dustlimit parameters
+    // AustraliaCash: allow comparison against different dustlimit parameters
     bool IsDust(const CAmount dustLimit) const
     {
       if (scriptPubKey.IsUnspendable())
@@ -279,7 +279,7 @@ class CTransaction
 {
 public:
     // Default transaction version.
-    // CyberDollar: Temporarily restricted to v1 for compatibility with 1.10
+    // AustraliaCash: Temporarily restricted to v1 for compatibility with 1.10
     static const int32_t CURRENT_VERSION=1;
 
     // Changing the default transaction version requires a two step process: first

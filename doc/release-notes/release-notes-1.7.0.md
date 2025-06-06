@@ -1,8 +1,8 @@
-# CyberDollar Core 1.7 Alpha
+# AustraliaCash Core 1.7 Alpha
 =========================
 
-CyberDollar Core 1.7 is a complete re-architecture of CyberDollar, changing from
-using the Litecoin client as its base, to Bitcoin 0.9. It's still CyberDollar,
+AustraliaCash Core 1.7 is a complete re-architecture of AustraliaCash, changing from
+using the Litecoin client as its base, to Bitcoin 0.9. It's still AustraliaCash,
 with the same Scrypt PoW algorithm, same reward schedule, but there are a 
 lot of changes under the hood.
 
@@ -21,19 +21,19 @@ First and foremost, please note that downgrading from 1.7 to 1.6 is not trivial.
 1.7 now uses Berkeley DB 5.1 as its default database (in place of 4.8), and as
 such may create database files which are incompatible with previous versions.
 
-Rebranding to CyberDollar Core
+Rebranding to AustraliaCash Core
 ---------------------------
 
-Following in the footsteps of Bitcoin (Core), the CyberDollar reference client
-has been rebranded as "CyberDollar Core". This helps separate its identity
-from CyberDollar (the network).
+Following in the footsteps of Bitcoin (Core), the AustraliaCash reference client
+has been rebranded as "AustraliaCash Core". This helps separate its identity
+from AustraliaCash (the network).
 
-cyberdollar-cli
+australiacash-cli
 ------------
 
-Where previously commands were sent to cyberdollard by running
-"cyberdollard <command>", 1.7 adopts the model from Bitcoin Core 0.9 where there is
-a separate "cyberdollar-cli" executable which is used instead. This avoids the risk
+Where previously commands were sent to australiacashd by running
+"australiacashd <command>", 1.7 adopts the model from Bitcoin Core 0.9 where there is
+a separate "australiacash-cli" executable which is used instead. This avoids the risk
 of accidentally trying to start two daemons at the same time, for example.
 
 
@@ -48,9 +48,9 @@ Testnet
 -------
 
 As mentioned at the start of this document, the alpha-client is for use with the
-CyberDollar testnet only. This is an alternative CyberDollar blockchain which is
+AustraliaCash testnet only. This is an alternative AustraliaCash blockchain which is
 not used for real transactions, and instead is intended for testing of experimental
-clients. Wallets and addresses are incompatible with the normal CyberDollar
+clients. Wallets and addresses are incompatible with the normal AustraliaCash
 network, in order to isolate the two.
 
 As "TestCyber" is essentially valueless, it can be acquired easily for testing,
