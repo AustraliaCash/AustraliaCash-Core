@@ -6,8 +6,8 @@ AustraliaCash Core [AUS, ₡]
 
 <div align="center">
 
-[![AustraliaCashBadge](https://img.shields.io/badge/Cyber-Coin-yellow.svg)](https://cyberchain.info)
-[![MuchWow](https://img.shields.io/badge/Much-Wow-yellow.svg)](https://cyberchain.info)
+[![AustraliaCashBadge](https://img.shields.io/badge/Cyber-Coin-yellow.svg)](https://australiacash.org)
+[![MuchWow](https://img.shields.io/badge/Much-Wow-yellow.svg)](https://australiacash.org)
 
 </div>
 
@@ -21,7 +21,7 @@ Select language: [EN](./README.md) | [CN](./README_zh_CN.md) | [PT](./README_pt_
 [پیشنهادهای هزینه‌ای](doc/fee-recommendation.md)
 مراجعه نمایید.
 
-**سایت اینترنتی:** [cyberchain.info](https://cyberchain.info)
+**سایت اینترنتی:** [australiacash.org](https://australiacash.org)
 
 ## استفاده 💻
 
@@ -97,7 +97,7 @@ Select language: [EN](./README.md) | [CN](./README_zh_CN.md) | [PT](./README_pt_
 این لیستی از برخی از جاهایی است که می‌توانید به آن سر بزنید:
 
 - [زیرقسمت AustraliaCash در سایت Reddit](https://www.reddit.com/r/australiacash/)
-- [زیرقسمت Cyberducation در سایت Reddit](https://www.reddit.com/r/cyberducation/)
+- [زیرقسمت Australiacash در سایت Reddit](https://www.reddit.com/r/australiacash/)
 - [دیسکورد (Discord)](https://discord.gg/australiacash)
 - [توییتر AustraliaCash](https://twitter.com/australiacash)
 

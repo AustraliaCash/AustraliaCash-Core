@@ -5,11 +5,11 @@
 /**
  * Utility functions for RPC commands
  */
-#ifndef CYBERDOLLAR_WALLET_UTIL_H
-#define CYBERDOLLAR_WALLET_UTIL_H
+#ifndef AUSTRALIACASH_WALLET_UTIL_H
+#define AUSTRALIACASH_WALLET_UTIL_H
 #include <boost/filesystem/path.hpp>
 #include "util.h"
 
 boost::filesystem::path GetBackupDirFromInput(std::string strUserFilename);
 
-#endif // CYBERDOLLAR_WALLET_UTIL_H
+#endif // AUSTRALIACASH_WALLET_UTIL_H

@@ -50,4 +50,4 @@ Test and Verify Tools
 Utilities to generate test vectors for the data-driven AustraliaCash tests.
 
 ### [Verify Binaries](/contrib/verifybinaries) ###
-This script attempts to download and verify the signature file SHA256SUMS.asc from cyberchain.info.
+This script attempts to download and verify the signature file SHA256SUMS.asc from australiacash.org.

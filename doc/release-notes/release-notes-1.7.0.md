@@ -54,4 +54,4 @@ clients. Wallets and addresses are incompatible with the normal AustraliaCash
 network, in order to isolate the two.
 
 As "TestCyber" is essentially valueless, it can be acquired easily for testing,
-either by mining, or from a faucet such as http://testcyber.lionservers.de/
+either by mining, or from a faucet such as http://testacash.lionservers.de/

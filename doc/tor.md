@@ -1,4 +1,4 @@
-TOR SUPPORT IN CYBERDOLLAR
+TOR SUPPORT IN AUSTRALIACASH
 =======================
 
 It is possible to run AustraliaCash as a Tor hidden service, and connect to such services.

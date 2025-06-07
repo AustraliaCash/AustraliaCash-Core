@@ -6,8 +6,8 @@ AustraliaCash Core [AUS, ₡]
 
 <div align="center">
 
-[![AustraliaCashBadge](https://img.shields.io/badge/Cyber-Coin-yellow.svg)](https://cyberchain.info)
-[![MuchWow](https://img.shields.io/badge/Much-Wow-yellow.svg)](https://cyberchain.info)
+[![AustraliaCashBadge](https://img.shields.io/badge/Cyber-Coin-yellow.svg)](https://australiacash.org)
+[![MuchWow](https://img.shields.io/badge/Much-Wow-yellow.svg)](https://australiacash.org)
 
 </div>
 
@@ -18,7 +18,7 @@ AustraliaCash is a community-driven cryptocurrency that was inspired by a Shiba 
 For information about the default fees used on the AustraliaCash network, please
 refer to the [fee recommendation](doc/fee-recommendation.md).
 
-**Website:** [cyberchain.info](https://cyberchain.info)
+**Website:** [australiacash.org](https://australiacash.org)
 
 ## Usage 💻
 
@@ -88,7 +88,7 @@ about AustraliaCash, give or ask for help, to share your project.
 Here are some places to visit:
 
 * [AustraliaCash subreddit](https://www.reddit.com/r/australiacash/)
-* [Cyberducation subreddit](https://www.reddit.com/r/cyberducation/)
+* [Australiacash subreddit](https://www.reddit.com/r/australiacash/)
 * [Discord](https://discord.gg/australiacash)
 * [AustraliaCash Twitter](https://twitter.com/australiacash)
 

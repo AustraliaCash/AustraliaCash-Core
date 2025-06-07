@@ -7,7 +7,7 @@ title: '[feat] '
 <!-- Please make sure you are posting an technical issue related to AustraliaCash Core. --> 
 
 <!-- For general questions about AustraliaCash or wallet recovery please use one of the various communities:
-* [Cyberducation on reddit](https://www.reddit.com/r/cyberducation/)
+* [Australiacash on reddit](https://www.reddit.com/r/australiacash/)
 * [Discord](https://discord.com/invite/australiacash) -->
 
 <!-- ISSUES MISSING IMPORTANT INFORMATION MAY BE CLOSED WITHOUT INVESTIGATION. -->

@@ -104,7 +104,7 @@ use old versions of Upstart and do not supply the start-stop-daemon utility.
 Copy australiacashd.init to /etc/init.d/australiacashd. Test by running `service australiacashd start`.
 
 Using this script, you can adjust the path and flags to the australiacashd program by
-setting the CYBERDOLLARD and FLAGS environment variables in the file
+setting the AUSTRALIACASHD and FLAGS environment variables in the file
 /etc/sysconfig/australiacashd. You can also use the DAEMONOPTS environment variable here.
 
 4e) Mac OS X

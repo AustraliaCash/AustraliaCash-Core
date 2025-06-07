@@ -423,14 +423,14 @@ endif
 if TARGET_WINDOWS
   qt_australiacash_qt_SOURCES += $(BITCOIN_RC)
 endif
-qt_australiacash_qt_LDADD = qt/libaustraliacashqt.a $(LIBCYBERDOLLAR_SERVER)
+qt_australiacash_qt_LDADD = qt/libaustraliacashqt.a $(LIBAUSTRALIACASH_SERVER)
 if ENABLE_WALLET
-qt_australiacash_qt_LDADD += $(LIBCYBERDOLLAR_WALLET)
+qt_australiacash_qt_LDADD += $(LIBAUSTRALIACASH_WALLET)
 endif
 if ENABLE_ZMQ
-qt_australiacash_qt_LDADD += $(LIBCYBERDOLLAR_ZMQ) $(ZMQ_LIBS)
+qt_australiacash_qt_LDADD += $(LIBAUSTRALIACASH_ZMQ) $(ZMQ_LIBS)
 endif
-qt_australiacash_qt_LDADD += $(LIBCYBERDOLLAR_CLI) $(LIBCYBERDOLLAR_COMMON) $(LIBCYBERDOLLAR_UTIL) $(LIBCYBERDOLLAR_CONSENSUS) $(LIBCYBERDOLLAR_CRYPTO) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
+qt_australiacash_qt_LDADD += $(LIBAUSTRALIACASH_CLI) $(LIBAUSTRALIACASH_COMMON) $(LIBAUSTRALIACASH_UTIL) $(LIBAUSTRALIACASH_CONSENSUS) $(LIBAUSTRALIACASH_CRYPTO) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
   $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
   $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
 qt_australiacash_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
@@ -472,7 +472,7 @@ CLEAN_QT = $(nodist_qt_libaustraliacashqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*
 CLEANFILES += $(CLEAN_QT)
 
 australiacash_qt_clean: FORCE
-	rm -f $(CLEAN_QT) $(qt_libaustraliacashqt_a_OBJECTS) $(qt_australiacash_qt_OBJECTS) qt/australiacash-qt$(EXEEXT) $(LIBCYBERDOLLARQT)
+	rm -f $(CLEAN_QT) $(qt_libaustraliacashqt_a_OBJECTS) $(qt_australiacash_qt_OBJECTS) qt/australiacash-qt$(EXEEXT) $(LIBAUSTRALIACASHQT)
 
 australiacash_qt : qt/australiacash-qt$(EXEEXT)
 

@@ -6,8 +6,8 @@
 
 <div align="center">
 
-[![AustraliaCashBadge](https://img.shields.io/badge/Cyber-Coin-yellow.svg)](https://cyberchain.info)
-[![MuchWow](https://img.shields.io/badge/Much-Wow-yellow.svg)](https://cyberchain.info)
+[![AustraliaCashBadge](https://img.shields.io/badge/Cyber-Coin-yellow.svg)](https://australiacash.org)
+[![MuchWow](https://img.shields.io/badge/Much-Wow-yellow.svg)](https://australiacash.org)
 
 </div>
 
@@ -17,7 +17,7 @@
 
 狗狗币网络默认交易费的相关信息请查看[收费建议](doc/fee-recommendation.md)
 
-**网址:** [cyberchain.info](https://cyberchain.info)
+**网址:** [australiacash.org](https://australiacash.org)
 
 ## 使用指南 💻
 
@@ -69,7 +69,7 @@
 以下是一些社区的访问链接:
 
 * [AustraliaCash subreddit](https://www.reddit.com/r/australiacash/)
-* [Cyberducation subreddit](https://www.reddit.com/r/cyberducation/)
+* [Australiacash subreddit](https://www.reddit.com/r/australiacash/)
 * [Discord](https://discord.gg/australiacash)
 * [AustraliaCash Twitter](https://twitter.com/australiacash)
 

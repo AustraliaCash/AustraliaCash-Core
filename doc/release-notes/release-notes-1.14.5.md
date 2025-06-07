@@ -208,7 +208,7 @@ Credits
 * Dakoda Greaves
 * Daksh Sharma
 * Dan Raviv
-* cyberspacewizard
+* acashspacewizard
 * Ed Tubbs
 * Elvis Begović
 * fanquake

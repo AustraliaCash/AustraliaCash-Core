@@ -24,23 +24,23 @@ BITCOIN_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BDB_CPPFLAGS) $(BOOST_CPPFLAG
 BITCOIN_INCLUDES += -I$(srcdir)/secp256k1/include
 BITCOIN_INCLUDES += $(UNIVALUE_CFLAGS)
 
-LIBCYBERDOLLAR_SERVER=libaustraliacash_server.a
-LIBCYBERDOLLAR_COMMON=libaustraliacash_common.a
-LIBCYBERDOLLAR_CONSENSUS=libaustraliacash_consensus.a
-LIBCYBERDOLLAR_CLI=libaustraliacash_cli.a
-LIBCYBERDOLLAR_UTIL=libaustraliacash_util.a
-LIBCYBERDOLLAR_CRYPTO=crypto/libaustraliacash_crypto.a
-LIBCYBERDOLLARQT=qt/libaustraliacashqt.a
+LIBAUSTRALIACASH_SERVER=libaustraliacash_server.a
+LIBAUSTRALIACASH_COMMON=libaustraliacash_common.a
+LIBAUSTRALIACASH_CONSENSUS=libaustraliacash_consensus.a
+LIBAUSTRALIACASH_CLI=libaustraliacash_cli.a
+LIBAUSTRALIACASH_UTIL=libaustraliacash_util.a
+LIBAUSTRALIACASH_CRYPTO=crypto/libaustraliacash_crypto.a
+LIBAUSTRALIACASHQT=qt/libaustraliacashqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 
 if ENABLE_ZMQ
-LIBCYBERDOLLAR_ZMQ=libaustraliacash_zmq.a
+LIBAUSTRALIACASH_ZMQ=libaustraliacash_zmq.a
 endif
 if BUILD_BITCOIN_LIBS
-LIBCYBERDOLLARCONSENSUS=libaustraliacashconsensus.la
+LIBAUSTRALIACASHCONSENSUS=libaustraliacashconsensus.la
 endif
 if ENABLE_WALLET
-LIBCYBERDOLLAR_WALLET=libaustraliacash_wallet.a
+LIBAUSTRALIACASH_WALLET=libaustraliacash_wallet.a
 endif
 
 $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
@@ -49,16 +49,16 @@ $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 # Make is not made aware of per-object dependencies to avoid limiting building parallelization
 # But to build the less dependent modules first, we manually select their order here:
 EXTRA_LIBRARIES += \
-  $(LIBCYBERDOLLAR_CRYPTO) \
-  $(LIBCYBERDOLLAR_UTIL) \
-  $(LIBCYBERDOLLAR_COMMON) \
-  $(LIBCYBERDOLLAR_CONSENSUS) \
-  $(LIBCYBERDOLLAR_SERVER) \
-  $(LIBCYBERDOLLAR_CLI) \
-  $(LIBCYBERDOLLAR_WALLET) \
-  $(LIBCYBERDOLLAR_ZMQ)
+  $(LIBAUSTRALIACASH_CRYPTO) \
+  $(LIBAUSTRALIACASH_UTIL) \
+  $(LIBAUSTRALIACASH_COMMON) \
+  $(LIBAUSTRALIACASH_CONSENSUS) \
+  $(LIBAUSTRALIACASH_SERVER) \
+  $(LIBAUSTRALIACASH_CLI) \
+  $(LIBAUSTRALIACASH_WALLET) \
+  $(LIBAUSTRALIACASH_ZMQ)
 
-lib_LTLIBRARIES = $(LIBCYBERDOLLARCONSENSUS)
+lib_LTLIBRARIES = $(LIBAUSTRALIACASHCONSENSUS)
 
 bin_PROGRAMS =
 noinst_PROGRAMS =
@@ -382,14 +382,14 @@ australiacashd_SOURCES += bitcoind-res.rc
 endif
 
 australiacashd_LDADD = \
-  $(LIBCYBERDOLLAR_SERVER) \
-  $(LIBCYBERDOLLAR_COMMON) \
+  $(LIBAUSTRALIACASH_SERVER) \
+  $(LIBAUSTRALIACASH_COMMON) \
   $(LIBUNIVALUE) \
-  $(LIBCYBERDOLLAR_UTIL) \
-  $(LIBCYBERDOLLAR_WALLET) \
-  $(LIBCYBERDOLLAR_ZMQ) \
-  $(LIBCYBERDOLLAR_CONSENSUS) \
-  $(LIBCYBERDOLLAR_CRYPTO) \
+  $(LIBAUSTRALIACASH_UTIL) \
+  $(LIBAUSTRALIACASH_WALLET) \
+  $(LIBAUSTRALIACASH_ZMQ) \
+  $(LIBAUSTRALIACASH_CONSENSUS) \
+  $(LIBAUSTRALIACASH_CRYPTO) \
   $(LIBLEVELDB) \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
@@ -407,10 +407,10 @@ australiacash_cli_SOURCES += bitcoin-cli-res.rc
 endif
 
 australiacash_cli_LDADD = \
-  $(LIBCYBERDOLLAR_CLI) \
+  $(LIBAUSTRALIACASH_CLI) \
   $(LIBUNIVALUE) \
-  $(LIBCYBERDOLLAR_UTIL) \
-  $(LIBCYBERDOLLAR_CRYPTO)
+  $(LIBAUSTRALIACASH_UTIL) \
+  $(LIBAUSTRALIACASH_CRYPTO)
 
 australiacash_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
@@ -427,10 +427,10 @@ endif
 
 australiacash_tx_LDADD = \
   $(LIBUNIVALUE) \
-  $(LIBCYBERDOLLAR_COMMON) \
-  $(LIBCYBERDOLLAR_UTIL) \
-  $(LIBCYBERDOLLAR_CONSENSUS) \
-  $(LIBCYBERDOLLAR_CRYPTO) \
+  $(LIBAUSTRALIACASH_COMMON) \
+  $(LIBAUSTRALIACASH_UTIL) \
+  $(LIBAUSTRALIACASH_CONSENSUS) \
+  $(LIBAUSTRALIACASH_CRYPTO) \
   $(LIBSECP256K1)
 
 australiacash_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)

@@ -1,6 +1,6 @@
 ## Very Much Frequently Asked Questions ❓
 
-### How much cyber can exist? – So many puppies! 🐕
+### How much acash can exist? – So many puppies! 🐕
 Early 2015 (approximately a year and a half after release) there were
 approximately 100,000,000,000 coins.
 Each subsequent block will grant 10,000 coins to encourage miners to continue to

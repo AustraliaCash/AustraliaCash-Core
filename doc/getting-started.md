@@ -5,7 +5,7 @@ This tutorial will help you to go through the basics to use AustraliaCash Core a
 > **Note:** For simplicity, this guide assumes that executables can be found under the `PATH` environment variable.
 If needed, you can specify their location by typing `PATH=$PATH:/path/to/executables`, or prepend the full path to the command like:
 > ```console
-> cybertoshi:~$ /path/to/australiacash-cli [arguments ...]
+> acashtoshi:~$ /path/to/australiacash-cli [arguments ...]
 > ```
 
 ### Table of contents
@@ -28,12 +28,12 @@ If needed, you can specify their location by typing `PATH=$PATH:/path/to/executa
 
 To start your node, you can run an headless server using `australiacashd`:
 ```console
-cybertoshi:~$ australiacashd -daemon
+acashtoshi:~$ australiacashd -daemon
 ```
 
 Or you can use the Graphical User Interface (GUI), `australiacash-qt`:
 ```console
-cybertoshi:~$ australiacash-qt
+acashtoshi:~$ australiacash-qt
 ```
 
 Detailed logging is recorded in `debug.log`, located in the [data directory](#data-directory).
@@ -53,10 +53,10 @@ To have an overview of the available commands, use the `help` command:
 
 ```console
 #List all commands
-cybertoshi:~$ australiacash-cli help
+acashtoshi:~$ australiacash-cli help
 
 #Get help for a specific command
-cybertoshi:~$ australiacash-cli help COMMAND
+acashtoshi:~$ australiacash-cli help COMMAND
 ```
 
 Some commands are different, but it's possible to use the [bitcoin RPC API documentation](https://developer.bitcoin.org/reference/rpc/).
@@ -70,7 +70,7 @@ By default, the AustraliaCash Core software will automatically create an address
 You can list wallet addresses using `getaddressesbyaccount`:
 
 ```console
-cybertoshi:~$ australiacash-cli getaddressesbyaccount ""
+acashtoshi:~$ australiacash-cli getaddressesbyaccount ""
 [
   "DA2fBazU8Y4epNJ2fQRZCcWpxKZY9HrhLN"
 ]
@@ -78,14 +78,14 @@ cybertoshi:~$ australiacash-cli getaddressesbyaccount ""
 
 Using `getnewaddress` will generate a new wallet address:
 ```console
-cybertoshi:~$ australiacash-cli getnewaddress
+acashtoshi:~$ australiacash-cli getnewaddress
 DNnGtXk9khadE7EKCmQzxjnehenX92PKAv
 ```
 
 Private keys are stored in the `wallet.dat` file. You can use `backupwallet` to save a copy:
 
 ```console
-cybertoshi:~$ australiacash-cli backupwallet /path/of/wallet/backup
+acashtoshi:~$ australiacash-cli backupwallet /path/of/wallet/backup
 ```
 
 **Tip:** AustraliaCash addresses start with the letter `D`.
@@ -98,14 +98,14 @@ The total balance of all addresses held in your wallet can be found with the `ge
 
 ```console
 #Syntax
-cybertoshi:~$ australiacash-cli getbalance "*" minconf
+acashtoshi:~$ australiacash-cli getbalance "*" minconf
 ```
 
 `minconf` stands for minimum confirmations.
 For example, to see current balance with transaction having at least 5 confirmations:
 
 ```console
-cybertoshi:~$ australiacash-cli getbalance "*" 5
+acashtoshi:~$ australiacash-cli getbalance "*" 5
 421.552000
 ```
 
@@ -118,10 +118,10 @@ AustraliaCash implements the [Unspent Transaction Output (UTXO)](https://en.wiki
 It's possible to use a single command to create, sign and send a transaction :
 ```console
 #Syntax
-cybertoshi:~$ australiacash-cli sendtoaddress address amount
+acashtoshi:~$ australiacash-cli sendtoaddress address amount
 
 #Example
-cybertoshi:~$ australiacash-cli sendtoaddress nWSYUqtimF7B6qW4GBdczaG6jvqKutS1Nh 420
+acashtoshi:~$ australiacash-cli sendtoaddress nWSYUqtimF7B6qW4GBdczaG6jvqKutS1Nh 420
 ```
 
 So much spending power !
@@ -134,10 +134,10 @@ This displays a list of UTXOs associated to addresses kept in the wallet.
 
 ```console
 #Syntax
-cybertoshi:~$ australiacash-cli listunspent minconf maxconf '["address", ...]'
+acashtoshi:~$ australiacash-cli listunspent minconf maxconf '["address", ...]'
 
 #Example
-cybertoshi:~$ australiacash-cli listunspent 1 9999999 '["nnJDY1xCRgWQc7vBXHUPMPsEynuZW23Y3P"]'
+acashtoshi:~$ australiacash-cli listunspent 1 9999999 '["nnJDY1xCRgWQc7vBXHUPMPsEynuZW23Y3P"]'
 [
   {
     "txid": "b869ed6606d52e6446dc12db02cf868ab693dd5b9f661116269536f0f8fa2433",
@@ -163,7 +163,7 @@ You can now build a new transaction using the available UTXOs from above.
 
 ```console
 #Syntax
-cybertoshi:~$ utxos_to_use='
+acashtoshi:~$ utxos_to_use='
   [
     {
       "txid": "id",
@@ -171,17 +171,17 @@ cybertoshi:~$ utxos_to_use='
     },
     ...
   ]'
-cybertoshi:~$ australiacash-cli createrawtransaction "$utxos_to_use" '{"address":amount, ...}'
+acashtoshi:~$ australiacash-cli createrawtransaction "$utxos_to_use" '{"address":amount, ...}'
 
 #Example
-cybertoshi:~$ utxos_to_use='
+acashtoshi:~$ utxos_to_use='
 [
   {
     "txid": "b869ed6606d52e6446dc12db02cf868ab693dd5b9f661116269536f0f8fa2433",
     "vout": 0
   }
 ]'
-cybertoshi:~$ australiacash-cli createrawtransaction "$utxos_to_use" '{"nWSYUqtimF7B6qW4GBdczaG6jvqKutS1Nh":69, "nnJDY1xCRgWQc7vBXHUPMPsEynuZW23Y3P": 30.999}'
+acashtoshi:~$ australiacash-cli createrawtransaction "$utxos_to_use" '{"nWSYUqtimF7B6qW4GBdczaG6jvqKutS1Nh":69, "nnJDY1xCRgWQc7vBXHUPMPsEynuZW23Y3P": 30.999}'
 01000000013324faf8f03695261611669f5bdd93b68a86cf02db12dc46642ed50666ed69b80000000000ffffffff0200a5459b010000001976a91418a89ee36293f15c4db4c01173babd579243161188ac60b8c4b8000000001976a914c6977da37560e1432c2e14e16952981a4c272cac88ac00000000
 ```
 
@@ -195,10 +195,10 @@ Before sending a transaction, it must be signed by the private key that the addr
 
 ```console
 #Syntax
-cybertoshi:~$ australiacash-cli signrawtransaction encoded_transaction
+acashtoshi:~$ australiacash-cli signrawtransaction encoded_transaction
 
 #Example
-cybertoshi:~$ australiacash-cli signrawtransaction "01000000013324faf8f03695261611669f5bdd93b68a86cf02db12dc46642ed50666ed69b80000000000ffffffff0200a5459b010000001976a91418a89ee36293f15c4db4c01173babd579243161188ac60b8c4b8000000001976a914c6977da37560e1432c2e14e16952981a4c272cac88ac00000000"
+acashtoshi:~$ australiacash-cli signrawtransaction "01000000013324faf8f03695261611669f5bdd93b68a86cf02db12dc46642ed50666ed69b80000000000ffffffff0200a5459b010000001976a91418a89ee36293f15c4db4c01173babd579243161188ac60b8c4b8000000001976a914c6977da37560e1432c2e14e16952981a4c272cac88ac00000000"
 {
   "hex": "01000000013324faf8f03695261611669f5bdd93b68a86cf02db12dc46642ed50666ed69b8000000006a47304402200e1bf722d4335179de170f7c762755b463b3f7b8f026f30950f701bc834f0e6e022036295fdd5e607ca41c4e0e62e59d0911b607bfabedde2424665ffae13564d0e001210388f8f226d12eccd3ba93c1454ec4498b065cea96e29b918fbdb517872ebbf581ffffffff0200a5459b010000001976a91418a89ee36293f15c4db4c01173babd579243161188ac60b8c4b8000000001976a914c6977da37560e1432c2e14e16952981a4c272cac88ac00000000",
   "complete": true
@@ -211,10 +211,10 @@ Finally, broadcast the transaction to the network so that it can be included in 
 
 ```console
 #Syntax
-cybertoshi:~$ australiacash-cli sendrawtransaction signed_transaction
+acashtoshi:~$ australiacash-cli sendrawtransaction signed_transaction
 
 #Example
-cybertoshi:~$ australiacash-cli sendrawtransaction 01000000013324faf8f03695261611669f5bdd93b68a86cf02db12dc46642ed50666ed69b8000000006a47304402200e1bf722d4335179de170f7c762755b463b3f7b8f026f30950f701bc834f0e6e022036295fdd5e607ca41c4e0e62e59d0911b607bfabedde2424665ffae13564d0e001210388f8f226d12eccd3ba93c1454ec4498b065cea96e29b918fbdb517872ebbf581ffffffff0200a5459b010000001976a91418a89ee36293f15c4db4c01173babd579243161188ac60b8c4b8000000001976a914c6977da37560e1432c2e14e16952981a4c272cac88ac00000000
+acashtoshi:~$ australiacash-cli sendrawtransaction 01000000013324faf8f03695261611669f5bdd93b68a86cf02db12dc46642ed50666ed69b8000000006a47304402200e1bf722d4335179de170f7c762755b463b3f7b8f026f30950f701bc834f0e6e022036295fdd5e607ca41c4e0e62e59d0911b607bfabedde2424665ffae13564d0e001210388f8f226d12eccd3ba93c1454ec4498b065cea96e29b918fbdb517872ebbf581ffffffff0200a5459b010000001976a91418a89ee36293f15c4db4c01173babd579243161188ac60b8c4b8000000001976a914c6977da37560e1432c2e14e16952981a4c272cac88ac00000000
 b4fae2a43cb35f8016a547e9658e061f1da4a043efafecc42f739d46d95dee21
 ```
 
@@ -229,11 +229,11 @@ First, request the information about block 69:
 
 ```console
 #Find block hash from his height
-cybertoshi:~$ australiacash-cli getblockhash 69
+acashtoshi:~$ australiacash-cli getblockhash 69
 3d2def20cd0d3aca148741ef469bda11647a3040d7669c82745d03c728706a8b
 
 #Get block data
-cybertoshi:~$ australiacash-cli getblock 3d2def20cd0d3aca148741ef469bda11647a3040d7669c82745d03c728706a8b
+acashtoshi:~$ australiacash-cli getblock 3d2def20cd0d3aca148741ef469bda11647a3040d7669c82745d03c728706a8b
 {
   "hash": "3d2def20cd0d3aca148741ef469bda11647a3040d7669c82745d03c728706a8b",
   "confirmations": 7816,
@@ -264,10 +264,10 @@ We can see the entire transaction by querying for its identifier:
 
 ```console
 #Syntax
-cybertoshi:~$ australiacash-cli getrawtransaction txid verbose
+acashtoshi:~$ australiacash-cli getrawtransaction txid verbose
 
 #Example
-cybertoshi:~$ australiacash-cli getrawtransaction 695ce4208fa7a87ef9e99805b0910dc129058ecdceb5cef7e25f71dcdc7936db 1
+acashtoshi:~$ australiacash-cli getrawtransaction 695ce4208fa7a87ef9e99805b0910dc129058ecdceb5cef7e25f71dcdc7936db 1
 {
   "hex": "01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff0e04d9eea3520101062f503253482fffffffff0100ac6156be23000023210340a42a5ad6c4c0cd5ae539657032e0a359bd3e0f95771f34d71691b13460a624ac00000000",
   "txid": "695ce4208fa7a87ef9e99805b0910dc129058ecdceb5cef7e25f71dcdc7936db",
@@ -314,7 +314,7 @@ Using `australiacashd -help` will display all available configuration parameters
 
 **Command example :**
 ```console
-cybertoshi:~$ australiacashd -daemon -paytxfee=0.01 -sendfreetransactions=1 -maxconnections=150
+acashtoshi:~$ australiacashd -daemon -paytxfee=0.01 -sendfreetransactions=1 -maxconnections=150
 ```
 
 Configuration can be persisted by creating a `australiacash.conf` file. Create it in the directory defined with the `datadir` setting, `$HOME/.australiacash` by default, or specify the file location with `-conf`.
