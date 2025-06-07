@@ -367,7 +367,7 @@
         <translation>Portofel</translation>
     </message>
     <message>
-        <source>&amp;Skypay</source>
+        <source>&amp;Send</source>
         <translation>&amp;Trimite</translation>
     </message>
     <message>
@@ -479,7 +479,7 @@
         <translation>Portofelul este &lt;b&gt;criptat&lt;/b&gt; și în prezent &lt;b&gt;blocat&lt;/b&gt;</translation>
     </message>
     <message>
-        <source>&amp;Wow</source>
+        <source>&amp;Overview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4473,7 +4473,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Wow</source>
+        <source>Overview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

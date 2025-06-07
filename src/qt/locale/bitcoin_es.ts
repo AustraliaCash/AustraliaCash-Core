@@ -279,7 +279,7 @@
         <translation>Sincronizando con la red…</translation>
     </message>
     <message>
-        <source>&amp;Wow</source>
+        <source>&amp;Overview</source>
         <translation>&amp;Vista general</translation>
     </message>
     <message>
@@ -399,7 +399,7 @@
         <translation>Monedero</translation>
     </message>
     <message>
-        <source>&amp;Skypay</source>
+        <source>&amp;Send</source>
         <translation>&amp;Enviar</translation>
     </message>
     <message>
@@ -4487,7 +4487,7 @@ Establecer la serialización de las transacciones sin procesar o el bloque hex d
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Wow</source>
+        <source>Overview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -138,7 +138,7 @@
         <translation>Billetera</translation>
     </message>
     <message>
-        <source>&amp;Skypay</source>
+        <source>&amp;Send</source>
         <translation>&amp;Enviar</translation>
     </message>
     <message>

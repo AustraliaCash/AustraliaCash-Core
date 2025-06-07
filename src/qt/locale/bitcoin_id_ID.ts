@@ -279,15 +279,15 @@
         <translation>Sinkronisasi dengan jaringan...</translation>
     </message>
     <message>
-        <source>&amp;Wow</source>
-        <translation>&amp;Wow</translation>
+        <source>&amp;Overview</source>
+        <translation>&amp;Overview</translation>
     </message>
     <message>
         <source>Show general overview of wallet</source>
         <translation>Tampilkan gambaran umum dompet Anda</translation>
     </message>
     <message>
-        <source>&amp;Skypay</source>
+        <source>&amp;Send</source>
         <translation>&amp;Kirim Aja</translation>
     </message>
     <message>
@@ -4459,7 +4459,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Wow</source>
+        <source>Overview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

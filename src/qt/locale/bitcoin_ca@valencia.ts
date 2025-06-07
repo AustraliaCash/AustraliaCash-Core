@@ -230,7 +230,7 @@
         <translation>S'està sincronitzant amb la xarxa ...</translation>
     </message>
     <message>
-        <source>&amp;Wow</source>
+        <source>&amp;Overview</source>
         <translation>&amp;Panorama general</translation>
     </message>
     <message>
@@ -330,7 +330,7 @@
         <translation>Moneder</translation>
     </message>
     <message>
-        <source>&amp;Skypay</source>
+        <source>&amp;Send</source>
         <translation>&amp;Envia</translation>
     </message>
     <message>

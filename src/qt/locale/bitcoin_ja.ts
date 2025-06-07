@@ -279,7 +279,7 @@
         <translation>ネットワークに同期中……</translation>
     </message>
     <message>
-        <source>&amp;Wow</source>
+        <source>&amp;Overview</source>
         <translation>概要(&amp;O)</translation>
     </message>
     <message>
@@ -399,7 +399,7 @@
         <translation>ウォレット</translation>
     </message>
     <message>
-        <source>&amp;Skypay</source>
+        <source>&amp;Send</source>
         <translation>送金 (&amp;S)</translation>
     </message>
     <message>
@@ -4468,7 +4468,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Wow</source>
+        <source>Overview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

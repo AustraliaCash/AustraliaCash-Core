@@ -376,11 +376,11 @@ Alihkan fail data ke dalam tab semasa</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Wow</source>
+        <source>&amp;Overview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Skypay</source>
+        <source>&amp;Send</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4458,7 +4458,7 @@ Alihkan fail data ke dalam tab semasa</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Wow</source>
+        <source>Overview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

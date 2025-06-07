@@ -271,7 +271,7 @@
 <context>
     <name>BitcoinGUI</name>
     <message>
-        <source>&amp;Wow</source>
+        <source>&amp;Overview</source>
         <translation>&amp;கண்ணோட்டம்</translation>
     </message>
     <message>
@@ -315,7 +315,7 @@
         <translation>பணப்பை</translation>
     </message>
     <message>
-        <source>&amp;Skypay</source>
+        <source>&amp;Send</source>
         <translation>&amp;அனுப்பு</translation>
     </message>
     <message>
@@ -4469,7 +4469,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Wow</source>
+        <source>Overview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -279,7 +279,7 @@
         <translation>Synchronisation avec le réseau...</translation>
     </message>
     <message>
-        <source>&amp;Wow</source>
+        <source>&amp;Overview</source>
         <translation>&amp;Vue d&apos;ensemble</translation>
     </message>
     <message>
@@ -399,7 +399,7 @@
         <translation>Porte-monnaie</translation>
     </message>
     <message>
-        <source>&amp;Skypay</source>
+        <source>&amp;Send</source>
         <translation>&amp;Envoyer</translation>
     </message>
     <message>
@@ -4544,8 +4544,8 @@ p, li { white-space: pre-wrap; }
         <translation>Très coûteux</translation>
     </message>
     <message>
-        <source>Wow</source>
-        <translation>Wow</translation>
+        <source>Overview</source>
+        <translation>Overview</translation>
     </message>
     <message>
         <source>-discardthreshold is set very high! This is the output amount that the wallet will discard (to fee) if it is smaller than this setting.</source>

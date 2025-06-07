@@ -106,7 +106,7 @@
         <translation>Đồng bộ hóa với mạng</translation>
     </message>
     <message>
-        <source>&amp;Wow</source>
+        <source>&amp;Overview</source>
         <translation>&amp;Tổng quan</translation>
     </message>
     <message>
@@ -214,7 +214,7 @@
         <translation>Ví</translation>
     </message>
     <message>
-        <source>&amp;Skypay</source>
+        <source>&amp;Send</source>
         <translation>&amp;Gửi</translation>
     </message>
     <message>

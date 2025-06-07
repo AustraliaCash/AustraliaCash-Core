@@ -279,8 +279,8 @@
         <translation>Synchronising with network...</translation>
     </message>
     <message>
-        <source>&amp;Wow</source>
-        <translation>&amp;Wow</translation>
+        <source>&amp;Overview</source>
+        <translation>&amp;Overview</translation>
     </message>
     <message>
         <source>Node</source>
@@ -391,8 +391,8 @@
         <translation>Wallet</translation>
     </message>
     <message>
-        <source>&amp;Skypay</source>
-        <translation>&amp;Skypay</translation>
+        <source>&amp;Send</source>
+        <translation>&amp;Send</translation>
     </message>
     <message>
         <source>&amp;Income</source>
@@ -4494,7 +4494,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Wow</source>
+        <source>Overview</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
