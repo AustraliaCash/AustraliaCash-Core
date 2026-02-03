@@ -59,13 +59,6 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
 /**
  * Main network
  */
-/**
- * What makes a good checkpoint block?
- * + Is surrounded by blocks with reasonable timestamps
- *   (no blocks before with a timestamp after, none after with
- *    timestamp before)
- * + Contains no strange transactions
- */
 
 class CMainParams : public CChainParams {
 private:
@@ -75,12 +68,10 @@ public:
     CMainParams() {
         strNetworkID = "main";
 
-        // Blocks 0 - 144999 are conventional difficulty calculation
         consensus.nSubsidyHalvingInterval = 100000;
         consensus.nMajorityEnforceBlockUpgrade = 1500;
         consensus.nMajorityRejectBlockOutdated = 1900;
         consensus.nMajorityWindow = 2000;
-        // BIP34 is never enforced in AustraliaCash v2 blocks, so we enforce from v3
         consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256S("0xb37bc8ff4f2ed04e392552a60276cecc66c96a2ec77247278b7d8ac22691c57f");
         consensus.BIP65Height = 0;
@@ -111,10 +102,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 0; // Disabled
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000000000f6575a1bd6f51a");
+        consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000000028ac7a34b1d57f2a");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x534b8c3c0639d062f1e910c521667551486e33318ca7252f2ce950a46ee4b6bd");
+        consensus.defaultAssumeValid = uint256S("0xb4ca3143c870cd58579f170f4805e2b07c55ac3ea3abc8636bb470eb05adb2c4");
 
         // AuxPoW parameters
         consensus.nAuxpowChainId = 0x0016;
@@ -167,6 +158,7 @@ public:
         vSeeds.push_back(CDNSSeedData("triplezen.org", "seednode3.triplezen.org"));
         vSeeds.push_back(CDNSSeedData("161.43.201.255", "161.43.201.255"));
         vSeeds.push_back(CDNSSeedData("207.148.87.64", "207.148.87.64"));
+        vSeeds.push_back(CDNSSeedData("139.84.198.41", "139.84.198.41"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,23);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
@@ -188,15 +180,18 @@ public:
             (  12757, uint256S("0x2c0092c1772767364d092db509a219452d9f0111070a6a984b84d1670fbbaef5"))
             (  36369, uint256S("0xaf13d8761d3ac3fac45a0938813eaefa0daf3f88580c05c78854de50a21bf308"))
             (  96369, uint256S("0x1fd25a6e76561ec3f04ed37d0f2a06b73568b943a29dac01ea9991added7b909"))
+            ( 987446, uint256S("0x06bfeada0c331ef543b3a1e854b74da4f0939624363d66429d78bb1112d68d09"))
+            (1187934, uint256S("0x1e147e2220d7a4de722ede2a0677fdcdebf8546024e1e30e6444c42a11fec05e"))
+            (1258777, uint256S("0xb4ca3143c870cd58579f170f4805e2b07c55ac3ea3abc8636bb470eb05adb2c4"))
         };
 
         chainTxData = ChainTxData{
             // Data as of block ed7d266dcbd8bb8af80f9ccb8deb3e18f9cc3f6972912680feeb37b090f8cee0 (height 4303965).
             // Tx estimate based on average between 2021-07-01 (3793538) and 2022-07-01 (4288126)
-            1691310766, // * UNIX timestamp of last checkpoint block
-            96369,   // * total number of transactions between genesis and last checkpoint
+            1758865720, // * UNIX timestamp of last checkpoint block
+            1268754,   // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
-            0.02        // * estimated number of transactions per second after checkpoint
+            0.05        // * estimated number of transactions per second after checkpoint
         };
     }
 };
@@ -328,7 +323,6 @@ public:
         };
 
         chainTxData = ChainTxData{
-            // Data as of block af23c3e750bb4f2ce091235f006e7e4e2af453d4c866282e7870471dcfeb4382 (height 3976284)
             1682425240, // * UNIX timestamp of last checkpoint block
             5,    // * total number of transactions between genesis and last checkpoint
             0.02        // * estimated number of transactions per second after that timestamp

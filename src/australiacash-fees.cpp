@@ -45,15 +45,15 @@ const std::string GetAustraliaCashPriorityLabel(int priority)
     switch(priority)
     {
     case SUCH_EXPENSIVE:
-        return _("Such expensive");
+        return _("Expensive");
     case MANY_GENEROUS:
-        return _("Many generous");
+        return _("Generous");
     case AMAZE:
-        return _("Amaze");
+        return _("Giving");
     case WOW:
-        return _("Wow");
+        return _("Average");
     case MORE:
-        return _("More");
+        return _("Low");
     case MINIMUM:
         return _("Minimum");
     default:
