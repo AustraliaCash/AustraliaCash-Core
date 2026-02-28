@@ -127,26 +127,60 @@ CAmount GetAustraliaCashBlockSubsidy(int nHeight, const Consensus::Params& conse
 {
     int halvings = nHeight / consensusParams.nSubsidyHalvingInterval;
 
-    // Handle rewards based on block height
+    // Pre-13th halving: original logic (DO NOT TOUCH)
     if (nHeight < (13 * consensusParams.nSubsidyHalvingInterval)) {
-        // Current-style rewards derived from the previous block hash
         const std::string cseed_str = prevHash.ToString().substr(7, 7);
-        const char* cseed = cseed_str.c_str();
-        char* endp = NULL;
-        long seed = strtol(cseed, &endp, 16);
+        long seed = strtol(cseed_str.c_str(), nullptr, 16);
+
         CAmount maxReward = (1000000 >> halvings) - 1;
         int rand = generateMTRandom(seed, maxReward);
 
         return (1 + rand) * COIN;
-    } else {
-        // Constant inflation with randomization after 13 halvings
-        const std::string cseed_str = prevHash.ToString().substr(7, 7);
-        const char* cseed = cseed_str.c_str();
-        char* endp = NULL;
-        long seed = strtol(cseed, &endp, 16);
-        int rand = generateMTRandom(seed, 100);  // Randomize for constant inflation
+    }
 
-        return (100 + rand) * COIN;  // Apply randomization to 100 * COIN
+    // 13th → 14th halving
+    if (halvings < 14) {
+        const std::string cseed_str = prevHash.ToString().substr(7, 7);
+        long seed = strtol(cseed_str.c_str(), nullptr, 16);
+        int rand = generateMTRandom(seed, 100);
+
+        return (100 + rand) * COIN;
+    }
+
+    // 14th → 15th halving
+    if (halvings < 15) {
+        const std::string cseed_str = prevHash.ToString().substr(7, 7);
+        long seed = strtol(cseed_str.c_str(), nullptr, 16);
+        int rand = generateMTRandom(seed, 50);
+
+        return (50 + rand) * COIN;
+    }
+
+    // 15th → 17th halving
+    if (halvings < 17) {
+        const std::string cseed_str = prevHash.ToString().substr(7, 7);
+        long seed = strtol(cseed_str.c_str(), nullptr, 16);
+        int rand = generateMTRandom(seed, 25);
+
+        return (25 + rand) * COIN;
+    }
+
+    // 17th → 20th halving
+    if (halvings < 20) {
+        const std::string cseed_str = prevHash.ToString().substr(7, 7);
+        long seed = strtol(cseed_str.c_str(), nullptr, 16);
+        int rand = generateMTRandom(seed, 10);
+
+        return (10 + rand) * COIN;
+    }
+
+    // 20th+ halving
+    {
+        const std::string cseed_str = prevHash.ToString().substr(7, 7);
+        long seed = strtol(cseed_str.c_str(), nullptr, 16);
+        int rand = generateMTRandom(seed, 2);
+
+        return (2 + rand) * COIN;
     }
 }
 
