@@ -45,11 +45,11 @@ QString BitcoinUnits::name(int unit)
 {
     switch(unit)
     {
-    case MBTC: return QString("MCYBER");
-    case kBTC: return QString("kCYBER");
+    case MBTC: return QString("MAUS");
+    case kBTC: return QString("kAUS");
     case BTC: return QString("AUS");
-    case mBTC: return QString("mCYBER");
-    case uBTC: return QString::fromUtf8("μCYBER");
+    case mBTC: return QString("mAUS");
+    case uBTC: return QString::fromUtf8("μAUS");
     default: return QString("???");
     }
 }
@@ -58,11 +58,11 @@ QString BitcoinUnits::description(int unit)
 {
     switch(unit)
     {
-    case MBTC: return QString("Mega-AustraliaCashs (1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-    case kBTC: return QString("Kilo-AustraliaCashs (1" THIN_SP_UTF8 "000)");
-    case BTC: return QString("AustraliaCashs");
-    case mBTC: return QString("Milli-AustraliaCashs (1 / 1" THIN_SP_UTF8 "000)");
-    case uBTC: return QString("Micro-AustraliaCashs (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+    case MBTC: return QString("Mega-AusCashs (1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+    case kBTC: return QString("Kilo-AusCashs (1" THIN_SP_UTF8 "000)");
+    case BTC: return QString("AusCashs");
+    case mBTC: return QString("Milli-AusCashs (1 / 1" THIN_SP_UTF8 "000)");
+    case uBTC: return QString("Micro-AusCashs (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
     default: return QString("???");
     }
 }
