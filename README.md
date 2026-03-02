@@ -1,58 +1,44 @@
 <h1 align="center">
 <img src="" alt="AustraliaCash" width="300"/>
 <br/><br/>
-AustraliaCash Core [AUS, ₡]  
+AustraliaCash Core [AUS]  
 </h1>
 
 <div align="center">
 
-[![AustraliaCashBadge](https://img.shields.io/badge/Cyber-Coin-yellow.svg)](https://australiacash.org)
-[![MuchWow](https://img.shields.io/badge/Much-Wow-yellow.svg)](https://australiacash.org)
 
 </div>
 
-Select language: EN | [CN](./README_zh_CN.md) | [PT](./README_pt_BR.md) | [FA](./README_fa_IR.md)
+# AustraliaCash-Core
+AUS-Cash Core Auxilary Proof Of Work Wallet
+v3.7.0.01
+####	About
 
-AustraliaCash is a community-driven cryptocurrency that was inspired by a Shiba Inu meme. The AustraliaCash Core software allows anyone to operate a node in the AustraliaCash blockchain networks and uses the Scrypt hashing method for Proof of Work. It is adapted from Bitcoin Core and other cryptocurrencies.
+>		Australiacash is a free open source peer-to-peer electronic system that is
+>		completely decentralized, without the need for a central server or trusted
+>		parties.  Users hold the crypto keys to their own Australia Cash and transact directly
+>		with each other, with the help of a peer-to-peer network to check for double-spending.
+>
+>		Australia Cash is a peer-to-peer cryptocurrency and open-source software project released 
+>		under the MIT/X11 license. Creation and transfer of coins is based on an open source 
+>		cryptographic protocol and is not managed by any central authority.
 
-For information about the default fees used on the AustraliaCash network, please
-refer to the [fee recommendation](doc/fee-recommendation.md).
 
-**Website:** [australiacash.org](https://australiacash.org)
+>		Australiacash Core is the original Australiacash client and it builds the backbone of the network.
+>		However, it downloads and stores the entire history of Australiacash transactions
+>		depending on the speed of your computer and network connection, the synchronization
+>		process can take anywhere from a few hours to a day or more.		
 
-## Usage 💻
 
-To start your journey with AustraliaCash Core, see the [installation guide](INSTALL.md) and the [getting started](doc/getting-started.md) tutorial.
+####    Install Instructions
 
-The JSON-RPC API provided by AustraliaCash Core is self-documenting and can be browsed with `australiacash-cli help`, while detailed information for each command can be viewed with `australiacash-cli help <command>`. Alternatively, see the [Bitcoin Core documentation](https://developer.bitcoin.org/reference/rpc/) - which implement a similar protocol - to get a browsable version.
-
-### Such ports
-
-AustraliaCash Core by default uses port `22333` for peer-to-peer communication that
-is needed to synchronize the "mainnet" blockchain and stay informed of new
-transactions and blocks. Additionally, a JSONRPC port can be opened, which
-defaults to port `22555` for mainnet nodes. It is strongly recommended to not
-expose RPC ports to the public internet.
-
-| Function | mainnet | testnet | regtest |
-| :------- | ------: | ------: | ------: |
-| P2P      |   22333 |   44888 |   18444 |
-| RPC      |   22555 |   44555 |   18332 |
-
-## Ongoing development - Moon plan 🌒
-
-AustraliaCash Core is an open source and community driven software. The development
-process is open and publicly visible; anyone can see, discuss and work on the
-software.
-
-Main development resources:
-
-* [GitHub Projects](https://github.com/australiacash/australiacash/projects) is used to
-  follow planned and in-progress work for upcoming releases.
-* [GitHub Discussion](https://github.com/australiacash/australiacash/discussions) is used
-  to discuss features, planned and unplanned, related to both the development of
-  the AustraliaCash Core software, the underlying protocols and the AUS asset.  
-* [AustraliaCashdev subreddit](https://www.reddit.com/r/australiacashdev/)
+>       Proceed to the releases section of this GitHub
+>       Find the latest release at top of page (Latest 3.7.0.01)
+>       Download the compressed file for your operating system
+>       Unzip and double click the AustraliaCash-qt file
+>
+>       Open ports 1986-1987 via the routers port forwarding or virtual server option for better peers connectivity.
+>       Start the wallet with australiacash-qt
 
 ### Version strategy
 Version numbers are following ```major.minor.patch``` semantics.

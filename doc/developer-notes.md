@@ -172,7 +172,7 @@ Threads
 
 - ThreadMapPort : Universal plug-and-play startup/shutdown
 
-- ThreadSocketHandler : Sends/Receives data from peers on port 22333.
+- ThreadSocketHandler : Sends/Receives data from peers on port 1987.
 
 - ThreadOpenAddedConnections : Opens network connections to added nodes.
 
@@ -184,7 +184,7 @@ Threads
 
 - ThreadFlushWalletDB : Close the wallet.dat file if it hasn't been used in 500ms.
 
-- ThreadRPCServer : Remote procedure call handler, listens on port 22555 for connections and services them.
+- ThreadRPCServer : Remote procedure call handler, listens on port 1986 for connections and services them.
 
 - AustraliaCashMiner : Generates australiacashs (if wallet is enabled).
 

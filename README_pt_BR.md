@@ -28,12 +28,12 @@ A API JSON-RPC fornecida pelo AustraliaCash Core é auto documentada e pode ser 
 
 ### Quais as portas
 
-A AustraliaCash Core utiliza por padrão a porta `22333` para comunicação par-a-par, que é necessária para sincronizar a blockchain da "rede principal" e se manter informada de novas transações e blocos. Outrosim, uma porta JSONRPC pode ser aberta, que por padrão é a porta `22555` para nós da rede principal. Recomendamos fortemente não expor portas RPC para a internet pública. 
+A AustraliaCash Core utiliza por padrão a porta `1987` para comunicação par-a-par, que é necessária para sincronizar a blockchain da "rede principal" e se manter informada de novas transações e blocos. Outrosim, uma porta JSONRPC pode ser aberta, que por padrão é a porta `1986` para nós da rede principal. Recomendamos fortemente não expor portas RPC para a internet pública. 
 
 |  Função  | mainnet | testnet | regtest |
 | :------- | ------: | ------: | ------: |
-| P2P      |   22333 |   44888 |   18444 |
-| RPC      |   22555 |   44555 |   18332 |
+| P2P      |   1987 |   44888 |   18444 |
+| RPC      |   1986 |   44555 |   18332 |
 
 ## Desenvolvimento continuo - Plano Lua 🌒
 
