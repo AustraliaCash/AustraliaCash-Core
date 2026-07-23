@@ -1,13 +1,10 @@
-<h1 align="center">
-<img src="" alt="AustraliaCash" width="300"/>
-<br/><br/>
-AustraliaCash Core [AUS]  
-</h1>
+## Australia Cash
 
-<div align="center">
+Australia Cash is experimental software.
 
+### V3 Security Release
 
-</div>
+V3 was developed in direct response to the attack vectors discovered in V1 and V2. This release introduces major security upgrades designed to strengthen network integrity and chain stability.
 
 # AustraliaCash-Core
 AUS-Cash Core Auxilary Proof Of Work Wallet
@@ -74,8 +71,7 @@ about AustraliaCash, give or ask for help, to share your project.
 Here are some places to visit:
 
 * [AustraliaCash subreddit](https://www.reddit.com/r/australiacash/)
-* [Australiacash subreddit](https://www.reddit.com/r/australiacash/)
-* [Discord](https://discord.gg/australiacash)
+* [Discord](https://discord.gg/UbrF48v43D)
 * [AustraliaCash Twitter](https://twitter.com/australiacash)
 
 ## Very Much Frequently Asked Questions ❓
@@ -84,6 +80,16 @@ Do you have a question regarding AustraliaCash? An answer is perhaps already in 
 [FAQ](doc/FAQ.md) or the
 [Q&A section](https://github.com/australiacash/australiacash/discussions/categories/q-a)
 of the discussion board!
+=======
+Key protections include:
+
+* Advanced reorganisation (reorg) protection derived from proven techniques implemented in Zcash.
+* 20,000 block confirmation requirements for new chain acceptance, significantly reducing the risk of hostile chain attacks and deep reorganisations.
+* Additional consensus and validation hardening to protect long-term network security.
+
+To date, the V3 chain remains unaffected by known attacks and has demonstrated strong resilience under current threat models.
+
+Australia Cash remains an experimental project, and security research is always encouraged. We welcome responsible disclosure of bugs, vulnerabilities, or unexpected behaviour through our Discord or here on GitHub.
 
 ## License - Much license ⚖️
 AustraliaCash Core is released under the terms of the MIT license. See
