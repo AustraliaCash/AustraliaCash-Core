@@ -12,7 +12,7 @@ $(package)_extract_cmds= \
 define $(package)_set_vars
 $(package)_config_opts=--disable-shared --without-tools --disable-sdltest
 $(package)_config_opts_linux=--with-pic
-$(package)_preprocess_cmds=autoreconf -vfi
+$(package)_preprocess_cmds=sed -i.old '/AM_PATH_SDL/d;/AM_ICONV_LINK/d' configure.ac && autoreconf -vfi
 endef
 
 define $(package)_config_cmds
