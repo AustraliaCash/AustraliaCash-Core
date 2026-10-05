@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: Continuous Integration on master branch
 
 on:
   push:
@@ -11,30 +11,23 @@ on:
       - develop
 
 env:
-  SOURCE_ARTIFACT: australiacash-source
+  SOURCE_ARTIFACT: ${{ github.workspace }}/source
 
 jobs:
-
-  # ============================================================
-  # SOURCE DISTRIBUTION
-  # ============================================================
   create-source-distribution:
     name: Create Source Distribution
     runs-on: ubuntu-22.04
-
+    env:
+      ARTIFACT_DIR: ${{ github.workspace }}/artifacts/source
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Update APT
+      - name: Update APT and Install Required Packages
         run: |
           sudo apt-get clean
-          sudo rm -rf /var/lib/apt/lists/*
           sudo apt-get update
-
-      - name: Install Build Dependencies
-        run: |
-          sudo apt-get install -y \
+          sudo apt-get install -y --no-install-recommends \
             build-essential \
             libtool \
             autotools-dev \
@@ -46,336 +39,131 @@ jobs:
             python3 \
             libboost-system-dev \
             libboost-filesystem-dev \
-            libboost-program-options-dev \
-            libboost-thread-dev \
-            libboost-test-dev \
             libboost-chrono-dev \
-            libboost-random-dev \
+            libboost-program-options-dev \
+            libboost-test-dev \
+            libboost-thread-dev \
             libboost-all-dev \
             libdb5.3-dev \
             libdb5.3++-dev \
             libminiupnpc-dev \
             libzmq3-dev \
-            qtbase5-dev \
+            libqt5gui5 \
+            libqt5core5a \
+            libqt5dbus5 \
             qttools5-dev \
             qttools5-dev-tools \
             libprotobuf-dev \
             protobuf-compiler \
             libqrencode-dev
 
-      - name: Generate Build System
+      - name: Create Distribution Tarball
         run: |
           ./autogen.sh
-
-      - name: Configure
-        run: |
-          ./configure --with-incompatible-bdb
-
-      - name: Build Source Distribution
-        run: |
+          ./configure --with-incompatible-bdb --with-miniupnpc CXXFLAGS="-std=c++11"
           make dist
 
-      - name: Build Depends
+      - name: Download Dependencies
+        run: make -C depends download
+
+      - name: Create Dependencies Tarball
+        run: tar -czf depends.tar.gz depends
+
+      - name: Prepare Files for Artifact
         run: |
-          make -C depends download
+          mkdir -p "$ARTIFACT_DIR"
+          mv depends.tar.gz australiacash-*.tar.gz "$ARTIFACT_DIR"
 
-      - name: Package Source
-        run: |
-          mkdir -p source-package
-
-          cp *.tar.gz source-package/
-
-          tar -czf australiacash-depends.tar.gz depends
-
-      - name: Upload Source Distribution
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.SOURCE_ARTIFACT }}
-          path: |
-            source-package/*.tar.gz
-            australiacash-depends.tar.gz
+          name: source
+          path: ${{ env.ARTIFACT_DIR }}
 
-
-  # ============================================================
-  # LINUX
-  # ============================================================
   build-linux:
-    name: Build Linux
+    name: Build for Linux
+    needs: create-source-distribution
     runs-on: ubuntu-22.04
-    needs:
-      - create-source-distribution
-
-    steps:
-      - name: Download Source Distribution
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.SOURCE_ARTIFACT }}
-
-      - name: Extract Source
-        run: |
-          tar -xzf source-package/*.tar.gz
-
-          SOURCE_DIR="$(find . -maxdepth 1 -type d -name 'australiacash-*' | head -n 1)"
-
-          echo "SOURCE_DIR=$SOURCE_DIR" >> "$GITHUB_ENV"
-
-      - name: Update APT
-        run: |
-          sudo apt-get clean
-          sudo rm -rf /var/lib/apt/lists/*
-          sudo apt-get update
-
-      - name: Install Linux Dependencies
-        run: |
-          sudo apt-get install -y \
-            python3-zmq
-
-      - name: Build Depends
-        working-directory: ${{ env.SOURCE_DIR }}
-        run: |
-          make -C depends -j"$(nproc)"
-
-      - name: Configure
-        working-directory: ${{ env.SOURCE_DIR }}
-        run: |
-          ./configure \
-            --prefix="$PWD/depends/x86_64-pc-linux-gnu" \
-            --disable-tests
-
-      - name: Build
-        working-directory: ${{ env.SOURCE_DIR }}
-        run: |
-          make -j"$(nproc)"
-
-      - name: Prepare Linux Binaries
-        working-directory: ${{ env.SOURCE_DIR }}
-        run: |
-          mkdir -p ../linux-binaries
-
-          cp src/australiacashd ../linux-binaries/
-          cp src/australiacash-cli ../linux-binaries/
-          cp src/australiacash-tx ../linux-binaries/
-
-          if [ -f src/qt/australiacash-qt ]; then
-            cp src/qt/australiacash-qt ../linux-binaries/
-          fi
-
-      - name: Upload Linux Binaries
-        uses: actions/upload-artifact@v4
-        with:
-          name: australiacash-linux
-          path: linux-binaries/
-
-
-  # ============================================================
-  # WINDOWS
-  # ============================================================
-  build-windows:
-    name: Build Windows
-    runs-on: ubuntu-22.04
-    needs:
-      - create-source-distribution
-
-    steps:
-      - name: Download Source Distribution
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.SOURCE_ARTIFACT }}
-
-      - name: Extract Source
-        run: |
-          tar -xzf source-package/*.tar.gz
-
-          SOURCE_DIR="$(find . -maxdepth 1 -type d -name 'australiacash-*' | head -n 1)"
-
-          echo "SOURCE_DIR=$SOURCE_DIR" >> "$GITHUB_ENV"
-
-      - name: Update APT
-        run: |
-          sudo apt-get clean
-          sudo rm -rf /var/lib/apt/lists/*
-          sudo apt-get update
-
-      - name: Install MinGW
-        run: |
-          sudo apt-get install -y \
-            g++-mingw-w64-x86-64 \
-            gcc-mingw-w64-x86-64
-
-      - name: Configure MinGW
-        run: |
-          sudo update-alternatives \
-            --install /usr/bin/x86_64-w64-mingw32-g++ \
-            x86_64-w64-mingw32-g++ \
-            /usr/bin/x86_64-w64-mingw32-g++-posix \
-            30
-
-          sudo update-alternatives \
-            --install /usr/bin/x86_64-w64-mingw32-gcc \
-            x86_64-w64-mingw32-gcc \
-            /usr/bin/x86_64-w64-mingw32-gcc-posix \
-            30
-
-      - name: Build Depends
-        working-directory: ${{ env.SOURCE_DIR }}
-        run: |
-          make -C depends \
-            HOST=x86_64-w64-mingw32 \
-            -j"$(nproc)"
-
-      - name: Configure
-        working-directory: ${{ env.SOURCE_DIR }}
-        run: |
-          ./configure \
-            --prefix="$PWD/depends/x86_64-w64-mingw32" \
-            --host=x86_64-w64-mingw32 \
-            --disable-tests
-
-      - name: Build
-        working-directory: ${{ env.SOURCE_DIR }}
-        run: |
-          make -j"$(nproc)"
-
-      - name: Prepare Windows Binaries
-        working-directory: ${{ env.SOURCE_DIR }}
-        run: |
-          mkdir -p ../windows-binaries
-
-          cp src/australiacashd.exe ../windows-binaries/
-          cp src/australiacash-cli.exe ../windows-binaries/
-          cp src/australiacash-tx.exe ../windows-binaries/
-
-          if [ -f src/qt/australiacash-qt.exe ]; then
-            cp src/qt/australiacash-qt.exe ../windows-binaries/
-          fi
-
-      - name: Upload Windows Binaries
-        uses: actions/upload-artifact@v4
-        with:
-          name: australiacash-windows
-          path: windows-binaries/
-
-
-  # ============================================================
-  # MACOS
-  # ============================================================
-  build-macos:
-    name: Build macOS
-    runs-on: macos-15
-    needs:
-      - create-source-distribution
-
     env:
-      HOST: aarch64-apple-darwin
-
+      ARTIFACT_DIR: ${{ github.workspace }}/artifacts/linux
+      TEST_LOG_ARTIFACT_DIR: test-logs
     steps:
-      - name: Download Source Distribution
+      - name: Getting Source
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.SOURCE_ARTIFACT }}
+          name: source
 
-      - name: Extract Source
+      - name: Extract Archives
         run: |
-          tar -xzf source-package/*.tar.gz
+          tar -xzf depends.tar.gz
+          tar -xzf australiacash-*.tar.gz --strip-components=1
 
-          SOURCE_DIR="$(find . -maxdepth 1 -type d -name 'australiacash-*' | head -n 1)"
-
-          echo "SOURCE_DIR=$SOURCE_DIR" >> "$GITHUB_ENV"
-
-      - name: Install Build Tools
+      - name: Install Required Packages
         run: |
-          brew install \
-            autoconf \
-            automake \
-            libtool \
-            pkg-config \
-            gnu-sed \
-            openssl@3 \
-            python@3.12
-
-          PYTHON_PREFIX="$(brew --prefix python@3.12)"
-
-          echo "$PYTHON_PREFIX/libexec/bin" >> "$GITHUB_PATH"
-          echo "$PYTHON_PREFIX/bin" >> "$GITHUB_PATH"
-
-          # The depends system contains old Python setup.py files
-          # which require setuptools. Use an isolated environment
-          # rather than modifying Homebrew's externally-managed Python.
-          "$PYTHON_PREFIX/bin/python3.12" -m venv \
-            "$HOME/.australiacash-python"
-
-          "$HOME/.australiacash-python/bin/python" -m pip install --upgrade \
-            pip \
-            setuptools
-
-          echo "$HOME/.australiacash-python/bin" >> "$GITHUB_PATH"
-
-          echo "Python:"
-          "$HOME/.australiacash-python/bin/python" --version
-
-          echo "Setuptools:"
-          "$HOME/.australiacash-python/bin/python" \
-            -c "import setuptools; print(setuptools.__version__)"
-
-          echo "Active Python:"
-          "$HOME/.australiacash-python/bin/python" \
-            -c "import sys; print(sys.executable)"
-
-      - name: Prepare ccache
-        run: |
-          brew install ccache
-
-          echo "$(brew --prefix ccache)/libexec" >> "$GITHUB_PATH"
-
-          ccache --version
+          sudo apt-get update
+          sudo apt-get install -y python3-zmq
 
       - name: Build Dependencies
-        working-directory: ${{ env.SOURCE_DIR }}
+        run: make -C depends -j$(nproc)
+
+      - name: Build ACash
         run: |
-          export PATH="$HOME/.australiacash-python/bin:$PATH"
+          ./configure --prefix=$(realpath depends/x86_64-pc-linux-gnu) --disable-tests
+          make -j$(nproc)
 
-          echo "Using Python:"
-          which python3
-          python3 --version
-
-          python3 -c \
-            "import setuptools; print('setuptools:', setuptools.__version__)"
-
-          n="$(sysctl -n hw.ncpu 2>/dev/null || echo 3)"
-
-          if [ "$n" -gt 4 ]; then
-            n=4
-          fi
-
-          make -C depends \
-            -j"$n" \
-            HOST="$HOST"
-
-      - name: Configure
-        working-directory: ${{ env.SOURCE_DIR }}
+      - name: Prepare Files for Artifact
         run: |
-          export PATH="$HOME/.australiacash-python/bin:$PATH"
+          mkdir -p "$ARTIFACT_DIR"
+          mv ./src/{australiacash-cli,australiacash-tx,australiacashd,qt/australiacash-qt} "$ARTIFACT_DIR"
 
-          export OPENSSL_PREFIX="$(brew --prefix openssl@3)"
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-binaries
+          path: ${{ env.ARTIFACT_DIR }}
 
-          ./configure \
-            --prefix="$PWD/depends/$HOST" \
-            --host="$HOST" \
-            --with-gui=qt5 \
-            --disable-tests \
-            --disable-bench \
-            --disable-man \
-            --with-incompatible-bdb \
-            CPPFLAGS="-I$OPENSSL_PREFIX/include" \
-            LDFLAGS="-L$OPENSSL_PREFIX/lib"
+  build-windows:
+    name: Build for Windows
+    needs: create-source-distribution
+    runs-on: ubuntu-22.04
+    env:
+      ARTIFACT_DIR: ${{ github.workspace }}/artifacts/windows
+    steps:
+      - name: Getting Source
+        uses: actions/download-artifact@v4
+        with:
+          name: source
 
-      - name: Build macOS
-        working-directory: ${{ env.SOURCE_DIR }}
+      - name: Extract Archives
         run: |
-          export PATH="$HOME/.australiacash-python/bin:$PATH"
+          tar -xzf depends.tar.gz
+          tar -xzf australiacash-*.tar.gz --strip-components=1
 
-          n="$(sysctl -n hw.ncpu 2>/dev/null || echo 3)"
+      - name: Install Required Packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++-mingw-w64-x86-64 gcc-mingw-w64-x86-64
 
-          if [ "$n" -gt 4 ]; then
-            n=4
-          fi
+      - name: Switch MinGW GCC and G++ to POSIX Threading
+        run: |
+          sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
+          sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+
+      - name: Build Dependencies
+        run: make -C depends -j$(nproc) HOST=x86_64-w64-mingw32
+
+      - name: Build ACash
+        run: |
+          ./configure --prefix=$(realpath depends/x86_64-w64-mingw32)
+          make -j$(nproc)
+
+      - name: Prepare Files for Artifact
+        run: |
+          mkdir -p "$ARTIFACT_DIR"
+          mv ./src/{australiacash-cli.exe,australiacash-tx.exe,australiacashd.exe,qt/australiacash-qt.exe} "$ARTIFACT_DIR"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-binaries
+          path: ${{ env.ARTIFACT_DIR }}
