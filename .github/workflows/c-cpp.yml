@@ -1,4 +1,3 @@
-```yaml
 name: Continuous Integration on master branch
 
 on:
