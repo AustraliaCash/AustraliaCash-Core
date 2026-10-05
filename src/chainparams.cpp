@@ -118,15 +118,7 @@ public:
         // Note that of those with the service bits flag, most only support a subset of possible options
         vSeeds.emplace_back("australiacash.org");
         vSeeds.emplace_back("recovery.australiacash.org");
-        vSeeds.emplace_back("161.43.201.255");
-        vSeeds.emplace_back("165.232.173.117");
-        vSeeds.emplace_back("104.156.233.160");
-        vSeeds.emplace_back("104.156.239.75");
-        vSeeds.emplace_back("45.32.244.142");
-		vSeeds.emplace_back("207.148.85.226");
-		vSeeds.emplace_back("104.27.141.137");
-		vSeeds.emplace_back("104.20.149.177");
-		vSeeds.emplace_back("104.24.6.35");
+        vSeeds.emplace_back("139.59.241.121");
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,23);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
@@ -160,30 +152,23 @@ public:
 		{  31502, uint256S("0xd5bc86ab92257f0e3eb149f69ba180410092c6465639d8fd5ab8525c1a2a0200")},
 		{  32985, uint256S("0x58815a2fdec8b91cf0e84197cb0eea88dd705edd962e4784a43d6783fe03963f")},
 		{  37846, uint256S("0x1e7d1f67de29e32e06c23426f9346a99876a24d664fcddbdd2705e8054dc5530")},
-		{  40000, uint256S("0xf2243cce020a8354758e4f26d4398656e80b2b91add91681d8a729248ff3e473")},
 		{  45000, uint256S("0x49f2754bc381ac77c1cc36210e8862935de2ff5346a66b9817906bb9223c0c90")},
-		{  50000, uint256S("0xfb09f0e9fc709c22e84b014bfbe11eb1a8ede673ab0873f03bf1bc70662b2a62")},
-		{  55000, uint256S("0x370f787f4daf4ac52c9d2560298de8e25efc40930804f55fac91f88cca91fecc")},
-		{  60000, uint256S("0x7ce107de1168a9052fb4bee934e3acf8a9694f6e5310b74fe40ffcd4536ddf1f")},
-		{  65000, uint256S("0x4e500fd331c28b3dccc714978d437b4cdde7675f69b84423c176f58b177a668b")},
-		{  70000, uint256S("0x2a954526a229c4679a950b08754460bd62ea7d88f7634fa020cf49c4bfe21312")},
 		{  75000, uint256S("0xddcc79c889ae5a72aab32abe826478b865e0df6cc4e0608bea0c3195237d0745")},
-		{  80000, uint256S("0x9b6230d9066906640bcfe26bc92b3eb1f1f52ea59c7aa107844dd7902ce1f70c")},
 		{  85000, uint256S("0xd410c1187292bb4e1a17e88a499fbd727cf1742b2eab2eb3257135e4522e6a77")},
-		{  90000, uint256S("0x8d4c267b390daa0913397f4357dd6b38f119f1d463bfcdcb1d5c4457eec6c2ec")},
-		{  95000, uint256S("0x16ae3b52e588a4750d1670127a66b428b64396709824e6b08d8050369b932c54")},
 		{ 130000, uint256S("0x233f0791e8beab0ea34af5aa4db4f9e9e78b4e6f570e7af3a26a94432019d697")},
         { 232059, uint256S("0x1b340cd2dd8990b4e8c1c686038cb4d882cd6a71991bb0a0381027af7851e892")},
+        { 485268, uint256S("0x94ff1d8cc4d2e9fbb482fcaa012c90dac4ccc2e84f0c87c77a62f93249c0cc8c")},
+        { 640162, uint256S("0x44e44e7fdd201e76196464720dd7d0d287726a42eada8b3b963bf61a12924d7a")},
 		
 		}
         };
 
         chainTxData = ChainTxData{
             // Data as of block 232060
-            1615034275, // * UNIX timestamp of last known number of transactions
-            266819,  // * total number of transactions between genesis and that timestamp
+            1791133106, // * UNIX timestamp of last known number of transactions
+            1266819,  // * total number of transactions between genesis and that timestamp
                     //   (the tx=... number in the SetBestChain debug.log lines)
-            0.004020786024531231     // * estimated number of transactions per second after that timestamp
+            0.04020786024531231     // * estimated number of transactions per second after that timestamp
         };
     }
 };
