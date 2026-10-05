@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       ARTIFACT_DIR: ${{ github.workspace }}/artifacts/source
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,6 +28,7 @@ jobs:
         run: |
           sudo apt-get clean
           sudo apt-get update
+
           sudo apt-get install -y --no-install-recommends \
             build-essential \
             libtool \
@@ -64,10 +66,12 @@ jobs:
           make dist
 
       - name: Download Dependencies
-        run: make -C depends download
+        run: |
+          make -C depends download
 
       - name: Create Dependencies Tarball
-        run: tar -czf depends.tar.gz depends
+        run: |
+          tar -czf depends.tar.gz depends
 
       - name: Prepare Files for Artifact
         run: |
@@ -87,6 +91,7 @@ jobs:
     env:
       ARTIFACT_DIR: ${{ github.workspace }}/artifacts/linux
       TEST_LOG_ARTIFACT_DIR: test-logs
+
     steps:
       - name: Getting Source
         uses: actions/download-artifact@v4
@@ -100,21 +105,28 @@ jobs:
 
       - name: Install Required Packages
         run: |
+          sudo apt-get clean
           sudo apt-get update
           sudo apt-get install -y python3-zmq
 
       - name: Build Dependencies
-        run: make -C depends -j$(nproc)
-
-      - name: Build ACash
         run: |
-          ./configure --prefix=$(realpath depends/x86_64-pc-linux-gnu) --disable-tests
+          make -C depends -j$(nproc)
+
+      - name: Build AustraliaCash
+        run: |
+          ./configure \
+            --prefix=$(realpath depends/x86_64-pc-linux-gnu) \
+            --disable-tests
+
           make -j$(nproc)
 
       - name: Prepare Files for Artifact
         run: |
           mkdir -p "$ARTIFACT_DIR"
-          mv ./src/{australiacash-cli,australiacash-tx,australiacashd,qt/australiacash-qt} "$ARTIFACT_DIR"
+
+          mv ./src/{australiacash-cli,australiacash-tx,australiacashd,qt/australiacash-qt} \
+            "$ARTIFACT_DIR"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -128,6 +140,7 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       ARTIFACT_DIR: ${{ github.workspace }}/artifacts/windows
+
     steps:
       - name: Getting Source
         uses: actions/download-artifact@v4
@@ -141,26 +154,39 @@ jobs:
 
       - name: Install Required Packages
         run: |
+          sudo apt-get clean
           sudo apt-get update
-          sudo apt-get install -y g++-mingw-w64-x86-64 gcc-mingw-w64-x86-64
+          sudo apt-get install -y \
+            g++-mingw-w64-x86-64 \
+            gcc-mingw-w64-x86-64
 
       - name: Switch MinGW GCC and G++ to POSIX Threading
         run: |
-          sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
-          sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+          sudo update-alternatives \
+            --set x86_64-w64-mingw32-gcc \
+            /usr/bin/x86_64-w64-mingw32-gcc-posix
+
+          sudo update-alternatives \
+            --set x86_64-w64-mingw32-g++ \
+            /usr/bin/x86_64-w64-mingw32-g++-posix
 
       - name: Build Dependencies
-        run: make -C depends -j$(nproc) HOST=x86_64-w64-mingw32
-
-      - name: Build ACash
         run: |
-          ./configure --prefix=$(realpath depends/x86_64-w64-mingw32)
+          make -C depends -j$(nproc) HOST=x86_64-w64-mingw32
+
+      - name: Build AustraliaCash
+        run: |
+          ./configure \
+            --prefix=$(realpath depends/x86_64-w64-mingw32)
+
           make -j$(nproc)
 
       - name: Prepare Files for Artifact
         run: |
           mkdir -p "$ARTIFACT_DIR"
-          mv ./src/{australiacash-cli.exe,australiacash-tx.exe,australiacashd.exe,qt/australiacash-qt.exe} "$ARTIFACT_DIR"
+
+          mv ./src/{australiacash-cli.exe,australiacash-tx.exe,australiacashd.exe,qt/australiacash-qt.exe} \
+            "$ARTIFACT_DIR"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -175,6 +201,7 @@ jobs:
     env:
       ARTIFACT_DIR: ${{ github.workspace }}/artifacts/macos
       HOST: aarch64-apple-darwin
+
     steps:
       - name: Getting Source
         uses: actions/download-artifact@v4
@@ -188,38 +215,87 @@ jobs:
 
       - name: Install Build Tools
         run: |
-          brew install autoconf automake libtool pkg-config gnu-sed openssl@3
-          pip3 install setuptools --break-system-packages
+          brew install \
+            autoconf \
+            automake \
+            libtool \
+            pkg-config \
+            gnu-sed \
+            openssl@3 \
+            python@3.12
+
+          PYTHON_PREFIX="$(brew --prefix python@3.12)"
+
+          echo "$PYTHON_PREFIX/bin" >> "$GITHUB_PATH"
+
+          "$PYTHON_PREFIX/bin/python3.12" -m pip install \
+            --upgrade \
+            pip \
+            setuptools
+
+          echo "Python:"
+          "$PYTHON_PREFIX/bin/python3.12" --version
+
+          echo "Setuptools:"
+          "$PYTHON_PREFIX/bin/python3.12" \
+            -c "import setuptools; print(setuptools.__version__)"
+
+          echo "Active Python:"
+          which python3
+          python3 --version
 
       - name: Prepare ccache directory
-        run: mkdir -p "${HOME}/.ccache"
+        run: |
+          mkdir -p "${HOME}/.ccache"
 
       - name: Build Dependencies
         run: |
           n="$(sysctl -n hw.ncpu 2>/dev/null || echo 3)"
+
           [ "$n" -gt 4 ] && n=4
-          make -C depends -j"$n" HOST=$HOST
+
+          make -C depends -j"$n" HOST="$HOST"
 
       - name: Build AustraliaCash
         run: |
-          OPENSSL_PREFIX=$(brew --prefix openssl@3)
+          OPENSSL_PREFIX="$(brew --prefix openssl@3)"
+
           export PKG_CONFIG_PATH="${OPENSSL_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
-          ./configure --prefix=$(realpath depends/$HOST) --with-gui=qt5 --enable-reduce-exports \
-            LDFLAGS="-L${OPENSSL_PREFIX}/lib" CPPFLAGS="-I${OPENSSL_PREFIX}/include" \
-            CRYPTO_CFLAGS="-I${OPENSSL_PREFIX}/include" CRYPTO_LIBS="-L${OPENSSL_PREFIX}/lib -lcrypto" \
-            SSL_CFLAGS="-I${OPENSSL_PREFIX}/include" SSL_LIBS="-L${OPENSSL_PREFIX}/lib -lssl -lcrypto" \
-            || ( cat config.log && false )
+          ./configure \
+            --prefix="$(realpath depends/$HOST)" \
+            --with-gui=qt5 \
+            --enable-reduce-exports \
+            LDFLAGS="-L${OPENSSL_PREFIX}/lib" \
+            CPPFLAGS="-I${OPENSSL_PREFIX}/include" \
+            CRYPTO_CFLAGS="-I${OPENSSL_PREFIX}/include" \
+            CRYPTO_LIBS="-L${OPENSSL_PREFIX}/lib -lcrypto" \
+            SSL_CFLAGS="-I${OPENSSL_PREFIX}/include" \
+            SSL_LIBS="-L${OPENSSL_PREFIX}/lib -lssl -lcrypto" \
+            || (
+              cat config.log
+              false
+            )
 
           n="$(sysctl -n hw.ncpu 2>/dev/null || echo 3)"
+
           [ "$n" -gt 4 ] && n=4
 
-          make -j"$n" || ( echo "Build failure. Verbose build follows." && make V=1 ; false )
+          make -j"$n" || (
+            echo "Build failure. Verbose build follows."
+            make V=1
+            false
+          )
 
       - name: Prepare Files for Artifact
         run: |
           mkdir -p "$ARTIFACT_DIR"
-          cp ./depends/$HOST/bin/australiacash* "$ARTIFACT_DIR/" || cp ./src/{australiacashd,australiacash-cli,australiacash-tx} ./src/qt/australiacash-qt "$ARTIFACT_DIR/"
+
+          cp ./depends/$HOST/bin/australiacash* "$ARTIFACT_DIR/" \
+            || cp \
+              ./src/{australiacashd,australiacash-cli,australiacash-tx} \
+              ./src/qt/australiacash-qt \
+              "$ARTIFACT_DIR/"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
