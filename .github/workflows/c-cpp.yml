@@ -226,4 +226,3 @@ jobs:
         with:
           name: macos-binaries
           path: ${{ env.ARTIFACT_DIR }}
-```
